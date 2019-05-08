@@ -1,9 +1,9 @@
 package com.axibase.webtest.service;
 
+import com.axibase.webtest.CommonAssertions;
 import org.junit.Test;
 
-import static com.codeborne.selenide.Selenide.*;
-import static org.junit.Assert.assertEquals;
+import static com.codeborne.selenide.Selenide.open;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -16,7 +16,7 @@ public class MetricsServiceTest extends AtsdTest {
     public void testDefaultMetrics() {
         String uri = "/metrics?page=1&size=1000&filter=all&mask=&tag-name=&tag-value=";
         open(uri);
-        assertEquals(generateAssertMessage("Title should be 'Metrics'"), MetricsService.TITLE, title());
+        CommonAssertions.assertPageTitleAfterLoadEquals(MetricsService.TITLE);
         MetricsService ms = new MetricsService();
         assertTrue(generateAssertMessage("Row count in metricList table should be more then 2"), ms.getMetricsCount() >= 3);
         assertNotNull(generateAssertMessage("Can't find metric 'jvm_memory_used_percent'"), ms.getMetricByName("jvm_memory_used_percent"));

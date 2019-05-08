@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.List;
 
 import static com.axibase.webtest.CommonConditions.clickable;
-import static com.axibase.webtest.PageUtils.urlPath;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.executeJavaScript;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
@@ -125,7 +124,7 @@ public class AdminBackupImportTest extends AtsdTest {
     private void goToReplacementTablesPage() {
         $(By.xpath("//*/a/span[contains(text(),'Data')]")).click();
         $(By.xpath("//*/a[contains(text(),'Replacement Tables')]")).click();
-        Assert.assertEquals("Wrong page", urlPath(), "/replacement-tables/");
+        CommonAssertions.assertPageUrlPathEquals("/replacement-tables/");
     }
 
     private void goToAdminImportBackupPage() {

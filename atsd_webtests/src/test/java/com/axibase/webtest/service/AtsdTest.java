@@ -20,7 +20,7 @@ public abstract class AtsdTest {
         login();
     }
 
-    protected String generateAssertMessage(String thread) {
+    public static String generateAssertMessage(String thread) {
         return thread + "\n" + "url: " + url() + "\n";
     }
 

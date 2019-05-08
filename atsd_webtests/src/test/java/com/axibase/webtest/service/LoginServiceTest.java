@@ -1,10 +1,11 @@
 package com.axibase.webtest.service;
 
+import com.axibase.webtest.CommonAssertions;
 import org.junit.Before;
 import org.junit.Test;
 
-import static com.codeborne.selenide.Selenide.title;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by sild on 02.02.15.
@@ -18,14 +19,14 @@ public class LoginServiceTest extends AtsdTest {
 
     @Test
     public void testLogin() {
-        assertEquals(generateAssertMessage("Title should be 'Login"), LoginService.TITLE, title());
+        CommonAssertions.assertPageTitleEquals(LoginService.TITLE);
         LoginService ls = new LoginService();
         assertTrue("Can't login on page", ls.loginAsAdmin());
     }
 
     @Test
     public void wrongLogin() {
-        assertEquals(generateAssertMessage("Title should be 'Login"), LoginService.TITLE, title());
+        CommonAssertions.assertPageTitleEquals(LoginService.TITLE);
         final LoginService ls = new LoginService();
         final String wrongLogin = "123";
         final String wrongPassword = "123";
@@ -37,7 +38,7 @@ public class LoginServiceTest extends AtsdTest {
 
     @Test
     public void testLogout() {
-        assertEquals(generateAssertMessage("Title should be 'Login"), LoginService.TITLE, title());
+        CommonAssertions.assertPageTitleEquals(LoginService.TITLE);
         LoginService ls = new LoginService();
         assertTrue("Can't login on page", ls.loginAsAdmin());
         assertTrue("Can't logout from page", ls.logout());

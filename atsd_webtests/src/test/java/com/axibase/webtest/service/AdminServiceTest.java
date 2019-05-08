@@ -39,7 +39,7 @@ public class AdminServiceTest extends AtsdTest {
             Date atsdDate = dateFormat.parse(atsdDateString);
             return atsdDate.getTime();
         } catch (Exception e) {
-            Assert.fail(generateAssertMessage("Cant parse getting date row: " + atsdDateString));
+            Assert.fail(generateAssertMessage("Can't parse getting date row: " + atsdDateString));
         }
         return 0;
     }
