@@ -1,6 +1,7 @@
 package com.axibase.webtest.service;
 
 
+import com.axibase.webtest.CommonAssertions;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class CreateAdminAccountTest extends AtsdTest {
     public void createAdminUser() {
         if (!LoginService.TITLE.equals(title())) {
             log.info("Trying to create admin...");
-            assertEquals(generateAssertMessage("Should get page with title '" + CREATE_ACCOUNT_TITLE + "'"), CREATE_ACCOUNT_TITLE, title());
+            CommonAssertions.assertPageTitleEquals(CREATE_ACCOUNT_TITLE);
             assertTrue(generateAssertMessage("Can't create account"), accountService.createAdmin());
             assertEquals(generateAssertMessage("Should get redirect on home page"), "/", urlPath());
         } else {

@@ -17,6 +17,7 @@ import static com.axibase.webtest.CommonConditions.clickable;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.executeJavaScript;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
+import static org.junit.Assert.assertTrue;
 
 @Ignore("Enable after fix")
 @RunWith(value = Parameterized.class)
@@ -60,7 +61,7 @@ public class AdminBackupImportTest extends AtsdTest {
 
         goToReplacementTablesPage();
 
-        Assert.assertTrue("Wrong table content",
+        assertTrue("Wrong table content",
                 checkTable($(By.id("overviewTable"))));
     }
 
@@ -76,7 +77,7 @@ public class AdminBackupImportTest extends AtsdTest {
 
         goToReplacementTablesPage();
 
-        Assert.assertTrue("Wrong table content",
+        assertTrue("Wrong table content",
                 checkTable($(By.id("overviewTable"))));
     }
 
@@ -88,7 +89,7 @@ public class AdminBackupImportTest extends AtsdTest {
 
         goToReplacementTablesPage();
 
-        Assert.assertTrue("Wrong table content",
+        assertTrue("Wrong table content",
                 checkTable($(By.id("overviewTable"))));
     }
 

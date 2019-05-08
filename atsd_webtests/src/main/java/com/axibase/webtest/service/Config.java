@@ -50,10 +50,11 @@ public class Config {
                 if (chromedriverPath != null) {
                     System.setProperty(CHROME_DRIVER_PROPERTY_NAME, chromedriverPath);
                 }
+                final String browserFromProperties = properties.getProperty(SELENIDE_BROWSER_PROPERTY_NAME, "chrome");
                 Configuration.baseUrl = url;
                 Configuration.screenshots = false; // create screenshots manually with proper name
                 Configuration.reportsFolder = screenshotDir;
-                Configuration.browser = System.getProperty(SELENIDE_BROWSER_PROPERTY_NAME, "chrome");
+                Configuration.browser = System.getProperty(SELENIDE_BROWSER_PROPERTY_NAME, browserFromProperties);
                 Configuration.browserSize = "1024x768";
                 Configuration.headless = Boolean.parseBoolean(properties.getProperty(SELENIDE_HEADLESS_PROPERTY_NAME, "true"));
                 if (Configuration.headless && "chrome".equals(Configuration.browser)) {

@@ -1,17 +1,17 @@
 package com.axibase.webtest.cases;
 
-import com.axibase.webtest.service.AtsdTest;
+import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AccountService;
-import io.qameta.allure.Flaky;
+import com.axibase.webtest.service.AtsdTest;
 import io.qameta.allure.Issue;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class CreateUserGroupTest extends AtsdTest {
     private static final String TEST_USER = "axiuser";
@@ -25,8 +25,14 @@ public class CreateUserGroupTest extends AtsdTest {
         accountService.createUser(TEST_USER, TEST_USER);
     }
 
+    @After
+    public void tearDown() {
+        // Configure ATSD as it was before test
+        open("/admin/users/edit.xhtml?user=" + TEST_USER);
+        accountService.deleteUser(TEST_USER);
+    }
+
     @Test
-    @Flaky
     @Issue("5179")
     public void createUserGroup() {
         open("/");
@@ -36,10 +42,10 @@ public class CreateUserGroupTest extends AtsdTest {
         assertTrue(generateAssertMessage("Submenu should be visible"), submenuVisible);
 
         $(By.xpath("//a[normalize-space(text())='User Groups']")).click();
-        assertEquals(generateAssertMessage("Title should be 'User Groups'"), "User Groups", title());
+        CommonAssertions.assertPageTitleAfterLoadEquals("User Groups");
 
         $(By.xpath("//form//a[normalize-space(text())='Create']")).click();
-        Assert.assertEquals(generateAssertMessage("Title should be 'New User Group'"), "New User Group", title());
+        CommonAssertions.assertPageTitleAfterLoadEquals("New User Group");
 
         $(By.id("userGroup.name")).sendKeys("Test Group");
         $(By.name("save")).click();
@@ -89,10 +95,6 @@ public class CreateUserGroupTest extends AtsdTest {
         $(By.cssSelector("a[href='#portal-permissions']")).click();
         WebElement firstPortalCheckbox = $(By.id("portalPermissionsModels0.accessGranted"));
         assertTrue(generateAssertMessage("Check box for first portal should be enabled"), firstPortalCheckbox.isSelected());
-
-        // Configure ATSD as it was before test
-        open("/admin/users/edit.xhtml?user=" + TEST_USER);
-        accountService.deleteUser(TEST_USER);
     }
 }
 

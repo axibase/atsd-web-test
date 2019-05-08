@@ -1,6 +1,5 @@
 package com.axibase.webtest.pages;
 
-import org.junit.Assert;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.*;
@@ -12,6 +11,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static java.util.concurrent.TimeUnit.MILLISECONDS;
+import static org.junit.Assert.fail;
 
 public class ForecastViewerPage {
     private WebDriver driver;
@@ -99,7 +99,7 @@ public class ForecastViewerPage {
         try {
             wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//*[@id='summary-container']/table")));
         } catch (TimeoutException e) {
-            Assert.fail("Chart's loading time (" + countOfSeconds + " seconds) is over");
+            fail("Chart's loading time (" + countOfSeconds + " seconds) is over");
         }
     }
 
@@ -146,7 +146,7 @@ public class ForecastViewerPage {
         try {
             wait.until(ExpectedConditions.presenceOfElementLocated(By.className("tooltip")));
         } catch (TimeoutException e) {
-            Assert.fail("Tooltip's time is over");
+            fail("Tooltip's time is over");
         }
         //that is for tooltip does not cover the button after tooltip is shown
         action.moveToElement(getSubmitButton()).perform();

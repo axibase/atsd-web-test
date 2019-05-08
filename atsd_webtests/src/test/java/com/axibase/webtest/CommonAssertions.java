@@ -48,8 +48,8 @@ public class CommonAssertions {
     }
 
     /**
-     * Compare current url with what should be
-     *  @param expectedUrl - url that should be
+     * Compare current url with expected
+     * @param expectedUrl - expected URL of the target page
      *
      */
     public static void assertPageUrlPathEquals(String expectedUrl) {

@@ -1,5 +1,6 @@
 package com.axibase.webtest.cases;
 
+import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AtsdTest;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -17,7 +18,7 @@ public class CreateEntityAndMetricTest extends AtsdTest {
         assertTrue(generateAssertMessage("Submenu should be visible"), submenuVisible);
 
         $(By.xpath("//a[normalize-space(text())='Data Entry']")).click();
-        assertEquals(generateAssertMessage("Title should be 'Data Entry'"), "Data Entry", title());
+        CommonAssertions.assertPageTitleAfterLoadEquals("Data Entry");
 
         $(By.id("seriesType")).click();
         $(By.name("entity")).sendKeys("my-entity");

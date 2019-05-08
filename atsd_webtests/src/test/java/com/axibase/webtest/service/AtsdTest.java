@@ -32,7 +32,7 @@ public abstract class AtsdTest {
                 throw new BadLoginException("Can not login as admin");
             }
         } else {
-            throw new BadLoginException("Expected login page title is '" + LoginService.TITLE + "' but there is '" + title());
+            throw new BadLoginException("Expected login page title is '" + LoginService.TITLE + "' but actual is '" + title() + "'");
         }
     }
 }

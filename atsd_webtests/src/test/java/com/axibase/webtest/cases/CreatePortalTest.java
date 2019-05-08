@@ -1,5 +1,6 @@
 package com.axibase.webtest.cases;
 
+import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AtsdTest;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -8,6 +9,7 @@ import org.openqa.selenium.WebDriver;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.axibase.webtest.CommonConditions.clickable;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static junit.framework.TestCase.assertTrue;
@@ -23,7 +25,7 @@ public class CreatePortalTest extends AtsdTest {
         assertTrue(generateAssertMessage("Portal panel should be visible"), panelVisible);
 
         $(By.xpath("//a[normalize-space(text())='Create']")).click();
-        assertEquals(generateAssertMessage("Title should be 'New Portal'"), "New Portal", title());
+        CommonAssertions.assertPageTitleAfterLoadEquals("New Portal");
 
         $(By.id("name")).sendKeys("Test Portal");
         String config = "[configuration]\\n" +
@@ -47,10 +49,10 @@ public class CreatePortalTest extends AtsdTest {
                 "      metric = my-metric";
 
         executeJavaScript("document.querySelector('.CodeMirror').CodeMirror.setValue('" + config + "');");
-        $(By.id("save-button")).click();
-        assertEquals(generateAssertMessage("Title should be 'Portal Test Portal'"), "Portal Test Portal", title());
-        $(By.id("view-button")).click();
-        $(By.id("view-name-button")).click();
+        $(By.id("save-button")).shouldBe(clickable).click();
+        CommonAssertions.assertPageTitleAfterLoadEquals("Portal Test Portal");
+        $(By.id("view-button")).shouldBe(clickable).click();
+        $(By.id("view-name-button")).shouldBe(clickable).click();
         final WebDriver driver = getWebDriver();
         List<String> tabs = new ArrayList<>(driver.getWindowHandles());
         assertEquals(generateAssertMessage("Exactly 2 new tabs must be opened"), 3, tabs.size());

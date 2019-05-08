@@ -3,7 +3,6 @@ package com.axibase.webtest.service;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.Condition;
 import org.junit.After;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
@@ -15,6 +14,8 @@ import java.util.List;
 import static com.axibase.webtest.PageUtils.urlPath;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class ReplacementTablesImportTest extends AtsdTest {
     private static final String XML_FILE = ReplacementTablesImportTest.class.getResource("replacement-table" + File.separator + "xml-file.xml").getFile();
@@ -38,7 +39,7 @@ public class ReplacementTablesImportTest extends AtsdTest {
         sendFilesFromReplacementTable(XML_FILE);
 
         goToReplacementTablesPage();
-        Assert.assertTrue("Wrong table content", checkTable($(By.id("overviewTable"))));
+        assertTrue("Wrong table content", checkTable($(By.id("overviewTable"))));
     }
 
     @Test
@@ -49,7 +50,7 @@ public class ReplacementTablesImportTest extends AtsdTest {
         sendFilesFromReplacementTable(XML_FILE);
 
         goToReplacementTablesPage();
-        Assert.assertTrue("Wrong table content", checkTable($(By.id("overviewTable"))));
+        assertTrue("Wrong table content", checkTable($(By.id("overviewTable"))));
     }
 
     @After
@@ -70,7 +71,7 @@ public class ReplacementTablesImportTest extends AtsdTest {
     private void goToReplacementTablesPage() {
         $(By.xpath("//*/a/span[contains(text(),'Data')]")).click();
         $(By.xpath("//*/a[contains(text(),'Replacement Tables')]")).click();
-        Assert.assertEquals("Wrong page", urlPath(), "/replacement-tables/");
+        assertEquals("Wrong page", urlPath(), "/replacement-tables/");
     }
 
     private void goToReplacementTablesImportPage() {
@@ -78,7 +79,7 @@ public class ReplacementTablesImportTest extends AtsdTest {
 
         $(By.xpath("//*/button/span[@class='caret']")).click();
         $(By.xpath("//*/a[text()='Import']")).click();
-        Assert.assertEquals("Wrong page", urlPath(), "/replacement-tables/import");
+        assertEquals("Wrong page", urlPath(), "/replacement-tables/import");
     }
 
     private void deleteReplacementTables() {

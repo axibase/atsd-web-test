@@ -1,11 +1,11 @@
 package com.axibase.webtest.service;
 
 
+import com.axibase.webtest.CommonAssertions;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ntp.NTPUDPClient;
 import org.apache.commons.net.ntp.TimeInfo;
 import org.apache.commons.net.ntp.TimeStamp;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.net.InetAddress;
@@ -13,9 +13,9 @@ import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.codeborne.selenide.Selenide.*;
-import static org.junit.Assert.assertEquals;
+import static com.codeborne.selenide.Selenide.open;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @Slf4j
 public class AdminServiceTest extends AtsdTest {
@@ -26,12 +26,12 @@ public class AdminServiceTest extends AtsdTest {
 
     @Test
     public void checkAtsdTime() {
-        assertTrue(generateAssertMessage("Time should be different not more 60 sec"), Math.abs(getCurrentTime() - getAtsdTime()) < MAX_DIFF_TIME);
+        assertTrue(generateAssertMessage("Time difference should not exceed 60 sec"), Math.abs(getCurrentTime() - getAtsdTime()) < MAX_DIFF_TIME);
     }
 
     private long getAtsdTime() {
         open( "/admin/system-information");
-        assertEquals("title should be System Information", "System Information", title());
+        CommonAssertions.assertPageTitleEquals("System Information");
         AdminService adminService = new AdminService();
         String atsdDateString = adminService.getTime();
         try {
@@ -39,7 +39,7 @@ public class AdminServiceTest extends AtsdTest {
             Date atsdDate = dateFormat.parse(atsdDateString);
             return atsdDate.getTime();
         } catch (Exception e) {
-            Assert.fail(generateAssertMessage("Can't parse getting date row: " + atsdDateString));
+            fail(generateAssertMessage("Can't parse getting date row: " + atsdDateString));
         }
         return 0;
     }
