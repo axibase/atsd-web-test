@@ -6,4 +6,4 @@ services:
 install:
   - docker pull axibase/atsd_package_validation
 script:
-  - docker run axibase/atsd_package_validation --env BRANCH=$TRAVIS_BRANCH
+  - docker run -e BRANCH=$TRAVIS_BRANCH -e ATSD_REQUIRED_REVISION=`curl -s 'https://axibase.com/atsd/version-check' | jq -r '.revision'` axibase/atsd_package_validation
