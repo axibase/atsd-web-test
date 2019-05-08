@@ -32,7 +32,7 @@ public class ExportServiceTest extends AtsdTest {
         final File csvFile = File.createTempFile("output", ".csv");
         try {
             final Config config = Config.getInstance();
-            final String command = "curl -u " + config.getLogin() + ":" + config.getPassword() + " -o " + csvFile.getAbsolutePath() + " " + config.getUrl() + EXPORT_URL;
+            final String command = "curl -u " + config.getLogin() + ":" + config.getPassword() + " -o " + csvFile.getAbsolutePath() + " " + config.getBaseUrl() + EXPORT_URL;
             Runtime.getRuntime().exec(command).waitFor();
             checkExportedData(csvFile);
         } catch (InterruptedException | IOException e) {

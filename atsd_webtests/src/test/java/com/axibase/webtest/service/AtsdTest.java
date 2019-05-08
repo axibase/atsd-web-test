@@ -9,11 +9,11 @@ import static com.codeborne.selenide.WebDriverRunner.url;
 
 public abstract class AtsdTest {
     static {
-        Config.getInstance(); // initialize config
+        Config.getInstance().init();
     }
 
     @Rule
-    public final ActionOnTestState action = new ActionOnTestState(this);
+    public final ActionOnTestState action = new ActionOnTestState();
 
     @Before
     public void setUp() {
@@ -21,12 +21,10 @@ public abstract class AtsdTest {
     }
 
     protected String generateAssertMessage(String thread) {
-        return thread + "\n" +
-                "url: " + url() + "\n";
-//                "page source:\n" + source();
+        return thread + "\n" + "url: " + url() + "\n";
     }
 
-    protected void login() {
+    private void login() {
         open("/");
         if (LoginService.TITLE.equals(title())) {
             LoginService ls = new LoginService();

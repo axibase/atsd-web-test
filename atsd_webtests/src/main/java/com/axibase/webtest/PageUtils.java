@@ -9,6 +9,6 @@ import static com.codeborne.selenide.WebDriverRunner.url;
 @UtilityClass
 public class PageUtils {
     public static String urlPath() {
-        return StringUtils.substringAfter(url(), Config.getInstance().getUrl());
+        return StringUtils.substringAfter(url(), Config.getInstance().getBaseUrl());
     }
 }

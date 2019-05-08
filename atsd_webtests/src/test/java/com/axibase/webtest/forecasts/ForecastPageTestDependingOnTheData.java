@@ -428,7 +428,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     }
 
     private void setTimeZone() {
-        String url = Config.getInstance().getUrl() + "/api/v1/version";
+        String url = Config.getInstance().getBaseUrl() + "/api/v1/version";
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(url);
         Config config = Config.getInstance();
