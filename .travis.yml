@@ -1,0 +1,9 @@
+language: java
+dist: trusty
+sudo: required
+services:
+  - docker
+install:
+  - docker pull axibase/atsd_package_validation
+script:
+  - docker run axibase/atsd_package_validation --env BRANCH=$TRAVIS_BRANCH
