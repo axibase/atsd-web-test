@@ -47,6 +47,9 @@ public class Config {
                 }
                 Configuration.baseUrl = url;
                 Configuration.headless = Boolean.parseBoolean(properties.getProperty("selenide.headless", "true"));
+                if (Configuration.headless) {
+                    System.setProperty("chromeoptions.args", "--no-sandbox");
+                }
                 Configuration.browser = "chrome";
                 Configuration.browserSize = "1024x768";
                 return new Config(login, password, url, screenshotDir);
