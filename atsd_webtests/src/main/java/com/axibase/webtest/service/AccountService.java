@@ -45,9 +45,10 @@ public class AccountService extends Service {
                 dropdownToggle.get(0).click();
             }
             deleteButton.click();
-            $(By.xpath("//button[normalize-space(text())='Yes']"))
+
+            $(".btn-confirm")
                     .should(Condition.appear)
-                    .shouldNotBe(Condition.empty)
+                    .shouldHave(Condition.text("Yes"))
                     .click();
             return true;
         }
