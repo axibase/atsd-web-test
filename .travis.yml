@@ -1,0 +1,9 @@
+language: java
+dist: trusty
+sudo: required
+services:
+  - docker
+install:
+  - docker pull axibase/atsd_package_validation
+script:
+  - docker run -e BRANCH=$TRAVIS_BRANCH -e ATSD_REQUIRED_REVISION=`curl -s 'https://axibase.com/atsd/version-check' | jq -r '.revision'` axibase/atsd_package_validation
