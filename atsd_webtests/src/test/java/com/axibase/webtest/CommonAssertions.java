@@ -1,5 +1,6 @@
 package com.axibase.webtest;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.WebElement;
 
 import static org.junit.Assert.*;
@@ -12,6 +13,7 @@ public class CommonAssertions {
      * @param errorMessage - message that will be shown if element is invalid
      * @param element      - element that will be checked
      */
+    @Step
     public static void assertValid(String errorMessage, WebElement element) {
         String script = "return element.checkValidity()";
         Boolean result = ElementUtils.executeWithElement(element, script);
@@ -24,6 +26,7 @@ public class CommonAssertions {
      * @param errorMessage - message that will be shown if element is valid
      * @param element      - element that will be checked
      */
+    @Step
     public static void assertInvalid(String errorMessage, WebElement element) {
         String script = "return element.checkValidity()";
         Boolean result = ElementUtils.executeWithElement(element, script);
@@ -37,6 +40,7 @@ public class CommonAssertions {
      * @param expectedValue - expected value
      * @param element       - element that will be checked
      */
+    @Step("Check \"{expectedValue}\" equals to element's value")
     public static void assertValueAttributeOfElement(String errorMessage, String expectedValue, WebElement element) {
         assertEquals(errorMessage, expectedValue, element.getAttribute("value"));
     }
@@ -58,6 +62,7 @@ public class CommonAssertions {
      * @param values       - values that must be a part of full string
      * @param string       - main string that have to contain all values
      */
+    @Step("Check if the given string contains \"{values}\" ")
     public static void assertStringContainsValues(String errorMessage, String[] values, String string) {
         for (String value : values) {
             assertTrue(errorMessage + value, string.contains(value));

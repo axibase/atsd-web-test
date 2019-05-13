@@ -3,6 +3,7 @@ package com.axibase.webtest.cases;
 import com.axibase.webtest.ElementUtils;
 import com.axibase.webtest.pageobjects.*;
 import com.axibase.webtest.service.AtsdTest;
+import io.qameta.allure.Step;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -50,7 +51,6 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertMessageAddByEntityName();
         assertMessageParameters(type, source, severity);
     }
-
 
     @Test
     public void testPropertyAdd() {
@@ -145,12 +145,14 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertEntityParams(status, label, interpolationMode, timeZone, tagNames, tagValues);
     }
 
+    @Step
     @Override
     public void cleanup() {
         dropRecord(new EntitiesTablePage(driver, url), ENTITY_NAME);
         dropRecord(new MetricsTablePage(driver, url), METRIC_NAME);
     }
 
+    @Step("Drop {recordName} from table if it is exist")
     private <T extends Table> void dropRecord(T page, String recordName) {
         page.searchRecordByName(recordName);
         if (page.isRecordPresent(recordName)) {
@@ -164,11 +166,13 @@ public class DataEntryCommandsTest extends AtsdTest {
         dropCheckedRecords(driver);
     }
 
+    @Step("Check entity adds into entities table")
     private void assertEntityAdd() {
         EntitiesTablePage entitiesTablePage = new EntitiesTablePage(driver, url);
         assertTrue("Entity is not added", entitiesTablePage.isRecordPresent(ENTITY_NAME));
     }
 
+    @Step("Check message adds into message table by its entity name")
     private void assertMessageAddByEntityName() {
         MessagesPage messagesPage = new MessagesPage(driver, url);
         messagesPage.setEntity(ENTITY_NAME)
@@ -176,11 +180,13 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertTrue("Message is not added into table", messagesPage.getCountOfMessages() > 0);
     }
 
+    @Step("Check property adds into entity properties table")
     private void assertPropertiesAdd(String propType) {
         PropertiesTablePage propertiesTablePage = new PropertiesTablePage(driver, url, ENTITY_NAME);
         assertTrue("Property is not added", propertiesTablePage.isPropertyPresent(propType));
     }
 
+    @Step
     private void assertPropertiesKeysAndTags(String propType, String[] key_names, String[] key_values,
                                              String[] tag_names, String[] tag_values) {
         PropertiesPage propertiesPage = new PropertiesPage(driver, url, ENTITY_NAME, new String[]{"type"}, new String[]{propType});
@@ -191,11 +197,13 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertStringContainsValues("There is no such tag in property:", tags, allTagsAdnKeys);
     }
 
+    @Step("Check series add by appropriate metric")
     private void assertSeriesAdd() {
         MetricsSeriesTablePage metricsSeriesTablePage = new MetricsSeriesTablePage(driver, url, METRIC_NAME);
         assertTrue("Series is not added", metricsSeriesTablePage.isSeriesPresent());
     }
 
+    @Step("Check series parameters")
     private void assertSeriesParams(String metricText, String[] tagNames, String[] tagValues) {
         StatisticsPage statisticsPage = new StatisticsPage(driver, url,
                 Stream.concat(Stream.of("entity", "metric"), Arrays.stream(tagNames)).toArray(String[]::new),
@@ -208,6 +216,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertTrue("Metric text is not added", statisticsPage.getSampleDataTableText().contains(metricText));
     }
 
+    @Step("Check metric adds into metrics table")
     private void assertMetricAdd() {
         MetricIDsPage metricIDsPage = new MetricIDsPage(driver, url);
         assertTrue("Metric is not added into Metric IDs table", metricIDsPage.getValuesInTable().contains(METRIC_NAME));
@@ -217,6 +226,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertTrue("Metric is not added into table on Metric Page", metricsTablePage.isRecordPresent(METRIC_NAME));
     }
 
+    @Step("Check metric parameters")
     private void checkMetricParams(String status, String label, String description, String dataType,
                                    String interpolationMode, String units, String filter, String timeZone,
                                    String versioning, String invalidAction, String persistent, String retentionIntervalDays,
@@ -241,11 +251,13 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertValueAttributeOfElement("Wrong time zone", timeZone, metricPage.getTimeZone());
     }
 
+    @Step
     private void assertSwitchElement(String errorMessage, String expectedValue, WebElement switchButton) {
         String script = "return element.checked";
         assertEquals(errorMessage, Boolean.parseBoolean(expectedValue), ElementUtils.executeWithElement(switchButton, script));
     }
 
+    @Step("Check entity parameters")
     private void assertEntityParams(String status, String label, String interpolationMode,
                                     String timeZone, String[] tagNames, String[] tagValues) {
         EntityPage entityPage = new EntityPage(driver, url, ENTITY_NAME);
@@ -258,6 +270,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertValueAttributeOfElement("Wrong time zone", timeZone, entityPage.getTimeZone());
     }
 
+    @Step("Check message  parameters")
     private void assertMessageParameters(String type, String source, String severity) {
         MessagesPage messagesPage = new MessagesPage(driver, url);
         messagesPage.setEntity(ENTITY_NAME).search();

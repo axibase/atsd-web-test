@@ -1,5 +1,6 @@
 package com.axibase.webtest;
 
+import io.qameta.allure.Step;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
@@ -24,6 +25,7 @@ public class CommonActions {
      * @param relatedTextArea - next to the CodeMirror element
      * @param text            - text to send
      */
+    @Step("Send data entry command")
     public static void sendTextToCodeMirror(WebElement relatedTextArea, String text) {
         if (!relatedTextArea.getTagName().equals("textarea")) {
             throw new IllegalStateException("This is not a textarea");
@@ -40,6 +42,7 @@ public class CommonActions {
      * @param value   - value to be set
      * @param element - selected element
      */
+    @Step
     public static void setValueOption(String value, WebElement element) {
         element.clear();
         element.sendKeys(value);
@@ -51,6 +54,7 @@ public class CommonActions {
      * @param value   - value to be set
      * @param element - selected element
      */
+    @Step
     public static void setSelectionOption(String value, WebElement element) {
         Select select = new Select(element);
         select.selectByValue(value);

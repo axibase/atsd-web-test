@@ -1,5 +1,6 @@
 package com.axibase.webtest;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -11,6 +12,7 @@ public class CommonSelects {
      * @param element - element that linked with tooltip
      * @return - label with tooltip
      */
+    @Step("Get element's tooltip")
     public static WebElement getElementTooltipByFor(WebElement element) {
         String elementsTag = element.getTagName();
         if (!(elementsTag.equals("input") || elementsTag.equals("select") || elementsTag.equals("textarea"))) {
