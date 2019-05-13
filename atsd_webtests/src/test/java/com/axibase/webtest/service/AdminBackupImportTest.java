@@ -1,7 +1,10 @@
 package com.axibase.webtest.service;
 
 import com.axibase.webtest.CommonAssertions;
-import org.junit.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.By;
@@ -13,9 +16,9 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static com.axibase.webtest.CommonConditions.clickable;
+import static com.codeborne.selenide.Condition.appear;
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.executeJavaScript;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.junit.Assert.assertTrue;
 
@@ -103,15 +106,8 @@ public class AdminBackupImportTest extends AtsdTest {
         WebElement inputFile = putTable.findElement(By.xpath(".//input[@type='file']"));
         WebElement submitButton = $(By.xpath(".//input[@type='submit']"));
 
-        removeMultipleTag(inputFile);
         inputFile.sendKeys(file);
         submitButton.click();
-    }
-
-    // This function was created in need to avoid PhantomJS  multiple input bug
-    // Function perform javascript on page to remove 'multiple' attribute from input element
-    private void removeMultipleTag(WebElement inputFile) {
-        executeJavaScript("arguments[0].removeAttribute('multiple')", inputFile);
     }
 
     private void setReplaceExisting(boolean on) {
@@ -119,7 +115,7 @@ public class AdminBackupImportTest extends AtsdTest {
     }
 
     private void setAutoEnable(boolean on) {
-        setCheckbox($(By.id("autoEnable")), on);
+        $(By.id("autoEnable")).setSelected(on);
     }
 
     private void goToReplacementTablesPage() {
@@ -140,17 +136,13 @@ public class AdminBackupImportTest extends AtsdTest {
     }
 
     private void deleteReplacementTables() {
-        setCheckbox($(By.xpath("//*/input[@title='Select All']")), true);
+        $(By.xpath("//*/input[@title='Select All']")).setSelected(true);
         $(By.xpath("//*/button/span[@class='caret']")).click();
         $(By.xpath("//*/input[@type='submit' and @value='Delete']")).click();
-        $(By.xpath("//*[@id=\"confirm-modal\"]/div/button[contains(text(), 'Yes')]")).waitUntil(clickable, 1000).click();
-        $(By.xpath("//*[@id='confirm-modal']/div/button[contains(text(), 'Yes')]")).click();
-    }
-
-    private void setCheckbox(WebElement webElement, boolean on) {
-        if (on != webElement.isSelected()) {
-            webElement.click();
-        }
+        $(".btn-confirm")
+                .should(appear)
+                .shouldHave(text("Yes"))
+                .click();
     }
 
     private boolean checkTable(WebElement table) {

@@ -2,13 +2,10 @@ package com.axibase.webtest.service;
 
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.SelenideElement;
-import lombok.SneakyThrows;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.*;
@@ -36,16 +33,10 @@ public class AccountService extends Service {
         return true;
     }
 
-    @SneakyThrows
     public boolean deleteUser(String login) {
         if (title().equals("User " + login)) {
-            final SelenideElement deleteButton = $(By.name("delete"));
-            final List<WebElement> dropdownToggle = deleteButton.findElements(By.xpath("../../../button[@data-toggle='dropdown']"));
-            if (!dropdownToggle.isEmpty()) {
-                dropdownToggle.get(0).click();
-            }
-            deleteButton.click();
-
+            $(By.xpath("//*/button/span[@class='caret']")).click();
+            $(By.xpath("//*/input[@type='submit' and @value='Delete']")).click();
             $(".btn-confirm")
                     .should(Condition.appear)
                     .shouldHave(Condition.text("Yes"))

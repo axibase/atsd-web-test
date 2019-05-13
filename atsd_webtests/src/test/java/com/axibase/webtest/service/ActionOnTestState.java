@@ -30,14 +30,21 @@ public class ActionOnTestState extends TestWatcher {
 
     @Override
     protected void starting(Description description) {
+        if (!CreateAdminAccountTest.class.equals(description.getTestClass())) {
+            createAdminUserIfItDoesNotExist();
+        }
+    }
+
+    private void createAdminUserIfItDoesNotExist() {
         if (!hasWebDriverStarted()) {
             open("/");
         }
-        if (!CreateAdminAccountTest.class.equals(description.getTestClass()) && CREATE_ACCOUNT_TITLE.equals(title())) {
+        if (CREATE_ACCOUNT_TITLE.equals(title())) {
             final AccountService accountService = new AccountService();
             if (!accountService.createAdmin()) {
                 throw new IllegalStateException("Admin account failed to be created");
             }
+            new LoginService().logout();
         }
     }
 }
