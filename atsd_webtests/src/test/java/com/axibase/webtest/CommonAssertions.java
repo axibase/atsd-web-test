@@ -65,11 +65,14 @@ public class CommonAssertions {
     }
 
     /**
-     * Compare page title with expected value. If page is not ready, method will wait up to 1 second.
+     * Compare page title with expected value. If page is not ready, method will wait up to 3 seconds.
      * @param expectedTitle expected title
      */
     public static void assertPageTitleAfterLoadEquals(String expectedTitle) {
-        Wait().withTimeout(Duration.ofSeconds(1)).until(driver -> driver.getTitle().equals(expectedTitle));
+        Wait().withMessage(() -> "Page title must be set to " + expectedTitle)
+                .withTimeout(Duration.ofSeconds(3))
+                .pollingEvery(Duration.ofMillis(200))
+                .until(driver -> driver.getTitle().equals(expectedTitle));
     }
 
 }
