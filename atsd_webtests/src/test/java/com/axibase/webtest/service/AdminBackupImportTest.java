@@ -1,5 +1,6 @@
 package com.axibase.webtest.service;
 
+import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.CommonAssertions;
 import lombok.RequiredArgsConstructor;
 import org.junit.After;
@@ -19,7 +20,6 @@ import static com.axibase.webtest.service.ReplacementTableImportBase.ImportOptio
 import static com.axibase.webtest.service.ReplacementTableImportBase.ImportOptionReplace.NO_REPLACE_EXISTING;
 import static com.axibase.webtest.service.ReplacementTableImportBase.ImportOptionReplace.REPLACE_EXISTING;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.actions;
 
 @RequiredArgsConstructor
 @RunWith(value = Parameterized.class)
@@ -75,26 +75,19 @@ public class AdminBackupImportTest extends ReplacementTableImportBase {
     private void sendFilesOnAdminImportBackup(String file, ImportOptionReplace replaceExisting, ImportOptionAutoEnable autoEnable) {
         $(By.id("replaceExisting")).setSelected(replaceExisting.value);
         $(By.id("autoEnable")).setSelected(autoEnable.value);
-        WebElement putTable = $(By.id("putTable"));
-        WebElement inputFile = putTable.findElement(By.xpath(".//input[@type='file']"));
-        WebElement submitButton = $(By.xpath(".//input[@type='submit']"));
-
-        inputFile.sendKeys(file);
-        submitButton.click();
+        CommonActions.uploadFile(file);
     }
 
     private void goToReplacementTablesPage() {
-        $(By.xpath("//*/a/span[contains(text(),'Data')]")).click();
-        $(By.xpath("//*/a[contains(text(),'Replacement Tables')]")).click();
+        $(By.linkText("Data")).click();
+        $(By.linkText("Replacement Tables")).click();
         CommonAssertions.assertPageUrlPathEquals("/replacement-tables/");
     }
 
     private void goToAdminImportBackupPage() {
-        actions()
-                .moveToElement($(By.xpath("//*/a/span[contains(text(),'Settings')]"))).click()
-                .moveToElement($(By.xpath("//*/a[contains(text(),'Diagnostics')]")))
-                .moveToElement($(By.xpath("//*/a[contains(text(),'Backup Import')]"))).click()
-                .perform();
+        $(By.linkText("Settings")).click();
+        $(By.linkText("Diagnostics")).hover();
+        $(By.linkText("Backup Import")).click();
         CommonAssertions.assertPageUrlPathEquals("/admin/import-backup");
     }
 }

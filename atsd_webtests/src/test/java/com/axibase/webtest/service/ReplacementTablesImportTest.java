@@ -1,5 +1,7 @@
 package com.axibase.webtest.service;
 
+import com.axibase.webtest.CommonActions;
+import com.axibase.webtest.CommonAssertions;
 import com.codeborne.selenide.CollectionCondition;
 import org.junit.After;
 import org.junit.Before;
@@ -26,7 +28,7 @@ public class ReplacementTablesImportTest extends ReplacementTableImportBase {
 
     @Test
     public void testImportDataImportPage() {
-        sendFilesFromReplacementTable(XML_FILE, NO_REPLACE_EXISTING);
+        sendFilesFromReplacementTable(NO_REPLACE_EXISTING);
 
         goToReplacementTablesPage();
         checkThatAllReplacementTablesAreShownInTheList();
@@ -34,8 +36,8 @@ public class ReplacementTablesImportTest extends ReplacementTableImportBase {
 
     @Test
     public void testImportDataWithReplaceImportPage() {
-        sendFilesFromReplacementTable(XML_FILE, NO_REPLACE_EXISTING);
-        sendFilesFromReplacementTable(XML_FILE, REPLACE_EXISTING);
+        sendFilesFromReplacementTable(NO_REPLACE_EXISTING);
+        sendFilesFromReplacementTable(REPLACE_EXISTING);
 
         goToReplacementTablesPage();
         checkThatAllReplacementTablesAreShownInTheList();
@@ -46,25 +48,22 @@ public class ReplacementTablesImportTest extends ReplacementTableImportBase {
         deleteReplacementTables();
     }
 
-    private void sendFilesFromReplacementTable(String file, ImportOptionReplace replaceExisting) {
-        $(By.xpath("*//input[@name='replace']")).setSelected(replaceExisting.value);
-        $(By.id("putTable")).find(By.xpath(".//input[@type='file']")).uploadFile(new File(file));
-        $(By.xpath(".//input[@type='submit']")).click();
-        $$(By.xpath("//*/span[@class='successMessage']")).shouldHave(CollectionCondition.sizeGreaterThan(0));
+    private void sendFilesFromReplacementTable(ImportOptionReplace replaceExisting) {
+        $(By.name("replace")).setSelected(replaceExisting.value);
+        CommonActions.uploadFile(XML_FILE);
+        $$(By.className("successMessage")).shouldHave(CollectionCondition.sizeGreaterThan(0));
     }
 
     private void goToReplacementTablesPage() {
-        $(By.xpath("//*/a/span[contains(text(),'Data')]")).click();
-        $(By.xpath("//*/a[contains(text(),'Replacement Tables')]")).click();
-        assertEquals("Wrong page", urlPath(), "/replacement-tables/");
+        $(By.linkText("Data")).click();
+        $(By.linkText("Replacement Tables")).click();
+        CommonAssertions.assertPageUrlPathEquals("/replacement-tables/");
     }
 
     private void goToReplacementTablesImportPage() {
         goToReplacementTablesPage();
-
-        $(By.xpath("//*/button/span[@class='caret']")).click();
-        $(By.xpath("//*/a[text()='Import']")).click();
-        assertEquals("Wrong page", urlPath(), "/replacement-tables/import");
+        CommonActions.clickImport();
+        CommonAssertions.assertPageUrlPathEquals("/replacement-tables/import");
     }
 
 }

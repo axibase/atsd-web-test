@@ -9,8 +9,7 @@ import org.openqa.selenium.By;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.codeborne.selenide.Condition.appear;
-import static com.codeborne.selenide.Condition.text;
+import com.axibase.webtest.CommonActions;
 import static com.codeborne.selenide.Selenide.$;
 import static org.junit.Assert.assertEquals;
 
@@ -32,13 +31,7 @@ public abstract class ReplacementTableImportBase extends AtsdTest {
 
     @Step
     protected void deleteReplacementTables() {
-        $(By.xpath("//*/input[@title='Select All']")).setSelected(true);
-        $(By.xpath("//*/button/span[@class='caret']")).click();
-        $(By.xpath("//*/input[@type='submit' and @value='Delete']")).click();
-        $(".btn-confirm")
-                .should(appear)
-                .shouldHave(text("Yes"))
-                .click();
+        CommonActions.deleteAllRecords();
     }
 
     @RequiredArgsConstructor

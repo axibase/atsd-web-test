@@ -20,11 +20,11 @@ public class CreatePortalTest extends AtsdTest {
 
     @Test
     public void createPortal() {
-        $(By.xpath("//a[normalize-space(text())='Portals']")).click();
+        $(By.linkText("Portals")).click();
         boolean panelVisible = $(By.xpath("//h4[normalize-space(text())='Portals']")).isDisplayed();
         assertTrue(generateAssertMessage("Portal panel should be visible"), panelVisible);
 
-        $(By.xpath("//a[normalize-space(text())='Create']")).click();
+        $(By.linkText("Create")).click();
         CommonAssertions.assertPageTitleAfterLoadEquals("New Portal");
 
         $(By.id("name")).sendKeys("Test Portal");

@@ -1,7 +1,9 @@
 package com.axibase.webtest.service.csv;
 
+import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AtsdTest;
+import com.codeborne.selenide.CollectionCondition;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,10 +12,8 @@ import org.openqa.selenium.WebElement;
 
 import java.util.Optional;
 
-import static com.axibase.webtest.CommonConditions.clickable;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class CSVImportParserAsSeriesTest extends AtsdTest {
@@ -29,16 +29,13 @@ public class CSVImportParserAsSeriesTest extends AtsdTest {
     @After
     public void cleanup() {
         goToCSVParsersPage();
-        $(By.xpath("//*/input[@title='Select all']")).setSelected(true);
-        $(By.xpath("//*/button[@data-toggle='dropdown']")).click();
-        $(By.xpath("//*/input[@type='submit' and @value='Delete']")).click();
-        $(By.xpath("//*[@id='confirm-modal']//button[contains(text(), 'Yes')]")).waitUntil(clickable, 1000).click();
+        CommonActions.deleteAllRecords();
     }
 
     @Test
     public void testImportCSVParserPage() {
         setReplaceExisting(false);
-        sendParserIntoTableWithoutReplacement(PATH_TO_PARSER);
+        sendParserIntoTableWithoutReplacement();
 
         goToCSVParsersPage();
 
@@ -53,23 +50,22 @@ public class CSVImportParserAsSeriesTest extends AtsdTest {
     @Test
     public void testImportCSVParserWithReplace() {
         setReplaceExisting(false);
-        sendParserIntoTableWithoutReplacement(PATH_TO_PARSER);
+        sendParserIntoTableWithoutReplacement();
         setReplaceExisting(true);
-        sendParserIntoTableWithReplacement(PATH_TO_PARSER);
+        sendParserIntoTableWithReplacement();
 
         goToCSVParsersPage();
         assertTrue("Parser is not added into table",
                 $(By.cssSelector("#configurationList > tbody")).getText().contains(PARSER_NAME));
     }
 
-    private void sendParserIntoTableWithoutReplacement(String file) {
-        $(By.cssSelector("#putTable input[type=\"file\"]")).sendKeys(file);
-        $(By.name("send")).click();
-        assertFalse("No success message", $$(By.className("successMessage")).isEmpty());
+    private void sendParserIntoTableWithoutReplacement() {
+        CommonActions.uploadFile(PATH_TO_PARSER);
+        $$(By.className("successMessage")).shouldHave(CollectionCondition.sizeGreaterThan(0));
     }
 
-    private void sendParserIntoTableWithReplacement(String file) {
-        sendParserIntoTableWithoutReplacement(file);
+    private void sendParserIntoTableWithReplacement() {
+        sendParserIntoTableWithoutReplacement();
         assertTrue("There was no replacement",
                 $(By.className("successMessage")).getText().matches(".*replaced:\\s[1-9]\\d*"));
     }
@@ -86,8 +82,7 @@ public class CSVImportParserAsSeriesTest extends AtsdTest {
 
     private void goToCSVParsersImportPage() {
         goToCSVParsersPage();
-        $(By.xpath("//*/button[@data-toggle='dropdown']")).click();
-        $(By.xpath("//*/a[text()='Import']")).click();
+        CommonActions.clickImport();
         CommonAssertions.assertPageUrlPathEquals("/csv/configs/import");
     }
 

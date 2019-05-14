@@ -17,8 +17,8 @@ public class LoginService extends Service {
     }
 
     public boolean login(String login, String password) {
-        $("#atsd_user").setValue(login);
-        $("#atsd_pwd").setValue(password);
+        $(By.id("atsd_user")).setValue(login);
+        $(By.id("atsd_pwd")).setValue(password);
         $(By.name("commit")).click();
         return "Axibase Time Series Database".equals(title());
     }

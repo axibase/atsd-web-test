@@ -1,13 +1,12 @@
 package com.axibase.webtest.service;
 
-
-import com.codeborne.selenide.Condition;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.util.stream.Collectors;
 
+import com.axibase.webtest.CommonActions;
 import static com.codeborne.selenide.Selenide.*;
 
 public class AccountService extends Service {
@@ -35,12 +34,7 @@ public class AccountService extends Service {
 
     public boolean deleteUser(String login) {
         if (title().equals("User " + login)) {
-            $(By.xpath("//*/button/span[@class='caret']")).click();
-            $(By.xpath("//*/input[@type='submit' and @value='Delete']")).click();
-            $(".btn-confirm")
-                    .should(Condition.appear)
-                    .shouldHave(Condition.text("Yes"))
-                    .click();
+            CommonActions.deleteRecord();
             return true;
         }
         return false;

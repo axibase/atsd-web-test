@@ -37,23 +37,23 @@ public class CreateUserGroupTest extends AtsdTest {
     public void createUserGroup() {
         open("/");
 
-        $(By.xpath("//a/span[normalize-space(text())='Settings']/..")).click();
+        $(By.linkText("Settings")).click();
         boolean submenuVisible = $(By.xpath("//h4[normalize-space(text())='Settings']")).isDisplayed();
         assertTrue(generateAssertMessage("Submenu should be visible"), submenuVisible);
 
-        $(By.xpath("//a[normalize-space(text())='User Groups']")).click();
+        $(By.linkText("User Groups")).click();
         CommonAssertions.assertPageTitleAfterLoadEquals("User Groups");
 
-        $(By.xpath("//form//a[normalize-space(text())='Create']")).click();
+        $(By.linkText("Create")).click();
         CommonAssertions.assertPageTitleAfterLoadEquals("New User Group");
 
         $(By.id("userGroup.name")).sendKeys("Test Group");
         $(By.name("save")).click();
 
-        $(By.cssSelector("a[href='#members']")).click();
+        $(By.linkText("Members")).click();
         $(By.id("members0.groupMember")).click(); // Select the first user
 
-        $(By.cssSelector("a[href='#entity-permissions']")).click();
+        $(By.linkText("Entity Permissions")).click();
         $(By.id("allEntityGroupsRead")).click();
 
         $(By.name("update")).click();
@@ -65,15 +65,15 @@ public class CreateUserGroupTest extends AtsdTest {
         WebElement allEntitiesWriteCheckbox = $(By.id("allEntityGroupsWrite"));
         assertFalse(generateAssertMessage("'All Entities Write' should be disabled"), allEntitiesWriteCheckbox.isSelected());
 
-        $(By.cssSelector("a[href='#members']")).click();
+        $(By.linkText("Members")).click();
         WebElement userCheckbox = $(By.id("members0.groupMember"));
         assertTrue(generateAssertMessage("Check box for user '" + TEST_USER + "' should be enabled"), userCheckbox.isSelected());
 
         // Add additional settings
-        $(By.cssSelector("a[href='#portal-permissions']")).click();
+        $(By.linkText("Portal Permissions")).click();
         $(By.id("portalPermissionsModels0.accessGranted")).click(); // Select the first portal
 
-        $(By.cssSelector("a[href='#entity-permissions']")).click();
+        $(By.linkText("Entity Permissions")).click();
         $(By.id("entityGroupPermissionModels1.write")).click(); // Select the second entity group
 
         $(By.name("update")).click();
@@ -88,11 +88,11 @@ public class CreateUserGroupTest extends AtsdTest {
         WebElement secondEntityGroupWriteCheckbox = $(By.id("entityGroupPermissionModels1.write"));
         assertTrue(generateAssertMessage("Write checkbox for the second Entity Group should be enabled"), secondEntityGroupWriteCheckbox.isSelected());
 
-        $(By.cssSelector("a[href='#members']")).click();
+        $(By.linkText("Members")).click();
         userCheckbox = $(By.id("members0.groupMember"));
         assertTrue(generateAssertMessage("Check box for user '" + TEST_USER + "' should be enabled"), userCheckbox.isSelected());
 
-        $(By.cssSelector("a[href='#portal-permissions']")).click();
+        $(By.linkText("Portal Permissions")).click();
         WebElement firstPortalCheckbox = $(By.id("portalPermissionsModels0.accessGranted"));
         assertTrue(generateAssertMessage("Check box for first portal should be enabled"), firstPortalCheckbox.isSelected());
     }

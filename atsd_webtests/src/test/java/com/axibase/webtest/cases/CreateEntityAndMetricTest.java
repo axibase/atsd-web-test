@@ -13,11 +13,11 @@ public class CreateEntityAndMetricTest extends AtsdTest {
 
     @Test
     public void createEntityAndMetric() {
-        $(By.xpath("//a/span[normalize-space(text())='Data']/..")).click();
+        $(By.linkText("Data")).click();
         boolean submenuVisible = $(By.xpath("//h4[normalize-space(text())='Data']")).isDisplayed();
         assertTrue(generateAssertMessage("Submenu should be visible"), submenuVisible);
 
-        $(By.xpath("//a[normalize-space(text())='Data Entry']")).click();
+        $(By.linkText("Data Entry")).click();
         CommonAssertions.assertPageTitleAfterLoadEquals("Data Entry");
 
         $(By.id("seriesType")).click();
