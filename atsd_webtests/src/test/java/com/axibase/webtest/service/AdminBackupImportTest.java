@@ -1,42 +1,31 @@
 package com.axibase.webtest.service;
 
 import com.axibase.webtest.CommonAssertions;
+import lombok.RequiredArgsConstructor;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
 
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
 
-import static com.codeborne.selenide.Condition.appear;
-import static com.codeborne.selenide.Condition.text;
+import static com.axibase.webtest.service.ReplacementTableImportBase.ImportOptionAutoEnable.AUTO_ENABLE;
+import static com.axibase.webtest.service.ReplacementTableImportBase.ImportOptionAutoEnable.NO_AUTO_ENABLE;
+import static com.axibase.webtest.service.ReplacementTableImportBase.ImportOptionReplace.NO_REPLACE_EXISTING;
+import static com.axibase.webtest.service.ReplacementTableImportBase.ImportOptionReplace.REPLACE_EXISTING;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
-import static org.junit.Assert.assertTrue;
+import static com.codeborne.selenide.Selenide.actions;
 
-@Ignore("Enable after fix")
+@RequiredArgsConstructor
 @RunWith(value = Parameterized.class)
-public class AdminBackupImportTest extends AtsdTest {
+public class AdminBackupImportTest extends ReplacementTableImportBase {
 
-    private String testFile;
-    private String[][] expectedResult = {
-            {"data-availability-json", "JSON", "Tommy Crow"},
-            {"graphql-queries", "GRAPHQL", "Tommy Crow"},
-            {"stickers", "LIST", ""},
-            {"test-after-new-editor-release-1", "SQL", "Tory Eagle"},
-            {"test-text", "TEXT", "Tony Bluejay"}};
-
-    public AdminBackupImportTest(String file) {
-        testFile = file;
-    }
+    private final String testFile;
 
     @Parameterized.Parameters(name = "{index} {0}")
     public static Collection<Object[]> data() {
@@ -58,42 +47,24 @@ public class AdminBackupImportTest extends AtsdTest {
 
     @Test
     public void testImportDataImportBackupPage() {
-        setReplaceExisting(false);
-        setAutoEnable(false);
-        sendFilesOnAdminImportBackup(testFile);
-
+        sendFilesOnAdminImportBackup(testFile, NO_REPLACE_EXISTING, NO_AUTO_ENABLE);
         goToReplacementTablesPage();
-
-        assertTrue("Wrong table content",
-                checkTable($(By.id("overviewTable"))));
+        checkThatAllReplacementTablesAreShownInTheList();
     }
 
     @Test
     public void testImportDataImportBackupPageWithReplace() {
-        setReplaceExisting(false);
-        setAutoEnable(false);
-        sendFilesOnAdminImportBackup(testFile);
-
-        setReplaceExisting(true);
-        setAutoEnable(false);
-        sendFilesOnAdminImportBackup(testFile);
-
+        sendFilesOnAdminImportBackup(testFile, NO_REPLACE_EXISTING, NO_AUTO_ENABLE);
+        sendFilesOnAdminImportBackup(testFile, REPLACE_EXISTING, NO_AUTO_ENABLE);
         goToReplacementTablesPage();
-
-        assertTrue("Wrong table content",
-                checkTable($(By.id("overviewTable"))));
+        checkThatAllReplacementTablesAreShownInTheList();
     }
 
     @Test
     public void testImportDataImportBackupPageWithAutoEnable() {
-        setReplaceExisting(false);
-        setAutoEnable(true);
-        sendFilesOnAdminImportBackup(testFile);
-
+        sendFilesOnAdminImportBackup(testFile, NO_REPLACE_EXISTING, AUTO_ENABLE);
         goToReplacementTablesPage();
-
-        assertTrue("Wrong table content",
-                checkTable($(By.id("overviewTable"))));
+        checkThatAllReplacementTablesAreShownInTheList();
     }
 
     @After
@@ -101,21 +72,15 @@ public class AdminBackupImportTest extends AtsdTest {
         deleteReplacementTables();
     }
 
-    private void sendFilesOnAdminImportBackup(String file) {
+    private void sendFilesOnAdminImportBackup(String file, ImportOptionReplace replaceExisting, ImportOptionAutoEnable autoEnable) {
+        $(By.id("replaceExisting")).setSelected(replaceExisting.value);
+        $(By.id("autoEnable")).setSelected(autoEnable.value);
         WebElement putTable = $(By.id("putTable"));
         WebElement inputFile = putTable.findElement(By.xpath(".//input[@type='file']"));
         WebElement submitButton = $(By.xpath(".//input[@type='submit']"));
 
         inputFile.sendKeys(file);
         submitButton.click();
-    }
-
-    private void setReplaceExisting(boolean on) {
-        $(By.id("replaceExisting")).setSelected(on);
-    }
-
-    private void setAutoEnable(boolean on) {
-        $(By.id("autoEnable")).setSelected(on);
     }
 
     private void goToReplacementTablesPage() {
@@ -125,41 +90,11 @@ public class AdminBackupImportTest extends AtsdTest {
     }
 
     private void goToAdminImportBackupPage() {
-        Actions action = new Actions(getWebDriver());
-
-        action.moveToElement($(By.xpath("//*/a/span[contains(text(),'Settings')]"))).click();
-        action.moveToElement($(By.xpath("//*/a[contains(text(),'Diagnostics')]")));
-        action.moveToElement($(By.xpath("//*/a[contains(text(),'Backup Import')]"))).click();
-        action.build().perform();
-
+        actions()
+                .moveToElement($(By.xpath("//*/a/span[contains(text(),'Settings')]"))).click()
+                .moveToElement($(By.xpath("//*/a[contains(text(),'Diagnostics')]")))
+                .moveToElement($(By.xpath("//*/a[contains(text(),'Backup Import')]"))).click()
+                .perform();
         CommonAssertions.assertPageUrlPathEquals("/admin/import-backup");
-    }
-
-    private void deleteReplacementTables() {
-        $(By.xpath("//*/input[@title='Select All']")).setSelected(true);
-        $(By.xpath("//*/button/span[@class='caret']")).click();
-        $(By.xpath("//*/input[@type='submit' and @value='Delete']")).click();
-        $(".btn-confirm")
-                .should(appear)
-                .shouldHave(text("Yes"))
-                .click();
-    }
-
-    private boolean checkTable(WebElement table) {
-        List<WebElement> findElements = table.findElements(By.xpath("./tbody/tr"));
-        if (findElements.size() != expectedResult.length) {
-            return false;
-        }
-
-        for (int i = 0; i < findElements.size(); i++) {
-            List<WebElement> tdList = findElements.get(i).findElements(By.xpath("./td"));
-            if (!tdList.get(1).getText().equals(expectedResult[i][0]) &&
-                    !tdList.get(2).getText().equals(expectedResult[i][1]) &&
-                    !tdList.get(3).getText().equals(expectedResult[i][2])) {
-                return false;
-            }
-        }
-
-        return true;
     }
 }
