@@ -8,9 +8,12 @@ import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.junit.Assert.assertEquals;
@@ -55,7 +58,12 @@ public class CreatePortalTest extends AtsdTest {
 
         ((JavascriptExecutor) driver).executeScript("document.querySelector('.CodeMirror').CodeMirror.setValue('" + config + "');");
         driver.findElement(By.id("save-button")).click();
-        assertEquals(generateAssertMessage("Title should be 'Portal Test Portal'"), "Portal Test Portal", driver.getTitle());
+        Boolean titleChanged = new FluentWait<>(driver)
+                .withTimeout(3, TimeUnit.SECONDS)
+                .pollingEvery(50, TimeUnit.MILLISECONDS)
+                .withMessage("Title should be 'Portal Test Portal'")
+                .until(ExpectedConditions.titleIs("Portal Test Portal"));
+        assertTrue(generateAssertMessage("Title should be 'Portal Test Portal'"), titleChanged);
         driver.findElement(By.id("view-button")).click();
         driver.findElement(By.id("view-name-button")).click();
         List<String> tabs = new ArrayList<>(driver.getWindowHandles());
