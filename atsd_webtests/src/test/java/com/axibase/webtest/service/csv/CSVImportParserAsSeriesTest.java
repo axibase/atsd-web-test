@@ -1,17 +1,20 @@
 package com.axibase.webtest.service.csv;
 
+import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AtsdTest;
+import com.codeborne.selenide.CollectionCondition;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.Optional;
 
-import static org.junit.Assert.*;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
+import static org.junit.Assert.assertTrue;
 
 public class CSVImportParserAsSeriesTest extends AtsdTest {
     private static final String PARSER_NAME = "test-atsd-import-series-parser";
@@ -19,19 +22,25 @@ public class CSVImportParserAsSeriesTest extends AtsdTest {
 
     @Before
     public void setUp() {
-        login();
+        super.setUp();
         goToCSVParsersImportPage();
+    }
+
+    @After
+    public void cleanup() {
+        goToCSVParsersPage();
+        CommonActions.deleteAllRecords();
     }
 
     @Test
     public void testImportCSVParserPage() {
         setReplaceExisting(false);
-        sendParserIntoTableWithoutReplacement(PATH_TO_PARSER);
+        sendParserIntoTableWithoutReplacement();
 
         goToCSVParsersPage();
 
-        final boolean isParserPresented = Optional.of(driver)
-                .map(d -> d.findElement(By.cssSelector("#configurationList > tbody")))
+
+        final boolean isParserPresented = Optional.of($("#configurationList > tbody"))
                 .map(WebElement::getText)
                 .map(text -> text.contains(PARSER_NAME))
                 .orElse(false);
@@ -41,59 +50,40 @@ public class CSVImportParserAsSeriesTest extends AtsdTest {
     @Test
     public void testImportCSVParserWithReplace() {
         setReplaceExisting(false);
-        sendParserIntoTableWithoutReplacement(PATH_TO_PARSER);
+        sendParserIntoTableWithoutReplacement();
         setReplaceExisting(true);
-        sendParserIntoTableWithReplacement(PATH_TO_PARSER);
+        sendParserIntoTableWithReplacement();
 
         goToCSVParsersPage();
         assertTrue("Parser is not added into table",
-                driver.findElement(By.cssSelector("#configurationList > tbody")).getText().contains(PARSER_NAME));
+                $(By.cssSelector("#configurationList > tbody")).getText().contains(PARSER_NAME));
     }
 
-    @Override
-    public void cleanup() {
-        goToCSVParsersPage();
-        setCheckbox(driver.findElement(By.xpath("//*/input[@title='Select all']")), true);
-        driver.findElement(By.xpath("//*/button[@data-toggle='dropdown']")).click();
-        driver.findElement(By.xpath("//*/input[@type='submit' and @value='Delete']")).click();
-        WebDriverWait wait = new WebDriverWait(driver, 1);
-        wait.until(ExpectedConditions.elementToBeClickable(By.xpath("//*[@id='confirm-modal']//button[contains(text(), 'Yes')]")));
-        driver.findElement(By.xpath("//*[@id='confirm-modal']//button[contains(text(), 'Yes')]")).click();
+    private void sendParserIntoTableWithoutReplacement() {
+        CommonActions.uploadFile(PATH_TO_PARSER);
+        $$(By.className("successMessage")).shouldHave(CollectionCondition.sizeGreaterThan(0));
     }
 
-    private void sendParserIntoTableWithoutReplacement(String file) {
-        driver.findElement(By.cssSelector("#putTable input[type=\"file\"]")).sendKeys(file);
-        driver.findElement(By.name("send")).click();
-        assertFalse("No success message", driver.findElements(By.className("successMessage")).isEmpty());
-    }
-
-    private void sendParserIntoTableWithReplacement(String file) {
-        sendParserIntoTableWithoutReplacement(file);
+    private void sendParserIntoTableWithReplacement() {
+        sendParserIntoTableWithoutReplacement();
         assertTrue("There was no replacement",
-                driver.findElement(By.className("successMessage")).getText().matches(".*replaced:\\s[1-9]\\d*"));
+                $(By.className("successMessage")).getText().matches(".*replaced:\\s[1-9]\\d*"));
     }
 
     private void setReplaceExisting(boolean on) {
-        setCheckbox(driver.findElement(By.name("overwrite")), on);
+        $(By.name("overwrite")).setSelected(on);
     }
 
     private void goToCSVParsersPage() {
-        driver.findElement(By.linkText("Data")).click();
-        driver.findElement(By.linkText("CSV Parsers")).click();
-        CommonAssertions.assertPageUrl(url + "/csv/configs", driver.getCurrentUrl());
+        $(By.linkText("Data")).click();
+        $(By.linkText("CSV Parsers")).click();
+        CommonAssertions.assertPageUrlPathEquals("/csv/configs");
     }
 
     private void goToCSVParsersImportPage() {
         goToCSVParsersPage();
-        driver.findElement(By.xpath("//*/button[@data-toggle='dropdown']")).click();
-        driver.findElement(By.xpath("//*/a[text()='Import']")).click();
-        CommonAssertions.assertPageUrl(url + "/csv/configs/import", driver.getCurrentUrl());
-    }
-
-    private void setCheckbox(WebElement webElement, boolean on) {
-        if (on != webElement.isSelected()) {
-            webElement.click();
-        }
+        CommonActions.clickImport();
+        CommonAssertions.assertPageUrlPathEquals("/csv/configs/import");
     }
 
 }

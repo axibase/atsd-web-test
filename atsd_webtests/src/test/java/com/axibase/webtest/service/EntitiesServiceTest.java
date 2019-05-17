@@ -1,27 +1,28 @@
 package com.axibase.webtest.service;
 
 
-import org.junit.Assert;
+import com.axibase.webtest.CommonAssertions;
 import org.junit.Test;
 
-public class EntitiesServiceTest extends AtsdTest{
+import static com.codeborne.selenide.Selenide.open;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+public class EntitiesServiceTest extends AtsdTest {
 
     @Test
     public void checkDefaultEntity() {
-        Assert.assertEquals(generateAssertMessage("Should get login page"), driver.getTitle(), LoginService.title);
-        LoginService ls = new LoginService(driver);
-        Assert.assertTrue(generateAssertMessage("Can't login"), ls.login(login, password));
-        driver.navigate().to(url + "/admin/system-information");
-        Assert.assertEquals(generateAssertMessage("Should get system-information page"), driver.getTitle(), SystemInfoService.title);
-        SystemInfoService sis = new SystemInfoService(driver);
+        open("/admin/system-information");
+        CommonAssertions.assertPageTitleEquals(SystemInfoService.TITLE);
+        SystemInfoService sis = new SystemInfoService();
         String hostname = sis.getSystemInfoValue("hostname");
-        Assert.assertNotNull("Can't find hostname value", hostname);
-        driver.navigate().to(url + "/entities");
-        Assert.assertEquals(generateAssertMessage("Title should be 'Entities'"), driver.getTitle(), EntitiesService.title);
-        EntitiesService es = new EntitiesService(driver);
-        Assert.assertTrue(generateAssertMessage("Should be more than 1 row in entities table"), es.getEntitiesCount() > 1);
-        Assert.assertNotNull(generateAssertMessage("Can't find 'atsd' cell"), es.getEntityByName("atsd"));
+        assertNotNull("Can't find hostname value", hostname);
+        open("/entities");
+        CommonAssertions.assertPageTitleAfterLoadEquals(EntitiesService.TITLE);
+        EntitiesService es = new EntitiesService();
+        assertTrue(generateAssertMessage("Should be more than 1 row in entities table"), es.getEntitiesCount() > 1);
+        assertNotNull(generateAssertMessage("Can't find 'atsd' cell"), es.getEntityByName("atsd"));
         //Assert.assertNotNull(generateAssertMessage("Can't find 'entity-1' cell"), es.getEntityByName("entity-1"));
-        Assert.assertNotNull(generateAssertMessage("Can't find " + hostname + " cell"), es.getEntityByName(hostname.toLowerCase()));
+        assertNotNull(generateAssertMessage("Can't find " + hostname + " cell"), es.getEntityByName(hostname.toLowerCase()));
     }
 }

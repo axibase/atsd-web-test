@@ -2,44 +2,29 @@ package com.axibase.webtest.service;
 
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+import static com.axibase.webtest.PageUtils.urlPath;
+import static com.codeborne.selenide.Selenide.*;
 
-/**
- * Created by sild on 30.01.15.
- */
 public class LoginService extends Service {
-    public static final String title = "Login";
-    private final String LOGOUT_URL;
+    public static final String TITLE = "Login";
+    private static final String LOGOUT_URL = "/logout";
+    private static final String LOGIN_URL = "/login";
 
-    public LoginService(WebDriver driver) {
-        super(driver);
-        try {
-            URL url = new URL(driver.getCurrentUrl());
-            LOGOUT_URL = new URL(url.getProtocol(), url.getHost(), url.getPort(), "/logout").toString();
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+    public boolean loginAsAdmin() {
+        final Config config = Config.getInstance();
+        return login(config.getLogin(), config.getPassword());
     }
 
     public boolean login(String login, String password) {
-        String field_atsd_user = "//*[@id='atsd_user']";
-        String field_atsd_pwd = "//*[@id='atsd_pwd']";
-        String btn_login = "//*[@name='commit']";
-        driver.findElement(By.xpath(field_atsd_user)).sendKeys(login);
-        driver.findElement(By.xpath(field_atsd_pwd)).sendKeys(password);
-        driver.findElement(By.xpath(btn_login)).click();
-        return driver.getTitle().equals("Axibase Time Series Database");
+        $(By.id("atsd_user")).setValue(login);
+        $(By.id("atsd_pwd")).setValue(password);
+        $(By.name("commit")).click();
+        return "Axibase Time Series Database".equals(title());
     }
 
     public boolean logout() {
-        driver.get(LOGOUT_URL);
-        try {
-            return "/login".equals(new URL(driver.getCurrentUrl()).getPath());
-        } catch (MalformedURLException e) {
-            throw new RuntimeException(e);
-        }
+        open(LOGOUT_URL);
+        return LOGIN_URL.equals(urlPath());
     }
 }

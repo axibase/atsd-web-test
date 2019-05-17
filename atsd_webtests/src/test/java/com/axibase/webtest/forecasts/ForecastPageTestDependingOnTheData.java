@@ -1,12 +1,13 @@
 package com.axibase.webtest.forecasts;
 
 import com.axibase.webtest.CommonAssertions;
+import com.axibase.webtest.CommonSelects;
 import com.axibase.webtest.pages.ForecastSettingsPage;
 import com.axibase.webtest.pages.ForecastViewerPage;
 import com.axibase.webtest.pages.PortalPage;
 import com.axibase.webtest.service.AtsdTest;
 import com.axibase.webtest.service.CSVDataUploaderService;
-import com.axibase.webtest.CommonSelects;
+import com.axibase.webtest.service.Config;
 import com.axibase.webtest.service.csv.CSVImportParserAsSeriesTest;
 import org.apache.commons.net.util.Base64;
 import org.apache.http.HttpHeaders;
@@ -17,8 +18,10 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.message.BasicNameValuePair;
-import org.junit.*;
-import org.openqa.selenium.*;
+import org.junit.Before;
+import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -34,10 +37,13 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
+import static com.codeborne.selenide.WebDriverRunner.url;
 import static org.junit.Assert.*;
 
 public class ForecastPageTestDependingOnTheData extends AtsdTest {
-    private static final String PAGE_URL = url + "/series/forecast";
+    private static final String PAGE_URL = "/series/forecast";
     private static final String URL_FOR_GROUPING_WITHOUT_TAGS = PAGE_URL + "?entity=entity-forecast-viewer-test&" +
             "metric=metric-forecast-viewer-test&_g&" +
             "startDate=2019-04-12T14:17:23.000Z";
@@ -52,12 +58,12 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
 
     @Before
     public void setUp() {
-        this.login();
-        csvDataUploaderService = new CSVDataUploaderService(AtsdTest.driver, AtsdTest.url);
+        super.setUp();
+        csvDataUploaderService = new CSVDataUploaderService();
         csvDataUploaderService.uploadWithParser(DATA_CSV, "test-atsd-import-series-parser");
         setTimeZone();
-        driver.get(START_URL);
-        forecastViewerPage = new ForecastViewerPage(driver);
+        open(START_URL);
+        forecastViewerPage = new ForecastViewerPage();
     }
 
     @Test
@@ -80,7 +86,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     @Test
     public void testGroupURLParameterWithTagsOnViewerPage() {
         loadDataAndParserByNames("test-atsd-_g-forecast-viewer-parser", "test-atsd-_g-forecast-viewer-data");
-        driver.get(URL_FOR_GROUPING_WITH_TAGS);
+        open(URL_FOR_GROUPING_WITH_TAGS);
         String tags = forecastViewerPage.getGroupedByURLTags();
         assertTrue("There is a missing tag in the grouping", tags.contains("name = entityById"));
         assertTrue("There is a missing tag in the grouping", tags.contains("host = A4AF797F3737"));
@@ -89,7 +95,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     @Test
     public void testGroupURLParameterWithoutTagsOnViewerPage() {
         loadDataAndParserByNames("test-atsd-_g-forecast-viewer-parser", "test-atsd-_g-forecast-viewer-data");
-        driver.get(URL_FOR_GROUPING_WITHOUT_TAGS);
+        open(URL_FOR_GROUPING_WITHOUT_TAGS);
         assertEquals("There is no sign of presence of grouping", "Grouped by all tags",
                 forecastViewerPage.getGroupedByURLText());
     }
@@ -98,10 +104,10 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     public void testGroupURLParameterWithTagsOnSettingsPage() {
         loadDataAndParserByNames("test-atsd-_g-forecast-viewer-parser", "test-atsd-_g-forecast-viewer-data");
 
-        driver.get(URL_FOR_GROUPING_WITH_TAGS);
+        open(URL_FOR_GROUPING_WITH_TAGS);
         forecastViewerPage.scheduleForecast();
         switchToNewWindowTab();
-        ForecastSettingsPage forecastSettings = new ForecastSettingsPage(driver);
+        ForecastSettingsPage forecastSettings = new ForecastSettingsPage();
         assertEquals("Wrong type of grouping in forecast settings", "Metric - Entity - Defined Tags",
                 forecastSettings.getGroupingType());
         assertEquals("Wrong tags in grouping in forecast settings", "host name",
@@ -111,10 +117,10 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     @Test
     public void testGroupURLParameterWithoutTagsOnSettingsPage() {
         loadDataAndParserByNames("test-atsd-_g-forecast-viewer-parser", "test-atsd-_g-forecast-viewer-data");
-        driver.get(URL_FOR_GROUPING_WITHOUT_TAGS);
+        open(URL_FOR_GROUPING_WITHOUT_TAGS);
         forecastViewerPage.scheduleForecast();
         switchToNewWindowTab();
-        ForecastSettingsPage forecastSettings = new ForecastSettingsPage(driver);
+        ForecastSettingsPage forecastSettings = new ForecastSettingsPage();
         assertEquals("Wrong type of grouping in forecast settings", "Metric - Entity",
                 forecastSettings.getGroupingType());
     }
@@ -122,10 +128,10 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     @Test
     public void testGroupURLParameterWithTagsInPortal() {
         loadDataAndParserByNames("test-atsd-_g-forecast-viewer-parser", "test-atsd-_g-forecast-viewer-data");
-        driver.get(URL_FOR_GROUPING_WITH_TAGS);
+        open(URL_FOR_GROUPING_WITH_TAGS);
         forecastViewerPage.savePortal();
         switchToNewWindowTab();
-        PortalPage portalPage = new PortalPage(driver);
+        PortalPage portalPage = new PortalPage();
         assertTrue("There is no tags section", portalPage.getContentWrapperText().contains("[tags]"));
         assertTrue("There is no host tag", portalPage.getContentWrapperText().contains("host = A4AF797F3737"));
         assertTrue("There is no name tag", portalPage.getContentWrapperText().contains("name = entityById"));
@@ -134,16 +140,16 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     @Test
     public void testGroupURLParameterWithoutTagsInPortal() {
         loadDataAndParserByNames("test-atsd-_g-forecast-viewer-parser", "test-atsd-_g-forecast-viewer-data");
-        driver.get(URL_FOR_GROUPING_WITHOUT_TAGS);
+        open(URL_FOR_GROUPING_WITHOUT_TAGS);
         forecastViewerPage.savePortal();
         switchToNewWindowTab();
-        PortalPage portalPage = new PortalPage(driver);
+        PortalPage portalPage = new PortalPage();
         assertFalse("There is tag section without tags", portalPage.getContentWrapperText().contains("[tags]"));
     }
 
     @Test
     public void testStrictTagsAndDataMapping() {
-        driver.get(removeURLParameter(driver.getCurrentUrl(), "tag_name1"));
+        open(removeURLParameter(url(), "tag_name1"));
         assertFalse("There is some data but with not full set of tags there shouldn't be any data",
                 forecastViewerPage.isWidgetContainerLoading());
         assertEquals("There are some charts but it shouldn't be", 0,
@@ -154,12 +160,12 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     public void testCorrectnessOfLinkClicks() {
         forecastViewerPage.getBreadcrumbElement(2).click();
         assertEquals("Wrong page while click on entity link in breadcrumb",
-                "Entity: nurswgvml007", driver.getTitle());
-        driver.navigate().back();
+                "Entity: nurswgvml007", title());
+        back();
         forecastViewerPage.getBreadcrumbElement(1).click();
         assertEquals("Wrong page while click on metric link in breadcrumb",
-                "Metric: forecastpagetest", driver.getTitle());
-        driver.navigate().back();
+                "Metric: forecastpagetest", title());
+        back();
 
         assertEquals("Wrong tag parameters in breadcrumb",
                 "tag_name1=\"forecastPageTest\", tag_name2=\"forecastPageTest\"",
@@ -169,8 +175,8 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     @Test
     public void testForecastURLParams() {
         Map<String, String> params = prepareURLParams();
-        String newURL = createNewURL(AtsdTest.url + "/series/forecast", params);
-        driver.navigate().to(newURL);
+        String newURL = createNewURL("/series/forecast", params);
+        open(newURL);
 
         assertRegularizeOptionValues(params.get("aggregation"), params.get("interpolation"), "25",
                 "minute", "URL params test");
@@ -352,9 +358,8 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     }
 
     private LocalDateTime getTranslatedDate(String oldDate) {
-        LocalDateTime sended = LocalDateTime.parse(oldDate, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX"));
-        sended = sended.plusHours(timeZoneHours);
-        return sended;
+        return LocalDateTime.parse(oldDate, DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSSX"))
+                .plusHours(timeZoneHours);
     }
 
     private void assertStartDate(String errorMessage, String sendedDate) {
@@ -363,22 +368,21 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
         assertEquals(errorMessage, getTranslatedDate(sendedDate).toString(), newDate);
     }
 
-    private String createNewURL(String URLPrefix, Map<String, String> params) {
+    private String createNewURL(String urlPrefix, Map<String, String> params) {
         List<NameValuePair> paramsForEncoding = new ArrayList<>();
         for (Map.Entry<String, String> entry : params.entrySet()) {
             paramsForEncoding.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
         }
         try {
-            return new URIBuilder(URLPrefix).addParameters(paramsForEncoding).build().toString();
+            return new URIBuilder(urlPrefix).addParameters(paramsForEncoding).build().toString();
         } catch (URISyntaxException e) {
             throw new RuntimeException("Wrong URI", e);
         }
     }
 
     private String removeURLParameter(String url, String parameterName) {
-        URIBuilder uriBuilder;
         try {
-            uriBuilder = new URIBuilder(url);
+            URIBuilder uriBuilder = new URIBuilder(url);
             List<NameValuePair> queryParameters = uriBuilder.getQueryParams();
             for (NameValuePair queryPair : queryParameters) {
                 if (queryPair.getName().equals(parameterName)) {
@@ -424,10 +428,11 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     }
 
     private void setTimeZone() {
-        String url = AtsdTest.url + "/api/v1/version";
+        String url = Config.getInstance().getBaseUrl() + "/api/v1/version";
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet(url);
-        String authorizationParams = AtsdTest.login + ":" + AtsdTest.password;
+        Config config = Config.getInstance();
+        String authorizationParams = config.getLogin() + ":" + config.getPassword();
         try {
             request.addHeader(HttpHeaders.AUTHORIZATION, "Basic " + new String(Base64.encodeBase64(
                     authorizationParams.getBytes(StandardCharsets.ISO_8859_1))));
@@ -449,6 +454,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     }
 
     private void switchToNewWindowTab() {
+        WebDriver driver = getWebDriver();
         List<String> tabs = new ArrayList<>(driver.getWindowHandles());
         driver.close();
         driver.switchTo().window(tabs.get(1));

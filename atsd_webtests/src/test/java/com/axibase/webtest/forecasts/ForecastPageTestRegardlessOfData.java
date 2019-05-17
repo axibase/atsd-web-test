@@ -2,40 +2,40 @@ package com.axibase.webtest.forecasts;
 
 import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.CommonAssertions;
+import com.axibase.webtest.CommonSelects;
 import com.axibase.webtest.pages.ForecastViewerPage;
 import com.axibase.webtest.service.AtsdTest;
-import com.axibase.webtest.CommonSelects;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
+import static com.codeborne.selenide.Selenide.*;
 import static org.junit.Assert.*;
 
 public class ForecastPageTestRegardlessOfData extends AtsdTest {
     private ForecastViewerPage forecastViewerPage;
-    private static final String START_PAGE = url + "/series/forecast?entity=entity-for-regardless-of-data-test&" +
+    private static final String START_PAGE = "/series/forecast?entity=entity-for-regardless-of-data-test&" +
             "metric=metric-for-regardless-of-data-test&" +
             "startDate=2015-03-04T14:24:40.000Z&horizonInterval=10-MINUTE&period=5-SECOND";
 
     @Before
     public void setUp() {
-        this.login();
+        super.setUp();
         loadData();
-        forecastViewerPage = new ForecastViewerPage(driver);
-        driver.get(START_PAGE);
+        forecastViewerPage = new ForecastViewerPage();
+        open(START_PAGE);
     }
 
     private void loadData() {
-        driver.get(AtsdTest.url + "/metrics/entry");
-        CommonActions.sendTextToCodeMirror(driver.findElement(By.name("commands")), "<#list 1..5 as i>\n" +
+        open("/metrics/entry");
+        CommonActions.sendTextToCodeMirror($(By.name("commands")), "<#list 1..5 as i>\n" +
                 "series s:${1425482080 - i * 600} " +
                 "e:entity-for-regardless-of-data-test " +
                 "m:metric-for-regardless-of-data-test=${60 - 2*i}\n" +
                 "</#list>");
-        driver.findElement(By.cssSelector("button[value=send]")).click();
+        $(By.cssSelector("button[value=send]")).click();
     }
 
     @Test
@@ -411,13 +411,12 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
     }
 
     private boolean isStoredWidgetContainerEqualsNew() {
-        return (Boolean) ((JavascriptExecutor) driver).executeScript(
+        return (Boolean) executeJavaScript(
                 "return document.getElementById(\"widget-container\").__innerWidget__===self.widgetContainerForAtsdTest");
     }
 
     private void storeCurrentWidgetContainerInJS() {
-        ((JavascriptExecutor) driver).executeScript(
-                "self.widgetContainerForAtsdTest =  document.getElementById(\"widget-container\").__innerWidget__");
+        executeJavaScript("self.widgetContainerForAtsdTest =  document.getElementById(\"widget-container\").__innerWidget__");
     }
 
 }
