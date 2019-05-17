@@ -6,4 +6,4 @@ services:
 install:
   - docker pull axibase/atsd_package_validation
 script:
-  - docker run -e BRANCH=$TRAVIS_BRANCH -e ATSD_REQUIRED_REVISION=`curl -s https://axibase.com/public/atsd_distrib_latest.htm | grep -oE 'atsd-distrib\.([0-9]+)' | head -n 1 | cut -f 2 -d .` axibase/atsd_package_validation
+  - docker run -e BRANCH=$TRAVIS_PULL_REQUEST_BRANCH -e ATSD_REQUIRED_REVISION=`curl -s https://axibase.com/public/atsd_distrib_latest.htm | grep -oE 'atsd-distrib\.([0-9]+)' | head -n 1 | cut -f 2 -d .` axibase/atsd_package_validation
