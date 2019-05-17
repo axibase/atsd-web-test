@@ -34,7 +34,9 @@ public class CommonActions {
     public static void deleteRecord() {
         $(By.className("btn-edit"))
                 .$(By.className("caret")).click();
-        $(byValue("Delete")).click();
+
+        $(By.xpath("//*[.='Delete'] | " +
+                "//*[@value='Delete']")).click();
         $(By.className("btn-confirm"))
                 .shouldBe(clickable)
                 .click();

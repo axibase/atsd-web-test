@@ -1,5 +1,6 @@
 package com.axibase.webtest.cases;
 
+import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.pageobjects.*;
 import com.axibase.webtest.service.AtsdTest;
 import com.codeborne.selenide.Condition;
@@ -164,13 +165,7 @@ public class DataEntryCommandsTest extends AtsdTest {
 
     private void removeRecordByCheckbox(String value) {
         clickCheckboxByValueAttribute(value);
-        deleteRecords();
-    }
-
-    private void deleteRecords(){
-        $(By.xpath("//*/div[@class='table-controls']//*[@data-toggle='dropdown']")).click();
-        $(By.xpath("//*/div[@class='table-controls']//a[text()='Delete']")).click();
-        $(By.xpath("//*[@id='confirm-modal']//button[text()='Yes']")).should(Condition.appear).click();
+        CommonActions.deleteRecord();
     }
 
     @Step("Check entity adds into entities table")
