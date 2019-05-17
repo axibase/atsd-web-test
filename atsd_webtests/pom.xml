@@ -16,15 +16,23 @@
         </dependency>
 
         <dependency>
-            <groupId>org.seleniumhq.selenium</groupId>
-            <artifactId>selenium-htmlunit-driver</artifactId>
-            <version>2.52.0</version>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-junit4</artifactId>
+            <version>2.11.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.2.3</version>
+            <scope>test</scope>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
-            <version>4.11</version>
+            <version>4.12</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -60,7 +68,7 @@
                         <!-- Default task is executed first. Order in executions list does not matter. -->
                         <configuration>
                             <includes>
-                                <include>**/AccountServiceTest.java</include>
+                                <include>**/CreateAdminAccountTest.java</include>
                             </includes>
                         </configuration>
                     </execution>
@@ -68,8 +76,7 @@
                         <id>after-account-creation</id>
                         <configuration>
                             <excludes>
-                                <exclude>**/*AccountServiceTest.java</exclude>
-                                <exclude>**/*AdminBackupImportTest.java</exclude>
+                                <exclude>**/*CreateAdminAccountTest.java</exclude>
                             </excludes>
                         </configuration>
                         <phase>test</phase>

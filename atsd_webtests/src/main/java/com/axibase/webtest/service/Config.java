@@ -4,21 +4,28 @@ import com.codeborne.selenide.Configuration;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Properties;
 
+@Slf4j
 @Getter
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class Config {
     private static final String PROPERTY_PATH = "atsd.properties";
     private static final String CHROME_DRIVER_PROPERTY_NAME = "webdriver.chrome.driver";
+    private static final String SELENIDE_BROWSER_PROPERTY_NAME = "selenide.browser";
+    private static final String SELENIDE_HEADLESS_PROPERTY_NAME = "selenide.headless";
     private final String login;
     private final String password;
-    private final String url;
-    private final String screenshotDir;
+    private final String baseUrl;
+
+    public void init() {
+        // already initialized. Do nothing
+    }
 
     public static Config getInstance() {
         return ConfigHolder.INSTANCE;
@@ -36,21 +43,26 @@ public class Config {
                 final String password = properties.getProperty("password");
                 final String screenshotDir = properties.getProperty("screenshot_directory");
                 if (url == null || login == null || password == null || screenshotDir == null) {
-                    System.out.println("Can't read required properties");
+                    log.error("Can't read required properties");
                     System.exit(1);
                 }
                 final String chromedriverPath = properties.getProperty(CHROME_DRIVER_PROPERTY_NAME);
                 if (chromedriverPath != null) {
                     System.setProperty(CHROME_DRIVER_PROPERTY_NAME, chromedriverPath);
                 }
+                final String browserFromProperties = properties.getProperty(SELENIDE_BROWSER_PROPERTY_NAME, "chrome");
                 Configuration.baseUrl = url;
-                Configuration.headless = true;
-                Configuration.browser = "chrome";
+                Configuration.screenshots = false; // create screenshots manually with proper name
+                Configuration.reportsFolder = screenshotDir;
+                Configuration.browser = System.getProperty(SELENIDE_BROWSER_PROPERTY_NAME, browserFromProperties);
                 Configuration.browserSize = "1024x768";
-                return new Config(login, password, url, screenshotDir);
+                Configuration.headless = Boolean.parseBoolean(properties.getProperty(SELENIDE_HEADLESS_PROPERTY_NAME, "true"));
+                if (Configuration.headless && "chrome".equals(Configuration.browser)) {
+                    System.setProperty("chromeoptions.args", "--no-sandbox");
+                }
+                return new Config(login, password, url);
             } catch (IOException e) {
-                System.out.println("Can't read property file");
-                e.printStackTrace();
+                log.error("Can't read property file", e);
                 System.exit(1);
                 throw new IllegalStateException(e);
             }

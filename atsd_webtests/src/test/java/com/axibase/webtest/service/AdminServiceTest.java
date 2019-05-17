@@ -1,10 +1,11 @@
 package com.axibase.webtest.service;
 
 
+import com.axibase.webtest.CommonAssertions;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ntp.NTPUDPClient;
 import org.apache.commons.net.ntp.TimeInfo;
 import org.apache.commons.net.ntp.TimeStamp;
-import org.junit.Assert;
 import org.junit.Test;
 
 import java.net.InetAddress;
@@ -12,10 +13,11 @@ import java.net.SocketException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static org.junit.Assert.assertEquals;
+import static com.codeborne.selenide.Selenide.open;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
-
+@Slf4j
 public class AdminServiceTest extends AtsdTest {
 
     private static final String[] NTP_SERVERS = new String[]{"us.pool.ntp.org", "0.pool.ntp.org", "1.pool.ntp.org", "2.pool.ntp.org", "3.pool.ntp.org"};
@@ -24,23 +26,20 @@ public class AdminServiceTest extends AtsdTest {
 
     @Test
     public void checkAtsdTime() {
-        assertTrue(generateAssertMessage("Time should be different not more 60 sec"), Math.abs(getCurrentTime() - getAtsdTime()) < MAX_DIFF_TIME);
+        assertTrue(generateAssertMessage("Time difference should not exceed 60 sec"), Math.abs(getCurrentTime() - getAtsdTime()) < MAX_DIFF_TIME);
     }
 
     private long getAtsdTime() {
-        assertEquals(generateAssertMessage("Should get login page"), LoginService.title, driver.getTitle());
-        LoginService loginService = new LoginService(driver);
-        loginService.loginAsAdmin();
-        driver.navigate().to(url + "/admin/system-information");
-        assertEquals("title should be System Information", "System Information", driver.getTitle());
-        AdminService adminService = new AdminService(driver);
+        open( "/admin/system-information");
+        CommonAssertions.assertPageTitleEquals("System Information");
+        AdminService adminService = new AdminService();
         String atsdDateString = adminService.getTime();
         try {
             SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss zzzz");
             Date atsdDate = dateFormat.parse(atsdDateString);
             return atsdDate.getTime();
         } catch (Exception e) {
-            Assert.fail(generateAssertMessage("Cant parse getting date row: " + atsdDateString));
+            fail(generateAssertMessage("Can't parse getting date row: " + atsdDateString));
         }
         return 0;
     }
@@ -58,11 +57,11 @@ public class AdminServiceTest extends AtsdTest {
                     TimeStamp ntpTime = TimeStamp.getNtpTime(info.getReturnTime());
                     return ntpTime.getTime();
                 } catch (Exception e2) {
-                    System.out.println("Can't get response from server: " + server + ".");
+                    log.error("Can't get response from server: {}.", server);
                 }
             }
         } catch (SocketException se) {
-            System.out.println("Can't open client session");
+            log.error("Can't open client session", se);
         } finally {
             client.close();
         }
