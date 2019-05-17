@@ -1,18 +1,17 @@
 package com.axibase.webtest.pageobjects;
 
 import com.axibase.webtest.CommonActions;
+import com.codeborne.selenide.ElementsCollection;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
+import static com.codeborne.selenide.Selenide.*;
 
 public class EntityPage {
     private final String BASE_URL = "/entities/";
-    private WebDriver driver;
 
     private By entityName = By.id("entityName");
     private By label = By.id("label");
@@ -24,77 +23,76 @@ public class EntityPage {
     private By interpolation = By.id("interpolate");
     private By timeZone = By.id("timeZone");
 
-    public EntityPage(WebDriver driver, String url, String entityName) {
-        this.driver = driver;
-        driver.get(createNewURL(url + BASE_URL + entityName));
+    public EntityPage(String entityName) {
+        open(createNewURL(BASE_URL + entityName));
     }
 
     public EntityPage openSettingsPanel() {
         By settingsPanel = By.xpath("//*[contains(@data-target,'#settingsPanel')]");
-        if (driver.findElement(settingsPanel).getAttribute("class").contains("collapsed")) {
-            driver.findElement(settingsPanel).click();
+        if ($(settingsPanel).getAttribute("class").contains("collapsed")) {
+            $(settingsPanel).click();
         }
         return this;
     }
 
     public EntityPage addTag(String tagName, String tagValue) {
-        driver.findElement(addTag).click();
-        List<WebElement> tagNamesList = driver.findElements(tagNames);
+        $(addTag).click();
+        ElementsCollection tagNamesList = $$(tagNames);
         CommonActions.setValueOption(tagName, tagNamesList.get(tagNamesList.size() - 1));
-        List<WebElement> tagValuesList = driver.findElements(tagValues);
+        ElementsCollection tagValuesList = $$(tagValues);
         CommonActions.setValueOption(tagValue, tagValuesList.get(tagValuesList.size() - 1));
         return this;
     }
 
     public WebElement getEntityName() {
-        return driver.findElement(entityName);
+        return $(entityName);
     }
 
     public WebElement getLabel() {
-        return driver.findElement(label);
+        return $(label);
     }
 
     public EntityPage setLabel(String value) {
-        CommonActions.setValueOption(value, driver.findElement(label));
+        CommonActions.setValueOption(value, $(label));
         return this;
     }
 
     public String getTagNames() {
-        return driver.findElements(tagNames).stream().
+        return $$(tagNames).stream().
                 map(element -> element.getAttribute("value")).
                 collect(Collectors.joining(","));
     }
 
     public String getTagValues() {
-        return driver.findElements(tagValues).stream().
+        return $$(tagValues).stream().
                 map(element -> element.getAttribute("value")).
                 collect(Collectors.joining(","));
     }
 
     public WebElement getEnabledSwitch() {
-        return driver.findElement(enabledSwitch);
+        return $(enabledSwitch);
     }
 
     public EntityPage toggleEnabledSwitch() {
-        driver.findElement(enabledSwitch).click();
+        $(enabledSwitch).click();
         return this;
     }
 
     public WebElement getInterpolation() {
-        return driver.findElement(interpolation);
+        return $(interpolation);
     }
 
     public EntityPage setInterpolation(String value) {
-        CommonActions.setSelectionOption(value, driver.findElement(interpolation));
+        CommonActions.setSelectionOption(value, $(interpolation));
         return this;
     }
 
     public WebElement getTimeZone() {
-        return driver.findElement(timeZone);
+        return $(timeZone);
     }
 
     public EntityPage setTimeZone(String value) {
-        CommonActions.setSelectionOption(value, driver.findElement(timeZone));
+        CommonActions.setSelectionOption(value, $(timeZone));
         return this;
 
     }

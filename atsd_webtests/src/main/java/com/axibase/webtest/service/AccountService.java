@@ -1,51 +1,40 @@
 package com.axibase.webtest.service;
 
-
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.util.List;
+import java.util.stream.Collectors;
 
-/**
- * Created by sild on 30.01.15.
- */
+import com.axibase.webtest.CommonActions;
+import static com.codeborne.selenide.Selenide.*;
+
 public class AccountService extends Service {
-    public AccountService(WebDriver driver) {
-        super(driver);
+    public static final String CREATE_ACCOUNT_TITLE = "Create Account";
+
+    public boolean createAdmin() {
+        final Config config = Config.getInstance();
+        return createUser(config.getLogin(), config.getPassword());
     }
 
     public boolean createUser(String login, String password) {
-        driver.findElement(By.id("userBean.username")).clear();
-        driver.findElement(By.id("userBean.username")).sendKeys(login);
-        driver.findElement(By.id("userBean.password")).clear();
-        driver.findElement(By.id("userBean.password")).sendKeys(password);
-        driver.findElement(By.id("repeatPassword")).clear();
-        driver.findElement(By.id("repeatPassword")).sendKeys(password);
-        driver.findElement(By.xpath("//input[@type='submit']")).click();
+        $(By.id("userBean.username")).setValue(login);
+        $(By.id("userBean.password")).setValue(password);
+        $(By.id("repeatPassword")).setValue(password);
+        $(By.xpath("//input[@type='submit']")).click();
+        final String errors = $$(".field__error").stream()
+                .map(WebElement::getText)
+                .filter(StringUtils::isNotEmpty)
+                .collect(Collectors.joining(", "));
+        if (StringUtils.isNotEmpty(errors)) {
+            throw new IllegalStateException(errors);
+        }
         return true;
     }
 
     public boolean deleteUser(String login) {
-        if (driver.getTitle().equals("User " + login)) {
-            final WebElement deleteButton = driver.findElement(By.name("delete"));
-            final List<WebElement> dropdownToggle = deleteButton.findElements(By.xpath("../../../button[@data-toggle='dropdown']"));
-            if (dropdownToggle.size() > 0) {
-                dropdownToggle.get(0).click();
-            }
-            deleteButton.click();
-            WebElement yes;
-            // Waiting for the confirmation window to be loaded
-            do {
-                try {
-                    Thread.sleep(200);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                yes = driver.findElement(By.xpath("//button[normalize-space(text())='Yes']"));
-            } while (yes.getText().isEmpty()); // Button "Yes" can be find but probably not initialized
-
-            yes.click();
+        if (title().equals("User " + login)) {
+            CommonActions.deleteRecord();
             return true;
         }
         return false;

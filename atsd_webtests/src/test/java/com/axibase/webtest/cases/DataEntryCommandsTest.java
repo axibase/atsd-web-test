@@ -1,21 +1,22 @@
 package com.axibase.webtest.cases;
 
-import com.axibase.webtest.ElementUtils;
 import com.axibase.webtest.pageobjects.*;
 import com.axibase.webtest.service.AtsdTest;
+import com.codeborne.selenide.Condition;
 import io.qameta.allure.Step;
 import org.apache.commons.lang3.ArrayUtils;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import static com.axibase.webtest.CommonActions.clickCheckboxByValueAttribute;
-import static com.axibase.webtest.CommonActions.dropCheckedRecords;
-import static com.axibase.webtest.CommonAssertions.assertStringContainsValues;
-import static com.axibase.webtest.CommonAssertions.assertValueAttributeOfElement;
+import static com.axibase.webtest.CommonActions.*;
+import static com.axibase.webtest.CommonAssertions.*;
+import static com.codeborne.selenide.Selenide.$;
 import static org.junit.Assert.*;
 
 public class DataEntryCommandsTest extends AtsdTest {
@@ -25,8 +26,8 @@ public class DataEntryCommandsTest extends AtsdTest {
 
     @Before
     public void setUp() {
-        this.login();
-        dataEntryPage = new DataEntryPage(driver, url);
+        super.setUp();
+        dataEntryPage = new DataEntryPage();
     }
 
     @Test
@@ -45,9 +46,9 @@ public class DataEntryCommandsTest extends AtsdTest {
 
         assertEntityAdd();
         assertStringContainsValues("Message tag key is not added into Message Tag Key IDs: ",
-                tagNames, new MessageTagKeyIDsPage(driver, url).getValuesInTable());
+                tagNames, new MessageTagKeyIDsPage().getValuesInTable());
         assertStringContainsValues("Message tag value is not added into Message Tag Value IDs: ",
-                tagValues, new MessageTagValueIDsPage(driver, url).getValuesInTable());
+                tagValues, new MessageTagValueIDsPage().getValuesInTable());
         assertMessageAddByEntityName();
         assertMessageParameters(type, source, severity);
     }
@@ -89,9 +90,9 @@ public class DataEntryCommandsTest extends AtsdTest {
         dataEntryPage.typeCommands(insertMessage1 + "\n" + insertMessage2).sendCommands();
 
         assertStringContainsValues("Series tag keys is not added into Series Tag Key IDs: ",
-                tagNames, new SeriesTagKeyIDsPage(driver, url).getValuesInTable());
+                tagNames, new SeriesTagKeyIDsPage().getValuesInTable());
         assertStringContainsValues("Series tag values is not added into Series Tag Values IDs: ",
-                tagValues, new SeriesTagValueIDsPage(driver, url).getValuesInTable());
+                tagValues, new SeriesTagValueIDsPage().getValuesInTable());
         assertSeriesAdd();
         assertEntityAdd();
         assertSeriesParams(metricText1 + "; " + metricText2, tagNames, tagValues);
@@ -146,10 +147,10 @@ public class DataEntryCommandsTest extends AtsdTest {
     }
 
     @Step
-    @Override
+    @After
     public void cleanup() {
-        dropRecord(new EntitiesTablePage(driver, url), ENTITY_NAME);
-        dropRecord(new MetricsTablePage(driver, url), METRIC_NAME);
+        dropRecord(new EntitiesTablePage(), ENTITY_NAME);
+        dropRecord(new MetricsTablePage(), METRIC_NAME);
     }
 
     @Step("Drop {recordName} from table if it is exist")
@@ -162,19 +163,25 @@ public class DataEntryCommandsTest extends AtsdTest {
     }
 
     private void removeRecordByCheckbox(String value) {
-        clickCheckboxByValueAttribute(driver, value);
-        dropCheckedRecords(driver);
+        clickCheckboxByValueAttribute(value);
+        deleteRecords();
+    }
+
+    private void deleteRecords(){
+        $(By.xpath("//*/div[@class='table-controls']//*[@data-toggle='dropdown']")).click();
+        $(By.xpath("//*/div[@class='table-controls']//a[text()='Delete']")).click();
+        $(By.xpath("//*[@id='confirm-modal']//button[text()='Yes']")).should(Condition.appear).click();
     }
 
     @Step("Check entity adds into entities table")
     private void assertEntityAdd() {
-        EntitiesTablePage entitiesTablePage = new EntitiesTablePage(driver, url);
+        EntitiesTablePage entitiesTablePage = new EntitiesTablePage();
         assertTrue("Entity is not added", entitiesTablePage.isRecordPresent(ENTITY_NAME));
     }
 
     @Step("Check message adds into message table by its entity name")
     private void assertMessageAddByEntityName() {
-        MessagesPage messagesPage = new MessagesPage(driver, url);
+        MessagesPage messagesPage = new MessagesPage();
         messagesPage.setEntity(ENTITY_NAME)
                 .search();
         assertTrue("Message is not added into table", messagesPage.getCountOfMessages() > 0);
@@ -182,14 +189,14 @@ public class DataEntryCommandsTest extends AtsdTest {
 
     @Step("Check property adds into entity properties table")
     private void assertPropertiesAdd(String propType) {
-        PropertiesTablePage propertiesTablePage = new PropertiesTablePage(driver, url, ENTITY_NAME);
+        PropertiesTablePage propertiesTablePage = new PropertiesTablePage(ENTITY_NAME);
         assertTrue("Property is not added", propertiesTablePage.isPropertyPresent(propType));
     }
 
-    @Step
+    @Step("Check properties keys and tags")
     private void assertPropertiesKeysAndTags(String propType, String[] key_names, String[] key_values,
                                              String[] tag_names, String[] tag_values) {
-        PropertiesPage propertiesPage = new PropertiesPage(driver, url, ENTITY_NAME, new String[]{"type"}, new String[]{propType});
+        PropertiesPage propertiesPage = new PropertiesPage(ENTITY_NAME, new String[]{"type"}, new String[]{propType});
         String[] keys = ArrayUtils.addAll(key_names, key_values);
         String[] tags = ArrayUtils.addAll(tag_names, tag_values);
         String allTagsAdnKeys = propertiesPage.getTagsAndKeys();
@@ -199,13 +206,13 @@ public class DataEntryCommandsTest extends AtsdTest {
 
     @Step("Check series add by appropriate metric")
     private void assertSeriesAdd() {
-        MetricsSeriesTablePage metricsSeriesTablePage = new MetricsSeriesTablePage(driver, url, METRIC_NAME);
+        MetricsSeriesTablePage metricsSeriesTablePage = new MetricsSeriesTablePage(METRIC_NAME);
         assertTrue("Series is not added", metricsSeriesTablePage.isSeriesPresent());
     }
 
     @Step("Check series parameters")
     private void assertSeriesParams(String metricText, String[] tagNames, String[] tagValues) {
-        StatisticsPage statisticsPage = new StatisticsPage(driver, url,
+        StatisticsPage statisticsPage = new StatisticsPage(
                 Stream.concat(Stream.of("entity", "metric"), Arrays.stream(tagNames)).toArray(String[]::new),
                 Stream.concat(Stream.of(ENTITY_NAME, METRIC_NAME), Arrays.stream(tagValues)).toArray(String[]::new));
         String allTags = statisticsPage.getSeriesTags();
@@ -218,10 +225,10 @@ public class DataEntryCommandsTest extends AtsdTest {
 
     @Step("Check metric adds into metrics table")
     private void assertMetricAdd() {
-        MetricIDsPage metricIDsPage = new MetricIDsPage(driver, url);
+        MetricIDsPage metricIDsPage = new MetricIDsPage();
         assertTrue("Metric is not added into Metric IDs table", metricIDsPage.getValuesInTable().contains(METRIC_NAME));
 
-        MetricsTablePage metricsTablePage = new MetricsTablePage(driver, url);
+        MetricsTablePage metricsTablePage = new MetricsTablePage();
         metricsTablePage.searchRecordByName(METRIC_NAME);
         assertTrue("Metric is not added into table on Metric Page", metricsTablePage.isRecordPresent(METRIC_NAME));
     }
@@ -231,7 +238,7 @@ public class DataEntryCommandsTest extends AtsdTest {
                                    String interpolationMode, String units, String filter, String timeZone,
                                    String versioning, String invalidAction, String persistent, String retentionIntervalDays,
                                    String minVal, String maxVal, String[] tagNames, String[] tagValues) {
-        MetricPage metricPage = new MetricPage(driver, url, new String[]{"metricName"}, new String[]{METRIC_NAME});
+        MetricPage metricPage = new MetricPage(new String[]{"metricName"}, new String[]{METRIC_NAME});
 
         assertSwitchElement("Wrong persistent", persistent, metricPage.getPersistentSwitch());
         assertSwitchElement("Wrong status", status, metricPage.getEnabledSwitch());
@@ -254,13 +261,13 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Step
     private void assertSwitchElement(String errorMessage, String expectedValue, WebElement switchButton) {
         String script = "return element.checked";
-        assertEquals(errorMessage, Boolean.parseBoolean(expectedValue), ElementUtils.executeWithElement(switchButton, script));
+        assertEquals(errorMessage, Boolean.parseBoolean(expectedValue), executeWithElement(switchButton, script));
     }
 
     @Step("Check entity parameters")
     private void assertEntityParams(String status, String label, String interpolationMode,
                                     String timeZone, String[] tagNames, String[] tagValues) {
-        EntityPage entityPage = new EntityPage(driver, url, ENTITY_NAME);
+        EntityPage entityPage = new EntityPage(ENTITY_NAME);
 
         assertSwitchElement("Wrong status", status, entityPage.getEnabledSwitch());
         assertValueAttributeOfElement("Wrong label", label, entityPage.getLabel());
@@ -272,7 +279,7 @@ public class DataEntryCommandsTest extends AtsdTest {
 
     @Step("Check message  parameters")
     private void assertMessageParameters(String type, String source, String severity) {
-        MessagesPage messagesPage = new MessagesPage(driver, url);
+        MessagesPage messagesPage = new MessagesPage();
         messagesPage.setEntity(ENTITY_NAME).search();
 
         messagesPage.openFilterPanel()

@@ -1,25 +1,24 @@
 package com.axibase.webtest.pageobjects;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import java.util.stream.Collectors;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
 
 public class SeriesTagValueIDsPage implements IDsPage {
     private static final String BASE_URL = "/admin/tags/series_tag_value/uids";
-    private WebDriver driver;
 
-    public SeriesTagValueIDsPage(WebDriver driver, String url) {
-        this.driver = driver;
-        driver.get(createNewURL(url + BASE_URL));
+    public SeriesTagValueIDsPage() {
+        open(createNewURL(BASE_URL));
     }
 
     @Override
     public String getValuesInTable() {
-        return driver.findElement(By.id("buildInfo"))
+        return $(By.id("buildInfo"))
                 .findElements(By.cssSelector("tbody > tr > td:nth-child(2n)"))
                 .stream()
                 .map(WebElement::getText)

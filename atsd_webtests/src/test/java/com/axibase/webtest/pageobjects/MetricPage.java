@@ -1,18 +1,17 @@
 package com.axibase.webtest.pageobjects;
 
 import com.axibase.webtest.CommonActions;
+import com.codeborne.selenide.ElementsCollection;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import java.util.List;
 import java.util.stream.Collectors;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
+import static com.codeborne.selenide.Selenide.*;
 
 public class MetricPage {
     private final String BASE_URL = "/metrics/metric.xhtml";
-    private WebDriver driver;
 
     private By name = By.id("metric.name");
     private By label = By.id("metric.label");
@@ -35,176 +34,175 @@ public class MetricPage {
     private By invalidAction = By.id("metric.invalidValueAction");
     private By interpolation = By.id("metric.interpolate");
 
-    public MetricPage(WebDriver driver, String url, String[] paramKeys, String[] paramValues) {
-        this.driver = driver;
-        driver.get(createNewURL(url + BASE_URL, paramKeys, paramValues));
+    public MetricPage(String[] paramKeys, String[] paramValues) {
+        open(createNewURL(BASE_URL, paramKeys, paramValues));
     }
 
     public MetricPage openSettingsPanel() {
         By settingsPanel = By.xpath("//*[contains(@data-target,'#settingsPanel')]");
-        if (driver.findElement(settingsPanel).getAttribute("class").contains("collapsed")) {
-            driver.findElement(settingsPanel).click();
+        if ($(settingsPanel).getAttribute("class").contains("collapsed")) {
+            $(settingsPanel).click();
         }
         return this;
     }
 
     public MetricPage addTag(String tagName, String tagValue) {
-        driver.findElement(addTag).click();
-        List<WebElement> tagNamesList = driver.findElements(tagNames);
+        $(addTag).click();
+        ElementsCollection tagNamesList = $$(tagNames);
         CommonActions.setValueOption(tagName, tagNamesList.get(tagNamesList.size() - 1));
-        List<WebElement> tagValuesList = driver.findElements(tagValues);
+        ElementsCollection tagValuesList = $$(tagValues);
         CommonActions.setValueOption(tagValue, tagValuesList.get(tagValuesList.size() - 1));
         return this;
     }
 
     public WebElement getName() {
-        return driver.findElement(name);
+        return $(name);
     }
 
     public WebElement getLabel() {
-        return driver.findElement(label);
+        return $(label);
     }
 
     public MetricPage setLabel(String value) {
-        CommonActions.setValueOption(value, driver.findElement(label));
+        CommonActions.setValueOption(value, $(label));
         return this;
     }
 
     public WebElement getDescription() {
-        return driver.findElement(description);
+        return $(description);
     }
 
     public MetricPage setDescription(String value) {
-        CommonActions.setValueOption(value, driver.findElement(description));
+        CommonActions.setValueOption(value, $(description));
         return this;
     }
 
     public WebElement getUnits() {
-        return driver.findElement(units);
+        return $(units);
     }
 
     public MetricPage setUnits(String value) {
-        CommonActions.setValueOption(value, driver.findElement(units));
+        CommonActions.setValueOption(value, $(units));
         return this;
     }
 
     public WebElement getMinValue() {
-        return driver.findElement(minValue);
+        return $(minValue);
     }
 
     public MetricPage setMinValue(String value) {
-        CommonActions.setValueOption(value, driver.findElement(minValue));
+        CommonActions.setValueOption(value, $(minValue));
         return this;
     }
 
     public WebElement getMaxValue() {
-        return driver.findElement(maxValue);
+        return $(maxValue);
     }
 
     public MetricPage setMaxValue(String value) {
-        CommonActions.setValueOption(value, driver.findElement(maxValue));
+        CommonActions.setValueOption(value, $(maxValue));
         return this;
     }
 
     public String getTagNames() {
-        return driver.findElements(tagNames).stream().
+        return $$(tagNames).stream().
                 map(element -> element.getAttribute("value")).
                 collect(Collectors.joining(","));
     }
 
     public String getTagValues() {
-        return driver.findElements(tagValues).stream().
+        return $$(tagValues).stream().
                 map(element -> element.getAttribute("value")).
                 collect(Collectors.joining(","));
     }
 
     public WebElement getEnabledSwitch() {
-        return driver.findElement(enabledSwitch);
+        return $(enabledSwitch);
     }
 
     public MetricPage toggleEnabledSwitch(String value) {
-        driver.findElement(enabledSwitch).click();
+        $(enabledSwitch).click();
         return this;
     }
 
     public WebElement getPersistentSwitch() {
-        return driver.findElement(persistentSwitch);
+        return $(persistentSwitch);
     }
 
     public MetricPage setPersistentSwitch(String value) {
-        driver.findElement(persistentSwitch).click();
+        $(persistentSwitch).click();
         return this;
     }
 
     public WebElement getPersistentFilter() {
-        return driver.findElement(persistentFilter);
+        return $(persistentFilter);
     }
 
     public MetricPage setPersistentFilter(String value) {
-        CommonActions.setValueOption(value, driver.findElement(persistentFilter));
+        CommonActions.setValueOption(value, $(persistentFilter));
         return this;
     }
 
     public WebElement getRetentionIntervalDays() {
-        return driver.findElement(retentionIntervalDays);
+        return $(retentionIntervalDays);
     }
 
     public MetricPage setRetentionIntervalDays(String value) {
-        CommonActions.setValueOption(value, driver.findElement(retentionIntervalDays));
+        CommonActions.setValueOption(value, $(retentionIntervalDays));
         return this;
     }
 
     public WebElement getSeriesRetentionDays() {
-        return driver.findElement(seriesRetentionDays);
+        return $(seriesRetentionDays);
     }
 
     public MetricPage setSeriesRetentionDays(String value) {
-        CommonActions.setValueOption(value, driver.findElement(seriesRetentionDays));
+        CommonActions.setValueOption(value, $(seriesRetentionDays));
         return this;
     }
 
     public WebElement getDataType() {
-        return driver.findElement(dataType);
+        return $(dataType);
     }
 
     public MetricPage setDataType(String value) {
-        CommonActions.setSelectionOption(value, driver.findElement(dataType));
+        CommonActions.setSelectionOption(value, $(dataType));
         return this;
     }
 
     public WebElement getTimeZone() {
-        return driver.findElement(timeZone);
+        return $(timeZone);
     }
 
     public MetricPage setTimeZone(String value) {
-        CommonActions.setSelectionOption(value, driver.findElement(timeZone));
+        CommonActions.setSelectionOption(value, $(timeZone));
         return this;
     }
 
     public WebElement getVersioningSwitch() {
-        return driver.findElement(versioningSwitch);
+        return $(versioningSwitch);
     }
 
     public MetricPage setVersioningSwitch(String value) {
-        driver.findElement(versioningSwitch).click();
+        $(versioningSwitch).click();
         return this;
     }
 
     public WebElement getInvalidAction() {
-        return driver.findElement(invalidAction);
+        return $(invalidAction);
     }
 
     public MetricPage setInvalidAction(String value) {
-        CommonActions.setSelectionOption(value, driver.findElement(invalidAction));
+        CommonActions.setSelectionOption(value, $(invalidAction));
         return this;
     }
 
     public WebElement getInterpolation() {
-        return driver.findElement(interpolation);
+        return $(interpolation);
     }
 
     public MetricPage setInterpolation(String value) {
-        CommonActions.setSelectionOption(value, driver.findElement(interpolation));
+        CommonActions.setSelectionOption(value, $(interpolation));
         return this;
     }
 
