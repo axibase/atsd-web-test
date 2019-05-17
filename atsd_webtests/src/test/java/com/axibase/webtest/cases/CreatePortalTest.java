@@ -8,6 +8,7 @@ import org.openqa.selenium.WebDriver;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import static com.axibase.webtest.CommonConditions.clickable;
 import static com.codeborne.selenide.Condition.cssClass;
