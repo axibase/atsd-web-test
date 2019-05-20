@@ -1,12 +1,10 @@
 package com.axibase.webtest;
 
-import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.message.BasicNameValuePair;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
@@ -14,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 
 import static com.axibase.webtest.CommonConditions.clickable;
-import static com.codeborne.selenide.Selectors.byValue;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.actions;
 
@@ -34,7 +31,6 @@ public class CommonActions {
     public static void deleteRecord() {
         $(By.className("btn-edit"))
                 .$(By.className("caret")).click();
-
         $(By.xpath("//*[.='Delete'] | " +
                 "//*[@value='Delete']")).click();
         $(By.className("btn-confirm"))
@@ -57,12 +53,11 @@ public class CommonActions {
      * @param relatedTextArea - next to the CodeMirror element
      * @param text            - text to send
      */
-    public static void sendTextToCodeMirror(WebElement relatedTextArea, String text) {
+    public static void sendTextToCodeMirror(SelenideElement relatedTextArea, String text) {
         if (!relatedTextArea.getTagName().equals("textarea")) {
             throw new IllegalStateException("this is not a textarea");
         }
-
-        actions().sendKeys(relatedTextArea.findElement(By.xpath("./following-sibling::*[contains(@class,CodeMirror)]")),
+        actions().sendKeys(relatedTextArea.$(By.xpath("./following-sibling::*[contains(@class,CodeMirror)]")),
                 text).build().perform();
     }
 
@@ -133,28 +128,6 @@ public class CommonActions {
     }
 
     /**
-     * Clear element's window and fill value
-     *
-     * @param value   - value to be set
-     * @param element - selected element
-     */
-    public static void setValueOption(String value, WebElement element) {
-        element.clear();
-        element.sendKeys(value);
-    }
-
-    /**
-     * Set one of the element's selection option
-     *
-     * @param value   - value to be set
-     * @param element - selected element
-     */
-    public static void setSelectionOption(String value, WebElement element) {
-        Select select = new Select(element);
-        select.selectByValue(value);
-    }
-
-    /**
      * Find checkbox by its value and select it
      *
      * @param value - value of the checkbox
@@ -163,6 +136,5 @@ public class CommonActions {
         String xpath = String.format("//*/input[@type='checkbox' and @value='%s']", value);
         $(By.xpath(xpath)).click();
     }
-
 
 }

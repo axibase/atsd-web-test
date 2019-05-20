@@ -1,8 +1,8 @@
 package com.axibase.webtest;
 
+import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 public class CommonSelects {
 
@@ -13,14 +13,13 @@ public class CommonSelects {
      * @return - label with tooltip
      */
     @Step("Get element's tooltip")
-    public static WebElement getElementTooltipByFor(WebElement element) {
+    public static SelenideElement getElementTooltipByFor(SelenideElement element) {
         String elementsTag = element.getTagName();
         if (!(elementsTag.equals("input") || elementsTag.equals("select") || elementsTag.equals("textarea"))) {
             throw new IllegalStateException("Wrong selector");
         }
-        return element.findElement(By.xpath("ancestor::label|" +
+        return element.$(By.xpath("ancestor::label|" +
                 "//*/label[@for='" + element.getAttribute("id") + "']"));
-
     }
 
     /**
@@ -30,7 +29,7 @@ public class CommonSelects {
      * @param unitElement  - element that is contained unit value
      * @return - string that is represented formatted interval value
      */
-    public static String getFormattedInterval(WebElement countElement, WebElement unitElement) {
+    public static String getFormattedInterval(SelenideElement countElement, SelenideElement unitElement) {
         return countElement.getAttribute("value") + "-" + unitElement.getAttribute("value");
     }
 

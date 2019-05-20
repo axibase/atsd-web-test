@@ -1,6 +1,5 @@
 package com.axibase.webtest.pageobjects;
 
-import com.axibase.webtest.CommonActions;
 import org.openqa.selenium.By;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
@@ -33,11 +32,11 @@ public class MessagesPage {
     }
 
     public int getCountOfMessages() {
-        return $(messagesList).findElements(By.xpath("./tbody/tr")).size();
+        return $(messagesList).$$(By.xpath("./tbody/tr")).size();
     }
 
     public MessagesPage setEntity(String name) {
-        CommonActions.setValueOption(name, $(entity));
+        $(entity).setValue(name);
         return this;
     }
 
@@ -49,17 +48,17 @@ public class MessagesPage {
     }
 
     public MessagesPage setSeverity(String value) {
-        CommonActions.setSelectionOption(value, $(severity));
+        $(severity).selectOption(value);
         return this;
     }
 
     public MessagesPage setSource(String value) {
-        CommonActions.setValueOption(value, $(source));
+        $(source).setValue(value);
         return this;
     }
 
     public MessagesPage setType(String value) {
-        CommonActions.setSelectionOption(value, $(type));
+        $(type).selectOption(value);
         return this;
     }
 

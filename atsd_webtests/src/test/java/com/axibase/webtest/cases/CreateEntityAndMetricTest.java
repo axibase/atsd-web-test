@@ -2,9 +2,9 @@ package com.axibase.webtest.cases;
 
 import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AtsdTest;
+import com.codeborne.selenide.SelenideElement;
 import org.junit.Test;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.Assert.*;
@@ -26,7 +26,7 @@ public class CreateEntityAndMetricTest extends AtsdTest {
 
         $(By.name("value")).sendKeys("50");
         $(By.name("series")).click();
-        WebElement successMessage = $(By.cssSelector("form.series .form-status>.alert-success"));
+        SelenideElement successMessage = $(By.cssSelector("form.series .form-status>.alert-success"));
         assertEquals(generateAssertMessage("Wrong success message"), "Series inserted successfully", successMessage.getText().trim());
 
         $(By.name("value")).sendKeys("150");

@@ -19,7 +19,7 @@ public class MetricIDsPage implements IDsPage {
     @Override
     public String getValuesInTable() {
         return $(By.id("buildInfo"))
-                .findElements(By.cssSelector("tbody > tr > td:nth-child(1n)"))
+                .$$(By.cssSelector("tbody > tr > td:nth-child(1n)"))
                 .stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList())

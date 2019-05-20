@@ -19,7 +19,7 @@ public class SeriesTagKeyIDsPage implements IDsPage {
     @Override
     public String getValuesInTable() {
         return $(By.id("buildInfo"))
-                .findElements(By.cssSelector("tbody > tr > td:nth-child(2n)"))
+                .$$(By.cssSelector("tbody > tr > td:nth-child(2n)"))
                 .stream()
                 .map(WebElement::getText)
                 .collect(Collectors.toList())

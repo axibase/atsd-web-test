@@ -15,7 +15,7 @@ public class MetricsSeriesTablePage {
     }
 
     public boolean isSeriesPresent() {
-        return !$(metricList).findElements(By.cssSelector("tbody > tr")).isEmpty();
+        return !$(metricList).$$(By.cssSelector("tbody > tr")).isEmpty();
     }
 
 }

@@ -1,11 +1,7 @@
 package com.axibase.webtest.pageobjects;
 
-import com.axibase.webtest.CommonActions;
-import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.openqa.selenium.TimeoutException;
 
 import java.time.Duration;
 
@@ -36,9 +32,7 @@ public class EntitiesTablePage implements Table {
 
     @Override
     public void searchRecordByName(String name) {
-        WebElement searchQueryElement = $(searchQuery);
-        CommonActions.setValueOption(name, searchQueryElement);
-        searchQueryElement.submit();
+        $(searchQuery).setValue(name).submit();
     }
 
 }

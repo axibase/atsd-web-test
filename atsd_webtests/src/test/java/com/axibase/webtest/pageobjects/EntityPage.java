@@ -1,9 +1,8 @@
 package com.axibase.webtest.pageobjects;
 
-import com.axibase.webtest.CommonActions;
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.stream.Collectors;
 
@@ -38,22 +37,22 @@ public class EntityPage {
     public EntityPage addTag(String tagName, String tagValue) {
         $(addTag).click();
         ElementsCollection tagNamesList = $$(tagNames);
-        CommonActions.setValueOption(tagName, tagNamesList.get(tagNamesList.size() - 1));
+        tagNamesList.get(tagNamesList.size() - 1).selectOption(tagName);
         ElementsCollection tagValuesList = $$(tagValues);
-        CommonActions.setValueOption(tagValue, tagValuesList.get(tagValuesList.size() - 1));
+        tagValuesList.get(tagValuesList.size() - 1).selectOption(tagValue);
         return this;
     }
 
-    public WebElement getEntityName() {
+    public SelenideElement getEntityName() {
         return $(entityName);
     }
 
-    public WebElement getLabel() {
+    public SelenideElement getLabel() {
         return $(label);
     }
 
     public EntityPage setLabel(String value) {
-        CommonActions.setValueOption(value, $(label));
+        $(label).setValue(value);
         return this;
     }
 
@@ -69,7 +68,7 @@ public class EntityPage {
                 collect(Collectors.joining(","));
     }
 
-    public WebElement getEnabledSwitch() {
+    public SelenideElement getEnabledSwitch() {
         return $(enabledSwitch);
     }
 
@@ -78,21 +77,21 @@ public class EntityPage {
         return this;
     }
 
-    public WebElement getInterpolation() {
+    public SelenideElement getInterpolation() {
         return $(interpolation);
     }
 
     public EntityPage setInterpolation(String value) {
-        CommonActions.setSelectionOption(value, $(interpolation));
+        $(interpolation).selectOption(value);
         return this;
     }
 
-    public WebElement getTimeZone() {
+    public SelenideElement getTimeZone() {
         return $(timeZone);
     }
 
     public EntityPage setTimeZone(String value) {
-        CommonActions.setSelectionOption(value, $(timeZone));
+        $(timeZone).selectOption(value);
         return this;
 
     }

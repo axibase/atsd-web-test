@@ -5,12 +5,14 @@ import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.CommonSelects;
 import com.axibase.webtest.pages.ForecastViewerPage;
 import com.axibase.webtest.service.AtsdTest;
+import com.codeborne.selenide.SelenideElement;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 
+import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selenide.*;
 import static org.junit.Assert.*;
 
@@ -146,15 +148,15 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
 
     @Test
     public void testChangeColorOfChangedParameters() {
-        checkHighlightOfSelectionElement(forecastViewerPage.getAggregation(), "SUM");
-        checkHighlightOfSelectionElement(forecastViewerPage.getInterpolation(), "PREVIOUS");
+        checkHighlightOfSelectionElement(forecastViewerPage.getAggregation(), "Sum");
+        checkHighlightOfSelectionElement(forecastViewerPage.getInterpolation(), "Previous");
         checkHighlightOfNumericElement(forecastViewerPage.getPeriodCount(), "2");
         checkHighlightOfNumericElement(forecastViewerPage.getThreshold(), "1");
         forecastViewerPage.getThreshold().sendKeys(Keys.BACK_SPACE);
         forecastViewerPage.getThreshold().sendKeys(Keys.DELETE);
         checkHighlightOfNumericElement(forecastViewerPage.getComponentCount(), "12");
         checkHighlightOfNumericElement(forecastViewerPage.getWindowLength(), "1");
-        checkHighlightOfSelectionElement(forecastViewerPage.getAveragingFunction(), "MEDIAN");
+        checkHighlightOfSelectionElement(forecastViewerPage.getAveragingFunction(), "Median");
         checkHighlightOfNumericElement(forecastViewerPage.getScoreIntervalCount(), "11");
     }
 
@@ -227,16 +229,14 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
 
     @Test
     public void testActiveGroupAutoOptionsCloning() {
-        forecastViewerPage.setGroupAutoOptions("10", "NOVOSIBIRSK", "A", "", "B-C;D")
+        forecastViewerPage.setGroupAutoOptions("10", "Novosibirsk", "A", "", "B-C;D")
                 .setGroupParameterV("0.9")
                 .setGroupParameterC("0.8")
                 .addForecastTab();
         assertTrue("Wrong grouping mode", forecastViewerPage.getGroupAuto());
         assertGroupAutoOptions("10", "NOVOSIBIRSK", "A", "", "B-C;D", "cloning");
-        CommonAssertions.assertValueAttributeOfElement("Wrong v parameter after cloning", "0.9",
-                forecastViewerPage.getGroupParameterV());
-        CommonAssertions.assertValueAttributeOfElement("Wrong c parameter after cloning", "0.8",
-                forecastViewerPage.getGroupParameterC());
+        forecastViewerPage.getGroupParameterV().shouldHave(value("0.9"));
+        forecastViewerPage.getGroupParameterC().shouldHave(value("0.8"));
     }
 
     @Test
@@ -250,7 +250,7 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
     public void testSwitchTabsGroupsOptions() {
         forecastViewerPage.setGroupOff()
                 .addForecastTab()
-                .setGroupAutoOptions("10", "NOVOSIBIRSK", "A", "", "B-C;D")
+                .setGroupAutoOptions("10", "Novosibirsk", "A", "", "B-C;D")
                 .addForecastTab()
                 .setGroupManualOptions("2-3", "", "2-4")
                 .switchForecastTab("Forecast 1");
@@ -264,8 +264,8 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
 
     @Test
     public void componentThresholdAndScoreIntervalAccessTest() {
-        WebElement threshold = forecastViewerPage.getThreshold();
-        WebElement intervalScore = forecastViewerPage.getScoreIntervalCount();
+        SelenideElement threshold = forecastViewerPage.getThreshold();
+        SelenideElement intervalScore = forecastViewerPage.getScoreIntervalCount();
 
         assertTrue("The score interval should be displayed before the Component Threshold is filled",
                 intervalScore.isDisplayed());
@@ -348,24 +348,24 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
                 isStoredWidgetContainerEqualsNew());
     }
 
-    private void checkHighlightOfSelectionElement(WebElement element, String value) {
+    private void checkHighlightOfSelectionElement(SelenideElement element, String value) {
         assertLackOfHighlight(element);
         forecastViewerPage.setSelectionOption(value, element);
         assertPresenceOfHighlight(element);
     }
 
-    private void checkHighlightOfNumericElement(WebElement element, String value) {
+    private void checkHighlightOfNumericElement(SelenideElement element, String value) {
         assertLackOfHighlight(element);
         forecastViewerPage.setNumericOption(value, element);
         assertPresenceOfHighlight(element);
     }
 
-    private void assertPresenceOfHighlight(WebElement element) {
+    private void assertPresenceOfHighlight(SelenideElement element) {
         assertTrue("Parameter with id: " + element.getAttribute("id") + "is not highlighted but it should be",
                 element.getAttribute("class").contains("highlight"));
     }
 
-    private void assertLackOfHighlight(WebElement element) {
+    private void assertLackOfHighlight(SelenideElement element) {
         assertFalse("Parameter with id: " + element.getAttribute("id") + "is highlighted but it shouldn't",
                 element.getAttribute("class").contains("highlight"));
     }
@@ -388,26 +388,18 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
     private void assertGroupAutoOptions(String countOfGroups, String clustering, String union1,
                                         String union2, String union3, String testType) {
         assertTrue("Wrong grouping mode", forecastViewerPage.getGroupAuto());
-        CommonAssertions.assertValueAttributeOfElement("Wrong count of groups after " + testType, countOfGroups,
-                forecastViewerPage.getGroupCount());
-        CommonAssertions.assertValueAttributeOfElement("Wrong clustering after " + testType, clustering,
-                forecastViewerPage.getClustering());
-        CommonAssertions.assertValueAttributeOfElement("Wrong union1 value after " + testType, union1,
-                forecastViewerPage.getGroupUnion1());
-        CommonAssertions.assertValueAttributeOfElement("Wrong union2 value after " + testType, union2,
-                forecastViewerPage.getGroupUnion2());
-        CommonAssertions.assertValueAttributeOfElement("Wrong union3 value after " + testType, union3,
-                forecastViewerPage.getGroupUnion3());
+        forecastViewerPage.getGroupCount().shouldHave(value(countOfGroups));
+        forecastViewerPage.getClustering().shouldHave(value(clustering));
+        forecastViewerPage.getGroupUnion1().shouldHave(value(union1));
+        forecastViewerPage.getGroupUnion2().shouldHave(value(union2));
+        forecastViewerPage.getGroupUnion3().shouldHave(value(union3));
     }
 
     private void assertGroupManualOptions(String group1, String group2, String group3, String testType) {
         assertTrue("Wrong grouping mode", forecastViewerPage.getGroupManual());
-        CommonAssertions.assertValueAttributeOfElement("Wrong component index 1 value after " + testType, group1,
-                forecastViewerPage.getGroupComponentIndex1());
-        CommonAssertions.assertValueAttributeOfElement("Wrong component index 2 value after " + testType, group2,
-                forecastViewerPage.getGroupComponentIndex2());
-        CommonAssertions.assertValueAttributeOfElement("Wrong component index 3 value after " + testType, group3,
-                forecastViewerPage.getGroupComponentIndex3());
+        forecastViewerPage.getGroupComponentIndex1().shouldHave(value(group1));
+        forecastViewerPage.getGroupComponentIndex2().shouldHave(value(group2));
+        forecastViewerPage.getGroupComponentIndex3().shouldHave(value(group3));
     }
 
     private boolean isStoredWidgetContainerEqualsNew() {

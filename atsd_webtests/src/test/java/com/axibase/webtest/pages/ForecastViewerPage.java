@@ -1,9 +1,10 @@
 package com.axibase.webtest.pages;
 
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 
 import java.time.Duration;
 import java.util.List;
@@ -76,8 +77,8 @@ public class ForecastViewerPage {
         $(portal).click();
     }
 
-    public WebElement getBreadcrumbElement(int elementsNumber) {
-        return $(breadcrumb).findElements(By.tagName("li")).get(elementsNumber);
+    public SelenideElement getBreadcrumbElement(int elementsNumber) {
+        return $(breadcrumb).$$(By.tagName("li")).get(elementsNumber);
     }
 
     public void submitFormAndWait(int countOfSeconds) {
@@ -133,7 +134,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public void waitUntilTooltipIsShown(WebElement element) {
+    public void waitUntilTooltipIsShown(SelenideElement element) {
         actions().moveToElement(element).perform();
         try {
             Wait().withTimeout(Duration.ofMillis(500))
@@ -190,7 +191,7 @@ public class ForecastViewerPage {
     }
 
     public String getGroupedByURLTags() {
-        return $(groupingByURL).findElement(By.tagName("ul")).getText();
+        return $(groupingByURL).$(By.tagName("ul")).getText();
     }
 
     public String getGroupedByURLText() {
@@ -207,36 +208,36 @@ public class ForecastViewerPage {
     }
 
     public int getCountOfActiveComponentsInComponentContainer() {
-        return $(componentContainer).findElements(By.xpath("//*[@fill='green' and not(@class)]")).size();
+        return $(componentContainer).$$(By.xpath("//*[@fill='green' and not(@class)]")).size();
     }
 
     public int getCountOfPassiveComponentsInComponentContainer() {
-        return $(componentContainer).findElements(By.xpath("//*[@fill='silver' and not(@class)]")).size();
+        return $(componentContainer).$$(By.xpath("//*[@fill='silver' and not(@class)]")).size();
     }
 
-    public String getNameOfForecastInSummaryTable(WebElement forecast) {
-        return forecast.findElement(By.xpath("../..")).getText().replace("\n(√λ)", "");
+    public String getNameOfForecastInSummaryTable(SelenideElement forecast) {
+        return forecast.$(By.xpath("../..")).getText().replace("\n(√λ)", "");
     }
 
     public String[] getForecastTabNames() {
         return $(forecastTabsPanel).getText().split("\n");
     }
 
-    public WebElement getComponentContainer() {
+    public SelenideElement getComponentContainer() {
         return $(componentContainer);
     }
 
-    public List<WebElement> getSummaryContainerForecastsSingularValueLinks() {
-        return $(summaryContainer).findElements(By.xpath("//a[text()='(√λ)']"));
+    public ElementsCollection getSummaryContainerForecastsSingularValueLinks() {
+        return $(summaryContainer).$$(By.xpath("//a[text()='(√λ)']"));
     }
 
     public List<String> getSummaryContainerForecastNames() {
-        return $(summaryContainer).findElements(By.xpath("//thead//th")).stream().
+        return $(summaryContainer).$$(By.xpath("//thead//th")).stream().
                 map(WebElement::getText).collect(Collectors.toList());
     }
 
-    public List<WebElement> getForecastsTabs() {
-        return $(forecastTabsPanel).findElements(By.tagName("li"));
+    public ElementsCollection getForecastsTabs() {
+        return $(forecastTabsPanel).$$(By.tagName("li"));
     }
 
     public boolean isForecastAddButtonPresent() {
@@ -273,35 +274,35 @@ public class ForecastViewerPage {
         return count;
     }
 
-    public WebElement getDownloadingPortal() {
+    public SelenideElement getDownloadingPortal() {
         return $(downloadingPortal);
     }
 
-    public WebElement getStatistics() {
+    public SelenideElement getStatistics() {
         return $(statistics);
     }
 
-    public WebElement getForecastSettings() {
+    public SelenideElement getForecastSettings() {
         return $(forecastSettings);
     }
 
-    public WebElement getPortal() {
+    public SelenideElement getPortal() {
         return $(portal);
     }
 
-    public WebElement getStackElement() {
+    public SelenideElement getStackElement() {
         return $(By.id("grouping-auto-stack"));
     }
 
-    public WebElement getGroupAutoElement() {
+    public SelenideElement getGroupAutoElement() {
         return $(groupAuto);
     }
 
-    public WebElement getGroupManualElement() {
+    public SelenideElement getGroupManualElement() {
         return $(groupManual);
     }
 
-    public WebElement getGroupParameterV() {
+    public SelenideElement getGroupParameterV() {
         return $(groupParameterV);
     }
 
@@ -310,7 +311,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getGroupParameterC() {
+    public SelenideElement getGroupParameterC() {
         return $(groupParameterC);
     }
 
@@ -319,11 +320,11 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getSubmitButton() {
+    public SelenideElement getSubmitButton() {
         return $(submitButton);
     }
 
-    public WebElement getAggregation() {
+    public SelenideElement getAggregation() {
         return $(aggregation);
     }
 
@@ -332,7 +333,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getInterpolation() {
+    public SelenideElement getInterpolation() {
         return $(interpolation);
     }
 
@@ -341,7 +342,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getPeriodCount() {
+    public SelenideElement getPeriodCount() {
         return $(periodCount);
     }
 
@@ -350,18 +351,18 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getPeriodUnit() {
+    public SelenideElement getPeriodUnit() {
         return $(periodUnit);
     }
 
     public ForecastViewerPage setPeriodUnit(String value) {
-        WebElement intervalInput = $(periodUnit).findElement(By.xpath(".."));
-        intervalInput.findElement(By.tagName("button")).click();
-        intervalInput.findElement(By.className("dropdown-menu")).findElement(By.partialLinkText(value)).click();
+        SelenideElement intervalInput = $(periodUnit).$(By.xpath(".."));
+        intervalInput.$(By.tagName("button")).click();
+        intervalInput.$(By.className("dropdown-menu")).$(By.partialLinkText(value)).click();
         return this;
     }
 
-    public WebElement getThreshold() {
+    public SelenideElement getThreshold() {
         return $(threshold);
     }
 
@@ -370,7 +371,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getComponentCount() {
+    public SelenideElement getComponentCount() {
         return $(componentCount);
     }
 
@@ -379,7 +380,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getWindowLength() {
+    public SelenideElement getWindowLength() {
         return $(windowLength);
     }
 
@@ -406,7 +407,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getGroupCount() {
+    public SelenideElement getGroupCount() {
         return $(groupCount);
     }
 
@@ -415,7 +416,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getClustering() {
+    public SelenideElement getClustering() {
         return $(clustering);
     }
 
@@ -424,7 +425,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getGroupUnion1() {
+    public SelenideElement getGroupUnion1() {
         return $(groupUnion1);
     }
 
@@ -433,7 +434,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getGroupUnion2() {
+    public SelenideElement getGroupUnion2() {
         return $(groupUnion2);
     }
 
@@ -442,7 +443,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getGroupUnion3() {
+    public SelenideElement getGroupUnion3() {
         return $(groupUnion3);
     }
 
@@ -460,7 +461,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getGroupComponentIndex1() {
+    public SelenideElement getGroupComponentIndex1() {
         return $(groupComponentIndex1);
     }
 
@@ -469,7 +470,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getGroupComponentIndex2() {
+    public SelenideElement getGroupComponentIndex2() {
         return $(groupComponentIndex2);
     }
 
@@ -478,7 +479,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getGroupComponentIndex3() {
+    public SelenideElement getGroupComponentIndex3() {
         return $(groupComponentIndex3);
     }
 
@@ -487,7 +488,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getAveragingFunction() {
+    public SelenideElement getAveragingFunction() {
         return $(averagingFunction);
     }
 
@@ -496,7 +497,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getScoreIntervalCount() {
+    public SelenideElement getScoreIntervalCount() {
         return $(scoreIntervalCount);
     }
 
@@ -505,18 +506,18 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getScoreIntervalUnit() {
+    public SelenideElement getScoreIntervalUnit() {
         return $(scoreIntervalUnit);
     }
 
     public ForecastViewerPage setScoreIntervalUnit(String value) {
-        WebElement intervalInput = $(scoreIntervalUnit).findElement(By.xpath(".."));
-        intervalInput.findElement(By.tagName("button")).click();
-        intervalInput.findElement(By.className("dropdown-menu")).findElement(By.partialLinkText(value)).click();
+        SelenideElement intervalInput = $(scoreIntervalUnit).$(By.xpath(".."));
+        intervalInput.$(By.tagName("button")).click();
+        intervalInput.$(By.className("dropdown-menu")).$(By.partialLinkText(value)).click();
         return this;
     }
 
-    public WebElement getStartDate() {
+    public SelenideElement getStartDate() {
         return $(startDate);
     }
 
@@ -525,7 +526,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getStartTime() {
+    public SelenideElement getStartTime() {
         return $(startTime);
     }
 
@@ -534,7 +535,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getEndDate() {
+    public SelenideElement getEndDate() {
         return $(endDate);
     }
 
@@ -543,7 +544,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getEndTime() {
+    public SelenideElement getEndTime() {
         return $(endTime);
     }
 
@@ -552,7 +553,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getForecastHorizonCount() {
+    public SelenideElement getForecastHorizonCount() {
         return $(forecastHorizonCount);
     }
 
@@ -561,26 +562,24 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getForecastHorizonUnit() {
+    public SelenideElement getForecastHorizonUnit() {
         return $(forecastHorizonUnit);
     }
 
     public ForecastViewerPage setForecastHorizonUnit(String value) {
-        WebElement intervalInput = $(forecastHorizonUnit).findElement(By.xpath(".."));
-        intervalInput.findElement(By.tagName("button")).click();
-        intervalInput.findElement(By.className("dropdown-menu")).findElement(By.partialLinkText(value)).click();
+        SelenideElement intervalInput = $(forecastHorizonUnit).$(By.xpath(".."));
+        intervalInput.$(By.tagName("button")).click();
+        intervalInput.$(By.className("dropdown-menu")).$(By.partialLinkText(value)).click();
         return this;
     }
 
-    public ForecastViewerPage setNumericOption(String value, WebElement element) {
-        element.clear();
-        element.sendKeys(value);
+    public ForecastViewerPage setNumericOption(String value, SelenideElement element) {
+        element.setValue(value);
         return this;
     }
 
-    public ForecastViewerPage setSelectionOption(String value, WebElement element) {
-        Select select = new Select(element);
-        select.selectByValue(value);
+    public ForecastViewerPage setSelectionOption(String value, SelenideElement element) {
+        element.selectOption(value);
         return this;
     }
 

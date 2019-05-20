@@ -1,7 +1,7 @@
 package com.axibase.webtest;
 
+import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
-import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
 
@@ -18,7 +18,7 @@ public class CommonAssertions {
      * @param errorMessage - message that will be shown if element is invalid
      * @param element      - element that will be checked
      */
-    public static void assertValid(String errorMessage, WebElement element) {
+    public static void assertValid(String errorMessage, SelenideElement element) {
         String script = "return element.checkValidity()";
         Boolean result = executeWithElement(element, script);
         assertTrue(errorMessage, result);
@@ -30,22 +30,10 @@ public class CommonAssertions {
      * @param errorMessage - message that will be shown if element is valid
      * @param element      - element that will be checked
      */
-    public static void assertInvalid(String errorMessage, WebElement element) {
+    public static void assertInvalid(String errorMessage, SelenideElement element) {
         String script = "return element.checkValidity()";
         Boolean result = executeWithElement(element, script);
         assertFalse(errorMessage, result);
-    }
-
-    /**
-     * Compare element's value and expected value
-     *
-     * @param errorMessage  - message that will be shown if element is valid
-     * @param expectedValue - expected value
-     * @param element       - element that will be checked
-     */
-    @Step("Check \"{expectedValue}\" equals to element's value")
-    public static void assertValueAttributeOfElement(String errorMessage, String expectedValue, WebElement element) {
-        assertEquals(errorMessage, expectedValue, element.getAttribute("value"));
     }
 
     /**
@@ -86,7 +74,7 @@ public class CommonAssertions {
      * @param <T>     type of returned expression
      * @return script execution result
      */
-    public static <T> T executeWithElement(WebElement element, String script) {
+    public static <T> T executeWithElement(SelenideElement element, String script) {
         String iifeScript = "return (function (element) {" + script + ";})(arguments[0])";
         return executeJavaScript(iifeScript, element);
     }

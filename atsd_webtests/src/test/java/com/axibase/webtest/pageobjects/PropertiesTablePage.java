@@ -19,7 +19,7 @@ public class PropertiesTablePage {
 
     public boolean isPropertyPresent(String propertyName) {
         return $(By.id("property-types-table"))
-                .findElements(By.cssSelector("tbody > tr >td:nth-child(3n)"))
+                .$$(By.cssSelector("tbody > tr >td:nth-child(3n)"))
                 .stream()
                 .map(WebElement::getText)
                 .collect(Collectors.joining(",")).contains(propertyName);

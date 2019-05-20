@@ -1,9 +1,8 @@
 package com.axibase.webtest.pageobjects;
 
-import com.axibase.webtest.CommonActions;
 import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.stream.Collectors;
 
@@ -49,58 +48,58 @@ public class MetricPage {
     public MetricPage addTag(String tagName, String tagValue) {
         $(addTag).click();
         ElementsCollection tagNamesList = $$(tagNames);
-        CommonActions.setValueOption(tagName, tagNamesList.get(tagNamesList.size() - 1));
+        tagNamesList.get(tagNamesList.size() - 1).selectOption(tagName);
         ElementsCollection tagValuesList = $$(tagValues);
-        CommonActions.setValueOption(tagValue, tagValuesList.get(tagValuesList.size() - 1));
+        tagValuesList.get(tagValuesList.size() - 1).selectOption(tagValue);
         return this;
     }
 
-    public WebElement getName() {
+    public SelenideElement getName() {
         return $(name);
     }
 
-    public WebElement getLabel() {
+    public SelenideElement getLabel() {
         return $(label);
     }
 
     public MetricPage setLabel(String value) {
-        CommonActions.setValueOption(value, $(label));
+        $(label).setValue(value);
         return this;
     }
 
-    public WebElement getDescription() {
+    public SelenideElement getDescription() {
         return $(description);
     }
 
     public MetricPage setDescription(String value) {
-        CommonActions.setValueOption(value, $(description));
+        $(description).setValue(value);
         return this;
     }
 
-    public WebElement getUnits() {
+    public SelenideElement getUnits() {
         return $(units);
     }
 
     public MetricPage setUnits(String value) {
-        CommonActions.setValueOption(value, $(units));
+        $(units).setValue(value);
         return this;
     }
 
-    public WebElement getMinValue() {
+    public SelenideElement getMinValue() {
         return $(minValue);
     }
 
     public MetricPage setMinValue(String value) {
-        CommonActions.setValueOption(value, $(minValue));
+        $(minValue).setValue(value);
         return this;
     }
 
-    public WebElement getMaxValue() {
+    public SelenideElement getMaxValue() {
         return $(maxValue);
     }
 
     public MetricPage setMaxValue(String value) {
-        CommonActions.setValueOption(value, $(maxValue));
+        $(maxValue).setValue(value);
         return this;
     }
 
@@ -116,7 +115,7 @@ public class MetricPage {
                 collect(Collectors.joining(","));
     }
 
-    public WebElement getEnabledSwitch() {
+    public SelenideElement getEnabledSwitch() {
         return $(enabledSwitch);
     }
 
@@ -125,7 +124,7 @@ public class MetricPage {
         return this;
     }
 
-    public WebElement getPersistentSwitch() {
+    public SelenideElement getPersistentSwitch() {
         return $(persistentSwitch);
     }
 
@@ -134,52 +133,52 @@ public class MetricPage {
         return this;
     }
 
-    public WebElement getPersistentFilter() {
+    public SelenideElement getPersistentFilter() {
         return $(persistentFilter);
     }
 
     public MetricPage setPersistentFilter(String value) {
-        CommonActions.setValueOption(value, $(persistentFilter));
+        $(persistentFilter).setValue(value);
         return this;
     }
 
-    public WebElement getRetentionIntervalDays() {
+    public SelenideElement getRetentionIntervalDays() {
         return $(retentionIntervalDays);
     }
 
     public MetricPage setRetentionIntervalDays(String value) {
-        CommonActions.setValueOption(value, $(retentionIntervalDays));
+        $(retentionIntervalDays).setValue(value);
         return this;
     }
 
-    public WebElement getSeriesRetentionDays() {
+    public SelenideElement getSeriesRetentionDays() {
         return $(seriesRetentionDays);
     }
 
     public MetricPage setSeriesRetentionDays(String value) {
-        CommonActions.setValueOption(value, $(seriesRetentionDays));
+        $(seriesRetentionDays).setValue(value);
         return this;
     }
 
-    public WebElement getDataType() {
+    public SelenideElement getDataType() {
         return $(dataType);
     }
 
     public MetricPage setDataType(String value) {
-        CommonActions.setSelectionOption(value, $(dataType));
+        $(dataType).selectOption(value);
         return this;
     }
 
-    public WebElement getTimeZone() {
+    public SelenideElement getTimeZone() {
         return $(timeZone);
     }
 
     public MetricPage setTimeZone(String value) {
-        CommonActions.setSelectionOption(value, $(timeZone));
+        $(timeZone).selectOption(value);
         return this;
     }
 
-    public WebElement getVersioningSwitch() {
+    public SelenideElement getVersioningSwitch() {
         return $(versioningSwitch);
     }
 
@@ -188,21 +187,21 @@ public class MetricPage {
         return this;
     }
 
-    public WebElement getInvalidAction() {
+    public SelenideElement getInvalidAction() {
         return $(invalidAction);
     }
 
     public MetricPage setInvalidAction(String value) {
-        CommonActions.setSelectionOption(value, $(invalidAction));
+        $(invalidAction).selectOption(value);
         return this;
     }
 
-    public WebElement getInterpolation() {
+    public SelenideElement getInterpolation() {
         return $(interpolation);
     }
 
     public MetricPage setInterpolation(String value) {
-        CommonActions.setSelectionOption(value, $(interpolation));
+        $(interpolation).selectOption(value);
         return this;
     }
 

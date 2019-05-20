@@ -14,7 +14,7 @@ public class StatisticsPage {
     }
 
     public String getSeriesTags() {
-        return $(By.xpath("//*/caption[contains(text(),'Series')]")).findElement(By.xpath("./..")).getText();
+        return $(By.xpath("//*/caption[contains(text(),'Series')]")).$(By.xpath("./..")).getText();
     }
 
     public void getSampleDataTab() {

@@ -1,7 +1,6 @@
 package com.axibase.webtest.pageobjects;
 
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.axibase.webtest.CommonActions.sendTextToCodeMirror;

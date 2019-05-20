@@ -1,6 +1,5 @@
 package com.axibase.webtest.forecasts;
 
-import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.CommonSelects;
 import com.axibase.webtest.pages.ForecastSettingsPage;
 import com.axibase.webtest.pages.ForecastViewerPage;
@@ -9,6 +8,8 @@ import com.axibase.webtest.service.AtsdTest;
 import com.axibase.webtest.service.CSVDataUploaderService;
 import com.axibase.webtest.service.Config;
 import com.axibase.webtest.service.csv.CSVImportParserAsSeriesTest;
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import org.apache.commons.net.util.Base64;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -22,7 +23,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static com.codeborne.selenide.WebDriverRunner.url;
@@ -60,8 +61,6 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     @Before
     public void setUp() {
         super.setUp();
-//        WebDriverRunner.getWebDriver().manage().window().setSize(new Dimension(1280, 720));
-
         csvDataUploaderService = new CSVDataUploaderService();
         csvDataUploaderService.uploadWithParser(DATA_CSV, "test-atsd-import-series-parser");
         setTimeZone();
@@ -182,7 +181,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
         open(newURL);
 
         assertRegularizeOptionValues(params.get("aggregation"), params.get("interpolation"), "25",
-                "minute", "URL params test");
+                "minute");
         assertDecomposeOptionValues(params.get("componentThreshold"), params.get("componentCount"),
                 params.get("windowLength"), "URL params test");
         assertForecastOptions("AVG", "1", "minute", "URL params test");
@@ -209,10 +208,10 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
                 .setComponentCount("19")
                 .submitFormAndWait(20);
 
-        List<WebElement> forecastSingularValues = forecastViewerPage.getSummaryContainerForecastsSingularValueLinks();
-        WebElement componentContainer = forecastViewerPage.getComponentContainer();
+        ElementsCollection forecastSingularValues = forecastViewerPage.getSummaryContainerForecastsSingularValueLinks();
+        SelenideElement componentContainer = forecastViewerPage.getComponentContainer();
 
-        for (WebElement forecastSingularValue : forecastSingularValues) {
+        for (SelenideElement forecastSingularValue : forecastSingularValues) {
             forecastSingularValue.click();
             assertNameOfForecastInComponentsWindowAndNameInSummary(forecastSingularValue, componentContainer);
             assertCountOfGreenComponents(forecastSingularValues.indexOf(forecastSingularValue));
@@ -221,9 +220,9 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
 
     @Test
     public void testActiveRegularizeOptionsCloning() {
-        forecastViewerPage.setRegularizeOptions("PERCENTILE_99", "PREVIOUS", "20", "minute")
+        forecastViewerPage.setRegularizeOptions("Percentile 99", "Previous", "20", "minute")
                 .addForecastTab();
-        assertRegularizeOptionValues("PERCENTILE_99", "PREVIOUS", "20", "minute", "cloning");
+        assertRegularizeOptionValues("PERCENTILE_99", "PREVIOUS", "20", "minute");
     }
 
     @Test
@@ -235,24 +234,24 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
 
     @Test
     public void testActiveForecastOptionsCloning() {
-        forecastViewerPage.setForecastOptions("MEDIAN", "10", "year")
+        forecastViewerPage.setForecastOptions("Median", "10", "year")
                 .addForecastTab();
         assertForecastOptions("MEDIAN", "10", "year", "cloning");
     }
 
     @Test
     public void testSwitchTabsRegularizeOptions() {
-        forecastViewerPage.setRegularizeOptions("PERCENTILE_99", "PREVIOUS", "20", "minute")
+        forecastViewerPage.setRegularizeOptions("Percentile 99", "Previous", "20", "minute")
                 .addForecastTab();
 
         String[] names = forecastViewerPage.getForecastTabNames();
         assertNotEquals("Forecast names in tabs are equals but they shouldn't be", names[0], names[1]);
 
-        forecastViewerPage.setRegularizeOptions("SUM", "LINEAR", "10", "hour")
+        forecastViewerPage.setRegularizeOptions("Sum", "Linear", "10", "hour")
                 .switchForecastTab("Forecast 1");
-        assertRegularizeOptionValues("PERCENTILE_99", "PREVIOUS", "20", "minute", "switching");
+        assertRegularizeOptionValues("PERCENTILE_99", "PREVIOUS", "20", "minute");
         forecastViewerPage.switchForecastTab("Forecast 2");
-        assertRegularizeOptionValues("SUM", "LINEAR", "10", "hour", "switching");
+        assertRegularizeOptionValues("SUM", "LINEAR", "10", "hour");
     }
 
     @Test
@@ -268,9 +267,9 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
 
     @Test
     public void testSwitchTabsForecastOptions() {
-        forecastViewerPage.setForecastOptions("MEDIAN", "10", "year")
+        forecastViewerPage.setForecastOptions("Median", "10", "year")
                 .addForecastTab()
-                .setForecastOptions("AVG", "11", "minute")
+                .setForecastOptions("Average", "11", "minute")
                 .switchForecastTab("Forecast 1");
         assertForecastOptions("MEDIAN", "10", "year", "switching");
         forecastViewerPage.switchForecastTab("Forecast 2");
@@ -308,7 +307,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     @Test
     public void testPresenceOfHistoryChartsInPicWithDifferentAggregation() {
         forecastViewerPage.addForecastTab()
-                .setAggregation("SUM")
+                .setAggregation("Sum")
                 .submitFormAndWait(20);
         int forecastCountInChart = forecastViewerPage.getCountOfHistoryChartsInWidgetContainer();
         assertEquals("Wrong count of history charts in chart", 2, forecastCountInChart);
@@ -317,7 +316,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     @Test
     public void testPresenceOfHistoryChartsInPicWithDifferentInterpolation() {
         forecastViewerPage.addForecastTab()
-                .setInterpolation("PREVIOUS")
+                .setInterpolation("Previous")
                 .submitFormAndWait(20);
         int forecastCountInChart = forecastViewerPage.getCountOfHistoryChartsInWidgetContainer();
         assertEquals("Wrong count of history charts in chart", 2, forecastCountInChart);
@@ -345,7 +344,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
         assertEquals("Wrong count of green components", countOfActiveComponents, countOfGreenComponents);
     }
 
-    private void assertNameOfForecastInComponentsWindowAndNameInSummary(WebElement forecast, WebElement componentContainer) {
+    private void assertNameOfForecastInComponentsWindowAndNameInSummary(SelenideElement forecast, SelenideElement componentContainer) {
         String name = forecastViewerPage.getNameOfForecastInSummaryTable(forecast);
         assertTrue("Wrong forecast name in components window", componentContainer.getText().contains(name));
     }
@@ -401,11 +400,9 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     }
 
     private void assertRegularizeOptionValues(String aggregationType, String interpolationType,
-                                              String periodCount, String periodUnit, String testType) {
-        CommonAssertions.assertValueAttributeOfElement("Wrong aggregation after " + testType, aggregationType,
-                forecastViewerPage.getAggregation());
-        CommonAssertions.assertValueAttributeOfElement("Wrong interpolation after " + testType, interpolationType,
-                forecastViewerPage.getInterpolation());
+                                              String periodCount, String periodUnit) {
+        forecastViewerPage.getAggregation().shouldHave(value(aggregationType));
+        forecastViewerPage.getInterpolation().shouldHave(value(interpolationType));
         assertIntervalEquals("Wrong period in the regularize section",
                 periodCount + "-" + periodUnit,
                 CommonSelects.getFormattedInterval(forecastViewerPage.getPeriodCount(),
@@ -413,17 +410,13 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     }
 
     private void assertDecomposeOptionValues(String threshold, String componentCount, String windowLen, String testType) {
-        CommonAssertions.assertValueAttributeOfElement("Wrong threshold after " + testType,
-                threshold, forecastViewerPage.getThreshold());
-        CommonAssertions.assertValueAttributeOfElement("Wrong component count after " + testType,
-                componentCount, forecastViewerPage.getComponentCount());
-        CommonAssertions.assertValueAttributeOfElement("Wrong window length after " + testType,
-                windowLen, forecastViewerPage.getWindowLength());
+        forecastViewerPage.getThreshold().shouldHave(value(threshold));
+        forecastViewerPage.getComponentCount().shouldHave(value(componentCount));
+        forecastViewerPage.getWindowLength().shouldHave(value(windowLen));
     }
 
     private void assertForecastOptions(String average, String intervalCount, String intervalUnit, String testType) {
-        CommonAssertions.assertValueAttributeOfElement("Wrong average name after " + testType,
-                average, forecastViewerPage.getAveragingFunction());
+        forecastViewerPage.getAveragingFunction().shouldHave(value(average));
         assertIntervalEquals("Wrong score interval in the Forecast section",
                 intervalCount + "-" + intervalUnit,
                 CommonSelects.getFormattedInterval(forecastViewerPage.getScoreIntervalCount(),

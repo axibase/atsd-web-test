@@ -4,6 +4,7 @@ import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.pageobjects.*;
 import com.axibase.webtest.service.AtsdTest;
 import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.After;
@@ -238,23 +239,23 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertSwitchElement("Wrong persistent", persistent, metricPage.getPersistentSwitch());
         assertSwitchElement("Wrong status", status, metricPage.getEnabledSwitch());
         assertSwitchElement("Wrong versioning", versioning, metricPage.getVersioningSwitch());
-        assertValueAttributeOfElement("Wrong label", label, metricPage.getLabel());
-        assertValueAttributeOfElement("Wrong interpolation", interpolationMode, metricPage.getInterpolation());
+        metricPage.getLabel().shouldHave(Condition.value(label));
+        metricPage.getInterpolation().shouldHave(Condition.value(interpolationMode));
         assertStringContainsValues("There is no such tag name: ", tagNames, metricPage.getTagNames());
         assertStringContainsValues("There is no such tag value: ", tagValues, metricPage.getTagValues());
-        assertValueAttributeOfElement("Wrong description", description, metricPage.getDescription());
-        assertValueAttributeOfElement("Wrong data type", dataType, metricPage.getDataType());
-        assertValueAttributeOfElement("Wrong units", units, metricPage.getUnits());
-        assertValueAttributeOfElement("Wrong filter", filter, metricPage.getPersistentFilter());
-        assertValueAttributeOfElement("Wrong min value", minVal, metricPage.getMinValue());
-        assertValueAttributeOfElement("Wrong max value", maxVal, metricPage.getMaxValue());
-        assertValueAttributeOfElement("Wrong retention days", retentionIntervalDays, metricPage.getRetentionIntervalDays());
-        assertValueAttributeOfElement("Wrong invalid action", invalidAction, metricPage.getInvalidAction());
-        assertValueAttributeOfElement("Wrong time zone", timeZone, metricPage.getTimeZone());
+        metricPage.getDescription().shouldHave(Condition.value(description));
+        metricPage.getDataType().shouldHave(Condition.value(dataType));
+        metricPage.getUnits().shouldHave(Condition.value(units));
+        metricPage.getPersistentFilter().shouldHave(Condition.value(filter));
+        metricPage.getMinValue().shouldHave(Condition.value(minVal));
+        metricPage.getMaxValue().shouldHave(Condition.value(maxVal));
+        metricPage.getRetentionIntervalDays().shouldHave(Condition.value(retentionIntervalDays));
+        metricPage.getInvalidAction().shouldHave(Condition.value(invalidAction));
+        metricPage.getTimeZone().shouldHave(Condition.value(timeZone));
     }
 
     @Step
-    private void assertSwitchElement(String errorMessage, String expectedValue, WebElement switchButton) {
+    private void assertSwitchElement(String errorMessage, String expectedValue, SelenideElement switchButton) {
         String script = "return element.checked";
         assertEquals(errorMessage, Boolean.parseBoolean(expectedValue), executeWithElement(switchButton, script));
     }
@@ -265,11 +266,11 @@ public class DataEntryCommandsTest extends AtsdTest {
         EntityPage entityPage = new EntityPage(ENTITY_NAME);
 
         assertSwitchElement("Wrong status", status, entityPage.getEnabledSwitch());
-        assertValueAttributeOfElement("Wrong label", label, entityPage.getLabel());
-        assertValueAttributeOfElement("Wrong interpolation", interpolationMode, entityPage.getInterpolation());
+        entityPage.getLabel().shouldHave(Condition.value(label));
+        entityPage.getInterpolation().shouldHave(Condition.value(interpolationMode));
         assertStringContainsValues("There is no such tag name: ", tagNames, entityPage.getTagNames());
         assertStringContainsValues("There is no such tag value: ", tagValues, entityPage.getTagValues());
-        assertValueAttributeOfElement("Wrong time zone", timeZone, entityPage.getTimeZone());
+        entityPage.getTimeZone().shouldHave(Condition.value(timeZone));
     }
 
     @Step("Check message  parameters")
