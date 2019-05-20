@@ -6,7 +6,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ntp.NTPUDPClient;
 import org.apache.commons.net.ntp.TimeInfo;
 import org.apache.commons.net.ntp.TimeStamp;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.net.InetAddress;
 import java.net.SocketException;
@@ -14,8 +14,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static com.codeborne.selenide.Selenide.open;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.AssertJUnit.fail;
 
 @Slf4j
 public class AdminServiceTest extends AtsdTest {

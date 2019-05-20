@@ -1,5 +1,6 @@
 package com.axibase.webtest.service;
 
+import com.axibase.webtest.CommonActions;
 import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.ElementsCollection;
 import io.qameta.allure.Step;
@@ -9,9 +10,8 @@ import org.openqa.selenium.By;
 import java.util.Arrays;
 import java.util.List;
 
-import com.axibase.webtest.CommonActions;
 import static com.codeborne.selenide.Selenide.$;
-import static org.junit.Assert.assertEquals;
+import static org.testng.AssertJUnit.assertEquals;
 
 public abstract class ReplacementTableImportBase extends AtsdTest {
     @Step

@@ -3,17 +3,13 @@ package com.axibase.webtest.service;
 import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.CommonAssertions;
 import lombok.RequiredArgsConstructor;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.junit.runners.Parameterized;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
 
 import java.io.File;
-import java.util.Arrays;
-import java.util.Collection;
 
 import static com.axibase.webtest.service.ReplacementTableImportBase.ImportOptionAutoEnable.AUTO_ENABLE;
 import static com.axibase.webtest.service.ReplacementTableImportBase.ImportOptionAutoEnable.NO_AUTO_ENABLE;
@@ -22,52 +18,46 @@ import static com.axibase.webtest.service.ReplacementTableImportBase.ImportOptio
 import static com.codeborne.selenide.Selenide.$;
 
 @RequiredArgsConstructor
-@RunWith(value = Parameterized.class)
 public class AdminBackupImportTest extends ReplacementTableImportBase {
-
-    private final String testFile;
-
-    @Parameterized.Parameters(name = "{index} {0}")
-    public static Collection<Object[]> data() {
-        Object[][] data = new Object[][]{
+    @DataProvider(name = "files")
+    public static Object[][] data() {
+        return new Object[][]{
                 {AdminBackupImportTest.class.getResource("replacement-table" + File.separator + "xml-file.xml").getFile()},
                 {AdminBackupImportTest.class.getResource("replacement-table" + File.separator + "zip-archive.zip").getFile()},
                 {AdminBackupImportTest.class.getResource("replacement-table" + File.separator + "tar-archive.tar").getFile()},
                 {AdminBackupImportTest.class.getResource("replacement-table" + File.separator + "bz2-archive.tar.bz2").getFile()},
                 {AdminBackupImportTest.class.getResource("replacement-table" + File.separator + "gz-archive.tar.gz").getFile()}};
-
-        return Arrays.asList(data);
     }
 
-    @Before
+    @BeforeMethod
     public void setUp() {
         super.setUp();
         goToAdminImportBackupPage();
     }
 
-    @Test
-    public void testImportDataImportBackupPage() {
+    @Test(dataProvider = "files")
+    public void testImportDataImportBackupPage(String testFile) {
         sendFilesOnAdminImportBackup(testFile, NO_REPLACE_EXISTING, NO_AUTO_ENABLE);
         goToReplacementTablesPage();
         checkThatAllReplacementTablesAreShownInTheList();
     }
 
-    @Test
-    public void testImportDataImportBackupPageWithReplace() {
+    @Test(dataProvider = "files")
+    public void testImportDataImportBackupPageWithReplace(String testFile) {
         sendFilesOnAdminImportBackup(testFile, NO_REPLACE_EXISTING, NO_AUTO_ENABLE);
         sendFilesOnAdminImportBackup(testFile, REPLACE_EXISTING, NO_AUTO_ENABLE);
         goToReplacementTablesPage();
         checkThatAllReplacementTablesAreShownInTheList();
     }
 
-    @Test
-    public void testImportDataImportBackupPageWithAutoEnable() {
+    @Test(dataProvider = "files")
+    public void testImportDataImportBackupPageWithAutoEnable(String testFile) {
         sendFilesOnAdminImportBackup(testFile, NO_REPLACE_EXISTING, AUTO_ENABLE);
         goToReplacementTablesPage();
         checkThatAllReplacementTablesAreShownInTheList();
     }
 
-    @After
+    @AfterMethod
     public void cleanUp() {
         deleteReplacementTables();
     }

@@ -3,20 +3,20 @@ package com.axibase.webtest.service;
 
 import com.axibase.webtest.CommonAssertions;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static com.axibase.webtest.PageUtils.urlPath;
 import static com.axibase.webtest.service.AccountService.CREATE_ACCOUNT_TITLE;
 import static com.codeborne.selenide.Selenide.title;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
 
 @Slf4j
 public class CreateAdminAccountTest extends AtsdTest {
     private AccountService accountService;
 
-    @Before
+    @BeforeMethod
     @Override
     public void setUp() {
         accountService = new AccountService();

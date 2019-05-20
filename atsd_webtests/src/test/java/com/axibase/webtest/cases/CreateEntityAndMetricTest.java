@@ -2,12 +2,13 @@ package com.axibase.webtest.cases;
 
 import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AtsdTest;
-import org.junit.Test;
+import org.testng.annotations.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.Assert.*;
+import static org.testng.Assert.assertNotEquals;
+import static org.testng.AssertJUnit.*;
 
 public class CreateEntityAndMetricTest extends AtsdTest {
 
@@ -35,6 +36,6 @@ public class CreateEntityAndMetricTest extends AtsdTest {
         assertEquals(generateAssertMessage("Wrong success message"), "Series inserted successfully", successMessage.getText().trim());
 
         open("/portals/series?entity=my-entity&metric=my-metric");
-        assertNotEquals(generateAssertMessage("No widgets for portal"), 0, $$(By.className("widget")).size());
+        assertNotEquals(0, $$(By.className("widget")).size(), generateAssertMessage("No widgets for portal"));
     }
 }
