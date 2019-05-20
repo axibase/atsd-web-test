@@ -3,10 +3,10 @@ package com.axibase.webtest.service;
 import com.axibase.webtest.CommonAssertions;
 import io.qameta.allure.Flaky;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import static com.codeborne.selenide.Selenide.open;
-import static org.junit.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertTrue;
 
 @Slf4j
 public class DeleteAccountTest extends AtsdTest {

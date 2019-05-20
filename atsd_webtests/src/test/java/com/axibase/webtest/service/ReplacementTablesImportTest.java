@@ -3,24 +3,22 @@ package com.axibase.webtest.service;
 import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.CommonAssertions;
 import com.codeborne.selenide.CollectionCondition;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import org.openqa.selenium.By;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.io.File;
 
-import static com.axibase.webtest.PageUtils.urlPath;
 import static com.axibase.webtest.service.ReplacementTableImportBase.ImportOptionReplace.NO_REPLACE_EXISTING;
 import static com.axibase.webtest.service.ReplacementTableImportBase.ImportOptionReplace.REPLACE_EXISTING;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static org.junit.Assert.assertEquals;
 
 public class ReplacementTablesImportTest extends ReplacementTableImportBase {
     private static final String XML_FILE = ReplacementTablesImportTest.class.getResource("replacement-table" + File.separator + "xml-file.xml").getFile();
 
-    @Before
+    @BeforeMethod
     public void setUp() {
         super.setUp();
         goToReplacementTablesImportPage();
@@ -43,7 +41,7 @@ public class ReplacementTablesImportTest extends ReplacementTableImportBase {
         checkThatAllReplacementTablesAreShownInTheList();
     }
 
-    @After
+    @AfterMethod
     public void cleanUp() {
         deleteReplacementTables();
     }

@@ -1,17 +1,17 @@
 package com.axibase.webtest.service;
 
 import com.axibase.webtest.CommonAssertions;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Created by sild on 02.02.15.
  */
 public class LoginServiceTest extends AtsdTest {
-    @Before
+    @BeforeMethod
     @Override
     public void setUp() {
         // skip sign in

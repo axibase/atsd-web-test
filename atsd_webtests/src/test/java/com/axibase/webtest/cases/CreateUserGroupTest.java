@@ -4,20 +4,22 @@ import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AccountService;
 import com.axibase.webtest.service.AtsdTest;
 import io.qameta.allure.Issue;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
-import static com.codeborne.selenide.Selenide.*;
-import static org.junit.Assert.*;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
 
 public class CreateUserGroupTest extends AtsdTest {
     private static final String TEST_USER = "axiuser";
     private AccountService accountService;
 
-    @Before
+    @BeforeMethod
     public void setUp() {
         super.setUp();
         open("/admin/users/edit.xhtml");
@@ -25,7 +27,7 @@ public class CreateUserGroupTest extends AtsdTest {
         accountService.createUser(TEST_USER, TEST_USER);
     }
 
-    @After
+    @AfterMethod
     public void tearDown() {
         // Configure ATSD as it was before test
         open("/admin/users/edit.xhtml?user=" + TEST_USER);
