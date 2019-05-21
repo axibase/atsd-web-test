@@ -3,7 +3,7 @@ package com.axibase.webtest.forecasts;
 import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.CommonSelects;
-import com.axibase.webtest.pages.ForecastViewerPage;
+import com.axibase.webtest.pageobjects.ForecastViewerPage;
 import com.axibase.webtest.service.AtsdTest;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
@@ -22,7 +22,7 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
             "startDate=2015-03-04T14:24:40.000Z&horizonInterval=10-MINUTE&period=5-SECOND";
 
     @BeforeMethod
-public void setUp() {
+    public void setUp() {
         super.setUp();
         loadData();
         forecastViewerPage = new ForecastViewerPage();

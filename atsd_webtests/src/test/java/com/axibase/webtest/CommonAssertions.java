@@ -98,7 +98,7 @@ public class CommonAssertions {
      *
      * @param errorMessage - message that will be shown if the table doesn't contains tags
      * @param tags         - expected tags
-     * @param allTags        - the given table's tags
+     * @param allTags      - the given table's tags
      */
     @Step("Check if the given table contains \"{tags}\" ")
     public static void assertExpectedTagsInTable(String errorMessage, String[] tags, String allTags) {

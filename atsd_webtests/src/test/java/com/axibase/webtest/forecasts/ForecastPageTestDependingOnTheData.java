@@ -1,13 +1,13 @@
 package com.axibase.webtest.forecasts;
 
 import com.axibase.webtest.CommonSelects;
-import com.axibase.webtest.pages.ForecastSettingsPage;
-import com.axibase.webtest.pages.ForecastViewerPage;
-import com.axibase.webtest.pages.PortalPage;
+import com.axibase.webtest.pageobjects.ForecastSettingsPage;
+import com.axibase.webtest.pageobjects.ForecastViewerPage;
+import com.axibase.webtest.pageobjects.PortalPage;
 import com.axibase.webtest.service.AtsdTest;
 import com.axibase.webtest.service.CSVDataUploaderService;
 import com.axibase.webtest.service.Config;
-import com.axibase.webtest.service.csv.CSVImportParserAsSeriesTest;
+import com.axibase.webtest.service.CSVImportParserAsSeriesTest;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.apache.commons.net.util.Base64;
@@ -59,7 +59,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     private ForecastViewerPage forecastViewerPage;
 
     @BeforeMethod
-public void setUp() {
+    public void setUp() {
         super.setUp();
         csvDataUploaderService = new CSVDataUploaderService();
         csvDataUploaderService.uploadWithParser(DATA_CSV, "test-atsd-import-series-parser");
@@ -79,7 +79,7 @@ public void setUp() {
                 .setPeriodUnit("minute")
                 .setForecastHorizonCount("1")
                 .setForecastHorizonUnit("hour")
-                .submitFormAndWait(15);
+                .submitFormAndWait();
 
         assertEquals("Should be only one silver component", 1,
                 forecastViewerPage.getCountOfPassiveComponentsInComponentContainer());
@@ -206,7 +206,7 @@ public void setUp() {
         forecastViewerPage.setGroupAuto()
                 .setGroupCount("11")
                 .setComponentCount("19")
-                .submitFormAndWait(20);
+                .submitFormAndWait();
 
         ElementsCollection forecastSingularValues = forecastViewerPage.getSummaryContainerForecastsSingularValueLinks();
         SelenideElement componentContainer = forecastViewerPage.getComponentContainer();
@@ -282,7 +282,7 @@ public void setUp() {
         forecastViewerPage.setGroupAuto()
                 .setGroupCount(countOfGroups)
                 .setComponentCount("19")
-                .submitFormAndWait(20);
+                .submitFormAndWait();
         int countInPic = forecastViewerPage.getCountOfForecastsInWidgetContainer();
         assertEquals("Wrong count of groups on the chart", countOfGroups, Integer.toString(countInPic));
     }
@@ -290,7 +290,7 @@ public void setUp() {
     @Test
     public void testPresenceOfForecastsInSummary() {
         forecastViewerPage.addForecastTab()
-                .submitFormAndWait(20);
+                .submitFormAndWait();
         int forecastCountInSummary = forecastViewerPage.getSummaryContainerForecastsSingularValueLinks().size();
         assertEquals("Wrong count of history charts in summary", 2, forecastCountInSummary);
     }
@@ -299,7 +299,7 @@ public void setUp() {
     public void testPresenceOfHistoryChartsInPicWithDifferentPeriods() {
         forecastViewerPage.addForecastTab()
                 .setPeriodCount("20")
-                .submitFormAndWait(20);
+                .submitFormAndWait();
         int forecastCountInChart = forecastViewerPage.getCountOfHistoryChartsInWidgetContainer();
         assertEquals("Wrong count of history charts in chart", 2, forecastCountInChart);
     }
@@ -308,7 +308,7 @@ public void setUp() {
     public void testPresenceOfHistoryChartsInPicWithDifferentAggregation() {
         forecastViewerPage.addForecastTab()
                 .setAggregation("Sum")
-                .submitFormAndWait(20);
+                .submitFormAndWait();
         int forecastCountInChart = forecastViewerPage.getCountOfHistoryChartsInWidgetContainer();
         assertEquals("Wrong count of history charts in chart", 2, forecastCountInChart);
     }
@@ -317,7 +317,7 @@ public void setUp() {
     public void testPresenceOfHistoryChartsInPicWithDifferentInterpolation() {
         forecastViewerPage.addForecastTab()
                 .setInterpolation("Previous")
-                .submitFormAndWait(20);
+                .submitFormAndWait();
         int forecastCountInChart = forecastViewerPage.getCountOfHistoryChartsInWidgetContainer();
         assertEquals("Wrong count of history charts in chart", 2, forecastCountInChart);
     }
@@ -328,7 +328,7 @@ public void setUp() {
                 .addForecastTab()
                 .switchForecastTab("Forecast 2")
                 .removeForecastTab()
-                .submitFormAndWait(25);
+                .submitFormAndWait();
 
         String[] names = forecastViewerPage.getForecastTabNames();
         List<String> forecastNames = forecastViewerPage.getSummaryContainerForecastNames();

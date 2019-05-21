@@ -5,21 +5,22 @@ import com.axibase.webtest.service.AccountService;
 import com.axibase.webtest.service.AtsdTest;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Issue;
+import org.openqa.selenium.By;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.openqa.selenium.By;
 
-
-import static com.codeborne.selenide.Selenide.*;
-import static org.testng.AssertJUnit.*;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.open;
+import static org.testng.AssertJUnit.assertFalse;
+import static org.testng.AssertJUnit.assertTrue;
 
 public class CreateUserGroupTest extends AtsdTest {
     private static final String TEST_USER = "axiuser";
     private AccountService accountService;
 
     @BeforeMethod
-public void setUp() {
+    public void setUp() {
         super.setUp();
         open("/admin/users/edit.xhtml");
         accountService = new AccountService();
@@ -27,7 +28,7 @@ public void setUp() {
     }
 
     @AfterMethod
-public void tearDown() {
+    public void tearDown() {
         // Configure ATSD as it was before test
         open("/admin/users/edit.xhtml?user=" + TEST_USER);
         accountService.deleteUser(TEST_USER);
@@ -97,5 +98,6 @@ public void tearDown() {
         SelenideElement firstPortalCheckbox = $(By.id("portalPermissionsModels0.accessGranted"));
         assertTrue(generateAssertMessage("Check box for first portal should be enabled"), firstPortalCheckbox.isSelected());
     }
+
 }
 

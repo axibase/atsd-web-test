@@ -16,7 +16,7 @@ import java.util.stream.Stream;
 import static com.axibase.webtest.CommonActions.clickCheckboxByValueAttribute;
 import static com.axibase.webtest.CommonAssertions.assertExpectedTagsInTable;
 import static com.axibase.webtest.CommonAssertions.executeWithElement;
-import static com.codeborne.selenide.Condition.*;
+import static com.codeborne.selenide.Condition.value;
 import static org.testng.AssertJUnit.*;
 
 public class DataEntryCommandsTest extends AtsdTest {
@@ -25,7 +25,7 @@ public class DataEntryCommandsTest extends AtsdTest {
     private DataEntryPage dataEntryPage;
 
     @BeforeMethod
-public void setUp() {
+    public void setUp() {
         super.setUp();
         dataEntryPage = new DataEntryPage();
     }
@@ -148,7 +148,7 @@ public void setUp() {
 
     @Step
     @AfterMethod
-public void cleanup() {
+    public void cleanup() {
         dropRecord(new EntitiesTablePage(), ENTITY_NAME);
         dropRecord(new MetricsTablePage(), METRIC_NAME);
     }

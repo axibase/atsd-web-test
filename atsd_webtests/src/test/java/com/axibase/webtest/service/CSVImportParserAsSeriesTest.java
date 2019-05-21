@@ -1,14 +1,13 @@
-package com.axibase.webtest.service.csv;
+package com.axibase.webtest.service;
 
 import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.CommonAssertions;
-import com.axibase.webtest.service.AtsdTest;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.SelenideElement;
+import org.openqa.selenium.By;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-import org.openqa.selenium.By;
 
 import java.util.Optional;
 
@@ -22,15 +21,9 @@ public class CSVImportParserAsSeriesTest extends AtsdTest {
     private static final String PATH_TO_PARSER = CSVImportParserAsSeriesTest.class.getResource("test-atsd-import-series-parser.xml").getFile();
 
     @BeforeMethod
-public void setUp() {
+    public void setUp() {
         super.setUp();
         goToCSVParsersImportPage();
-    }
-
-    @AfterMethod
-public void cleanup() {
-        goToCSVParsersPage();
-        CommonActions.deleteAllRecords();
     }
 
     @Test
@@ -58,6 +51,12 @@ public void cleanup() {
         goToCSVParsersPage();
         assertTrue("Parser is not added into table",
                 $("#configurationList > tbody").getText().contains(PARSER_NAME));
+    }
+
+    @AfterMethod
+    public void cleanup() {
+        goToCSVParsersPage();
+        CommonActions.deleteAllRecords();
     }
 
     private void sendParserIntoTableWithoutReplacement() {

@@ -1,4 +1,4 @@
-package com.axibase.webtest.pages;
+package com.axibase.webtest.pageobjects;
 
 import org.openqa.selenium.By;
 

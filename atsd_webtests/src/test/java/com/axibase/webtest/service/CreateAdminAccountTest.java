@@ -33,4 +33,5 @@ public class CreateAdminAccountTest extends AtsdTest {
             log.info("User already created");
         }
     }
+
 }

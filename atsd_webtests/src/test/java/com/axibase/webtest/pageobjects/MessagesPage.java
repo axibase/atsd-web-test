@@ -43,7 +43,7 @@ public class MessagesPage {
     public String[] getMessagesSeverity() {
         return $$(By.xpath("//td[contains(@id,'severity')]"))
                 .stream()
-                .map(element->element.getAttribute("data-value"))
+                .map(element -> element.getAttribute("data-value"))
                 .toArray(String[]::new);
     }
 

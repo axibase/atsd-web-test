@@ -1,4 +1,4 @@
-package com.axibase.webtest.pages;
+package com.axibase.webtest.pageobjects;
 
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import static com.axibase.webtest.CommonAssertions.executeWithElement;
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.Assert.fail;
+import static org.testng.Assert.fail;
 
 public class ForecastViewerPage {
     private By breadcrumb = By.className("breadcrumb");
@@ -80,9 +80,9 @@ public class ForecastViewerPage {
         return $(breadcrumb).$$(By.tagName("li")).get(elementsNumber);
     }
 
-    public void submitFormAndWait(int countOfSeconds) {
+    public void submitFormAndWait() {
         $(submitButton).click();
-        waitUntilSummaryTableIsLoaded(countOfSeconds);
+        waitUntilSummaryTableIsLoaded(25);
     }
 
     public ForecastViewerPage clickSubmitButton() {

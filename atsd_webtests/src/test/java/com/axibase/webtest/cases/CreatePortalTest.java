@@ -68,4 +68,5 @@ public class CreatePortalTest extends AtsdTest {
         // The size of the window changes after close -> switch
         driver.manage().window().setSize(new Dimension(1280, 720));
     }
+
 }
