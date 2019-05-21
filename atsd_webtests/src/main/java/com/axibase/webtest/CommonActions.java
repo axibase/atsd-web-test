@@ -1,7 +1,15 @@
 package com.axibase.webtest;
 
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URIBuilder;
+import org.apache.http.message.BasicNameValuePair;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 import static com.axibase.webtest.CommonConditions.clickable;
 import static com.codeborne.selenide.Selectors.*;
@@ -62,5 +70,24 @@ public class CommonActions {
     public static void uploadFile(String file) {
         $("input[type='file']").sendKeys(file);
         $("input[type='submit']").click();
+    }
+
+    /**
+     * Create URL with params from map
+     *
+     * @param URLPrefix -  prefix without params
+     * @param params    - string params
+     * @return - new URL
+     */
+    public static String createNewURL(String URLPrefix, Map<String, String> params) {
+        List<NameValuePair> paramsForEncoding = new ArrayList<>();
+        for (Map.Entry<String, String> entry : params.entrySet()) {
+            paramsForEncoding.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
+        }
+        try {
+            return new URIBuilder(URLPrefix).addParameters(paramsForEncoding).build().toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Wrong URL", e);
+        }
     }
 }
