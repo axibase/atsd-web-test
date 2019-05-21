@@ -1,13 +1,14 @@
 package com.axibase.webtest.pages;
 
 import com.axibase.webtest.CommonActions;
-import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
+import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.codeborne.selenide.Selenide.*;
-import static com.codeborne.selenide.Selenide.open;
 
 public class MetricsForEntityPage {
     private By searchQuery = By.id("searchQuery");
@@ -17,18 +18,19 @@ public class MetricsForEntityPage {
         open(CommonActions.createNewURL("/entities/" + entityName + "/metrics", params));
     }
 
-    public MetricsForEntityPage setQuerySearch(String filter){
+    public MetricsForEntityPage setQuerySearch(String filter) {
         $(searchQuery).setValue(filter);
         return this;
     }
 
-    public MetricsForEntityPage search(){
+    public MetricsForEntityPage search() {
         $(searchButton).click();
         return this;
     }
 
-    public ElementsCollection getMetrics(){
-        return $$("#metricList > tbody > tr > td:nth-child(4n)");
+    public List<String> getMetricNames() {
+        return $$("#metricList > tbody > tr > td:nth-child(4n)")
+                .stream().map(SelenideElement::text).collect(Collectors.toList());
     }
 
 }
