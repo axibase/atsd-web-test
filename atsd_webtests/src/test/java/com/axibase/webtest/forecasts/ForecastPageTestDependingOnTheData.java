@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
@@ -354,8 +355,8 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     }
 
     private void assertEndDate(String errorMessage, String sendedDate) {
-        String newDate = forecastViewerPage.getEndDate().getAttribute("value") + "T" +
-                forecastViewerPage.getEndTime().getAttribute("value");
+        String newDate = forecastViewerPage.getEndDate().getValue() + "T" +
+                forecastViewerPage.getEndTime().getValue();
         assertEquals(errorMessage, getTranslatedDate(sendedDate).toString(), newDate);
     }
 
@@ -365,21 +366,9 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     }
 
     private void assertStartDate(String errorMessage, String sendedDate) {
-        String newDate = forecastViewerPage.getStartDate().getAttribute("value") + "T" +
-                forecastViewerPage.getStartTime().getAttribute("value");
+        String newDate = forecastViewerPage.getStartDate().getValue() + "T" +
+                forecastViewerPage.getStartTime().getValue();
         assertEquals(errorMessage, getTranslatedDate(sendedDate).toString(), newDate);
-    }
-
-    private String createNewURL(String urlPrefix, Map<String, String> params) {
-        List<NameValuePair> paramsForEncoding = new ArrayList<>();
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            paramsForEncoding.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-        }
-        try {
-            return new URIBuilder(urlPrefix).addParameters(paramsForEncoding).build().toString();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Wrong URI", e);
-        }
     }
 
     private String removeURLParameter(String url, String parameterName) {

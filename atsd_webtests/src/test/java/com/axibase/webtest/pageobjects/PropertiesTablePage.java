@@ -1,7 +1,7 @@
 package com.axibase.webtest.pageobjects;
 
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.stream.Collectors;
 
@@ -19,9 +19,9 @@ public class PropertiesTablePage {
 
     public boolean isPropertyPresent(String propertyName) {
         return $(By.id("property-types-table"))
-                .$$(By.cssSelector("tbody > tr >td:nth-child(3n)"))
+                .$$("tbody > tr >td:nth-child(3n)")
                 .stream()
-                .map(WebElement::getText)
+                .map(SelenideElement::getText)
                 .collect(Collectors.joining(",")).contains(propertyName);
     }
 

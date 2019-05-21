@@ -14,7 +14,7 @@ public class ForecastSettingsPage {
     }
 
     public String getGroupingTags() {
-        return $(groupingTags).getAttribute("value");
+        return $(groupingTags).getValue();
     }
 
 }

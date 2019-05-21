@@ -30,7 +30,7 @@ public class CommonSelects {
      * @return - string that is represented formatted interval value
      */
     public static String getFormattedInterval(SelenideElement countElement, SelenideElement unitElement) {
-        return countElement.getAttribute("value") + "-" + unitElement.getAttribute("value");
+        return countElement.getValue()+ "-" + unitElement.getValue();
     }
 
 }

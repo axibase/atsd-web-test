@@ -4,12 +4,14 @@ import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AtsdTest;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static com.axibase.webtest.CommonConditions.clickable;
+import static com.codeborne.selenide.Condition.cssClass;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static junit.framework.TestCase.assertTrue;
@@ -50,18 +52,20 @@ public class CreatePortalTest extends AtsdTest {
 
         executeJavaScript("document.querySelector('.CodeMirror').CodeMirror.setValue('" + config + "');");
         $(By.id("save-button")).shouldBe(clickable).click();
+        $(By.id("save-button")).shouldHave(cssClass("btn-success"));
         CommonAssertions.assertPageTitleAfterLoadEquals("Portal Test Portal");
         $(By.id("view-button")).shouldBe(clickable).click();
         $(By.id("view-name-button")).shouldBe(clickable).click();
         final WebDriver driver = getWebDriver();
         List<String> tabs = new ArrayList<>(driver.getWindowHandles());
         assertEquals(generateAssertMessage("Exactly 2 new tabs must be opened"), 3, tabs.size());
-
         for (int i = 1; i < tabs.size(); i++) {
             driver.switchTo().window(tabs.get(i));
             assertNotEquals(generateAssertMessage("No widgets for portal"), 0, $$(By.className("widget")).size());
             driver.close();
         }
         driver.switchTo().window(tabs.get(0));
+        // The size of the window changes after close -> switch
+        driver.manage().window().setSize(new Dimension(1280, 720));
     }
 }

@@ -3,22 +3,20 @@ package com.axibase.webtest.cases;
 import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.pageobjects.*;
 import com.axibase.webtest.service.AtsdTest;
-import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.apache.commons.lang3.ArrayUtils;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import static com.axibase.webtest.CommonActions.*;
-import static com.axibase.webtest.CommonAssertions.*;
-import static com.codeborne.selenide.Selenide.$;
+import static com.axibase.webtest.CommonActions.clickCheckboxByValueAttribute;
+import static com.axibase.webtest.CommonAssertions.assertExpectedTagsInTable;
+import static com.axibase.webtest.CommonAssertions.executeWithElement;
+import static com.codeborne.selenide.Condition.*;
 import static org.junit.Assert.*;
 
 public class DataEntryCommandsTest extends AtsdTest {
@@ -32,7 +30,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         dataEntryPage = new DataEntryPage();
     }
 
-    @Test
+//    @Test
     public void testMessageAdd() {
         String messageText = "\"Message text\"";
         String type = "message_tag_type_value";
@@ -47,10 +45,10 @@ public class DataEntryCommandsTest extends AtsdTest {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
 
         assertEntityAdd();
-        assertStringContainsValues("Message tag key is not added into Message Tag Key IDs: ",
-                tagNames, new MessageTagKeyIDsPage().getValuesInTable());
-        assertStringContainsValues("Message tag value is not added into Message Tag Value IDs: ",
-                tagValues, new MessageTagValueIDsPage().getValuesInTable());
+        assertExpectedTagsInTable("Message tag key is not added into Message Tag Key IDs: ",
+                tagNames, new MessageTagKeyIDsPage().getTable());
+        assertExpectedTagsInTable("Message tag value is not added into Message Tag Value IDs: ",
+                tagValues, new MessageTagValueIDsPage().getTable());
         assertMessageAddByEntityName();
         assertMessageParameters(type, source, severity);
     }
@@ -73,7 +71,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertPropertiesKeysAndTags(propType, key_names, key_values, tag_names, tag_values);
     }
 
-    @Test
+//    @Test
     public void testSeriesAdd() {
         String metricText1 = "metric_text1";
         String metricText2 = "metric_text2";
@@ -91,10 +89,10 @@ public class DataEntryCommandsTest extends AtsdTest {
 
         dataEntryPage.typeCommands(insertMessage1 + "\n" + insertMessage2).sendCommands();
 
-        assertStringContainsValues("Series tag keys is not added into Series Tag Key IDs: ",
-                tagNames, new SeriesTagKeyIDsPage().getValuesInTable());
-        assertStringContainsValues("Series tag values is not added into Series Tag Values IDs: ",
-                tagValues, new SeriesTagValueIDsPage().getValuesInTable());
+        assertExpectedTagsInTable("Series tag keys is not added into Series Tag Key IDs: ",
+                tagNames, new SeriesTagKeyIDsPage().getTable());
+        assertExpectedTagsInTable("Series tag values is not added into Series Tag Values IDs: ",
+                tagValues, new SeriesTagValueIDsPage().getTable());
         assertSeriesAdd();
         assertEntityAdd();
         assertSeriesParams(metricText1 + "; " + metricText2, tagNames, tagValues);
@@ -196,8 +194,8 @@ public class DataEntryCommandsTest extends AtsdTest {
         String[] keys = ArrayUtils.addAll(key_names, key_values);
         String[] tags = ArrayUtils.addAll(tag_names, tag_values);
         String allTagsAdnKeys = propertiesPage.getTagsAndKeys();
-        assertStringContainsValues("There is no such key in property:", keys, allTagsAdnKeys);
-        assertStringContainsValues("There is no such tag in property:", tags, allTagsAdnKeys);
+        assertExpectedTagsInTable("There is no such key in property:", keys, allTagsAdnKeys);
+        assertExpectedTagsInTable("There is no such tag in property:", tags, allTagsAdnKeys);
     }
 
     @Step("Check series add by appropriate metric")
@@ -212,8 +210,8 @@ public class DataEntryCommandsTest extends AtsdTest {
                 Stream.concat(Stream.of("entity", "metric"), Arrays.stream(tagNames)).toArray(String[]::new),
                 Stream.concat(Stream.of(ENTITY_NAME, METRIC_NAME), Arrays.stream(tagValues)).toArray(String[]::new));
         String allTags = statisticsPage.getSeriesTags();
-        assertStringContainsValues("There is no such tag name:", tagNames, allTags);
-        assertStringContainsValues("There is no such tag value:", tagValues, allTags);
+        assertExpectedTagsInTable("There is no such tag name:", tagNames, allTags);
+        assertExpectedTagsInTable("There is no such tag value:", tagValues, allTags);
 
         statisticsPage.getSampleDataTab();
         assertTrue("Metric text is not added", statisticsPage.getSampleDataTableText().contains(metricText));
@@ -222,7 +220,8 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Step("Check metric adds into metrics table")
     private void assertMetricAdd() {
         MetricIDsPage metricIDsPage = new MetricIDsPage();
-        assertTrue("Metric is not added into Metric IDs table", metricIDsPage.getValuesInTable().contains(METRIC_NAME));
+        assertTrue("Metric is not added into Metric IDs table",
+                CommonActions.getValuesInTable(metricIDsPage.getTable()).contains(METRIC_NAME));
 
         MetricsTablePage metricsTablePage = new MetricsTablePage();
         metricsTablePage.searchRecordByName(METRIC_NAME);
@@ -239,19 +238,19 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertSwitchElement("Wrong persistent", persistent, metricPage.getPersistentSwitch());
         assertSwitchElement("Wrong status", status, metricPage.getEnabledSwitch());
         assertSwitchElement("Wrong versioning", versioning, metricPage.getVersioningSwitch());
-        metricPage.getLabel().shouldHave(Condition.value(label));
-        metricPage.getInterpolation().shouldHave(Condition.value(interpolationMode));
-        assertStringContainsValues("There is no such tag name: ", tagNames, metricPage.getTagNames());
-        assertStringContainsValues("There is no such tag value: ", tagValues, metricPage.getTagValues());
-        metricPage.getDescription().shouldHave(Condition.value(description));
-        metricPage.getDataType().shouldHave(Condition.value(dataType));
-        metricPage.getUnits().shouldHave(Condition.value(units));
-        metricPage.getPersistentFilter().shouldHave(Condition.value(filter));
-        metricPage.getMinValue().shouldHave(Condition.value(minVal));
-        metricPage.getMaxValue().shouldHave(Condition.value(maxVal));
-        metricPage.getRetentionIntervalDays().shouldHave(Condition.value(retentionIntervalDays));
-        metricPage.getInvalidAction().shouldHave(Condition.value(invalidAction));
-        metricPage.getTimeZone().shouldHave(Condition.value(timeZone));
+        metricPage.getLabel().shouldHave(value(label));
+        metricPage.getInterpolation().shouldHave(value(interpolationMode));
+        assertExpectedTagsInTable("There is no such tag name: ", tagNames, metricPage.getTagNames());
+        assertExpectedTagsInTable("There is no such tag value: ", tagValues, metricPage.getTagValues());
+        metricPage.getDescription().shouldHave(value(description));
+        metricPage.getDataType().shouldHave(value(dataType));
+        metricPage.getUnits().shouldHave(value(units));
+        metricPage.getPersistentFilter().shouldHave(value(filter));
+        metricPage.getMinValue().shouldHave(value(minVal));
+        metricPage.getMaxValue().shouldHave(value(maxVal));
+        metricPage.getRetentionIntervalDays().shouldHave(value(retentionIntervalDays));
+        metricPage.getInvalidAction().shouldHave(value(invalidAction));
+        metricPage.getTimeZone().shouldHave(value(timeZone));
     }
 
     @Step
@@ -266,11 +265,11 @@ public class DataEntryCommandsTest extends AtsdTest {
         EntityPage entityPage = new EntityPage(ENTITY_NAME);
 
         assertSwitchElement("Wrong status", status, entityPage.getEnabledSwitch());
-        entityPage.getLabel().shouldHave(Condition.value(label));
-        entityPage.getInterpolation().shouldHave(Condition.value(interpolationMode));
-        assertStringContainsValues("There is no such tag name: ", tagNames, entityPage.getTagNames());
-        assertStringContainsValues("There is no such tag value: ", tagValues, entityPage.getTagValues());
-        entityPage.getTimeZone().shouldHave(Condition.value(timeZone));
+        entityPage.getLabel().shouldHave(value(label));
+        entityPage.getInterpolation().shouldHave(value(interpolationMode));
+        assertExpectedTagsInTable("There is no such tag name: ", tagNames, entityPage.getTagNames());
+        assertExpectedTagsInTable("There is no such tag value: ", tagValues, entityPage.getTagValues());
+        entityPage.getTimeZone().shouldHave(value(timeZone));
     }
 
     @Step("Check message  parameters")

@@ -46,12 +46,14 @@ public class CSVDataUploaderService extends Service {
 
     private void uploadParserByPath(String pathToParser) {
         open(PARSER_IMPORT_PATH);
-        CommonActions.uploadFile(pathToParser);
+        $(By.name("file")).sendKeys(pathToParser);
+        $(By.xpath(".//input[@type='submit']")).click();
     }
 
     private void uploadCSVFileByPath(String pathToCSVFile, String parserName) {
-        open(CSV_IMPORT_PATH + parserName);
-        CommonActions.uploadFile(pathToCSVFile);
+        open(CommonActions.createNewURL(CSV_IMPORT_PATH + parserName));
+        $(By.id("file")).sendKeys(pathToCSVFile);
+        $(By.id("upload-btn")).click();
     }
 
 }

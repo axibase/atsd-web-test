@@ -21,8 +21,7 @@ public class EntitiesTablePage implements Table {
     public boolean isRecordPresent(String name) {
         String xpathToEntity = String.format("//*[@id='entitiesList']//a[text()='%s']", name);
         try {
-            Wait()
-                    .withTimeout(Duration.ofSeconds(2))
+            Wait().withTimeout(Duration.ofSeconds(2))
                     .until(condition -> $(By.xpath(xpathToEntity)).exists());
         } catch (TimeoutException th) {
             refresh();

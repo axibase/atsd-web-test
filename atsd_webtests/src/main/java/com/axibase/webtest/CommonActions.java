@@ -7,13 +7,14 @@ import org.apache.http.message.BasicNameValuePair;
 import org.openqa.selenium.By;
 
 import java.net.URISyntaxException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.axibase.webtest.CommonConditions.clickable;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.actions;
+import static com.codeborne.selenide.Selenide.*;
 
 public class CommonActions {
 
@@ -36,6 +37,14 @@ public class CommonActions {
         $(By.className("btn-confirm"))
                 .shouldBe(clickable)
                 .click();
+        if ($(By.className("btn-confirm")).exists()) {
+            $(By.className("btn-confirm")).click();
+            System.out.println("oooops");
+
+        }
+        Wait().withTimeout(Duration.ofSeconds(2))
+                .until(condition -> !$(By.className("btn-confirm")).exists());
+
     }
 
     /**
@@ -51,14 +60,14 @@ public class CommonActions {
      * Find CodeMirror editor window and send text to it
      *
      * @param relatedTextArea - next to the CodeMirror element
-     * @param text            - text to send
+     * @param command         - text to send
      */
-    public static void sendTextToCodeMirror(SelenideElement relatedTextArea, String text) {
+    public static void sendTextToCodeMirror(SelenideElement relatedTextArea, String command) {
         if (!relatedTextArea.getTagName().equals("textarea")) {
             throw new IllegalStateException("this is not a textarea");
         }
         actions().sendKeys(relatedTextArea.$(By.xpath("./following-sibling::*[contains(@class,CodeMirror)]")),
-                text).build().perform();
+                command).build().perform();
     }
 
     /**
@@ -135,6 +144,21 @@ public class CommonActions {
     public static void clickCheckboxByValueAttribute(String value) {
         String xpath = String.format("//*/input[@type='checkbox' and @value='%s']", value);
         $(By.xpath(xpath)).click();
+    }
+
+    /**
+     * get all tags in the table
+     *
+     * @param table - the table with tags
+     * @return - string representation of tags in the table
+     */
+    public static String getValuesInTable(SelenideElement table) {
+        return table
+                .$$("tbody > tr > td:nth-child(2n)")
+                .stream()
+                .map(SelenideElement::getText)
+                .collect(Collectors.toList())
+                .toString();
     }
 
 }

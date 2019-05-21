@@ -1,12 +1,10 @@
 package com.axibase.webtest.service;
 
 import com.codeborne.selenide.Configuration;
-import com.codeborne.selenide.WebDriverRunner;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.openqa.selenium.Dimension;
 
 import java.io.File;
 import java.io.FileInputStream;

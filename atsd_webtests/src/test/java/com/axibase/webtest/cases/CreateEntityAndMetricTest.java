@@ -26,12 +26,12 @@ public class CreateEntityAndMetricTest extends AtsdTest {
 
         $(By.name("value")).sendKeys("50");
         $(By.name("series")).click();
-        SelenideElement successMessage = $(By.cssSelector("form.series .form-status>.alert-success"));
+        SelenideElement successMessage = $("form.series .form-status>.alert-success");
         assertEquals(generateAssertMessage("Wrong success message"), "Series inserted successfully", successMessage.getText().trim());
 
         $(By.name("value")).sendKeys("150");
         $(By.name("series")).click();
-        successMessage = $(By.cssSelector("form.series .form-status>.alert-success"));
+        successMessage = $("form.series .form-status>.alert-success");
         assertEquals(generateAssertMessage("Wrong success message"), "Series inserted successfully", successMessage.getText().trim());
 
         open("/portals/series?entity=my-entity&metric=my-metric");

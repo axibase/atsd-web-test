@@ -1,8 +1,8 @@
 package com.axibase.webtest.service;
 
+import com.codeborne.selenide.SelenideElement;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 
 import java.util.stream.Collectors;
 
@@ -23,7 +23,7 @@ public class AccountService extends Service {
         $(By.id("repeatPassword")).setValue(password);
         $(By.xpath("//input[@type='submit']")).click();
         final String errors = $$(".field__error").stream()
-                .map(WebElement::getText)
+                .map(SelenideElement::getText)
                 .filter(StringUtils::isNotEmpty)
                 .collect(Collectors.joining(", "));
         if (StringUtils.isNotEmpty(errors)) {

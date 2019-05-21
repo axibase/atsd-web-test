@@ -10,7 +10,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebElement;
 
 import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selenide.*;
@@ -37,7 +36,7 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
                 "e:entity-for-regardless-of-data-test " +
                 "m:metric-for-regardless-of-data-test=${60 - 2*i}\n" +
                 "</#list>");
-        $(By.cssSelector("button[value=send]")).click();
+        $("button[value=send]").click();
     }
 
     @Test
@@ -211,13 +210,13 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
     public void testClickableUnits() {
         forecastViewerPage.setPeriodUnit("week");
         assertEquals("Wrong period unit", "week",
-                forecastViewerPage.getPeriodUnit().getAttribute("value"));
+                forecastViewerPage.getPeriodUnit().getValue());
         forecastViewerPage.setForecastHorizonUnit("week");
         assertEquals("Wrong horizon unit", "week",
-                forecastViewerPage.getForecastHorizonUnit().getAttribute("value"));
+                forecastViewerPage.getForecastHorizonUnit().getValue());
         forecastViewerPage.setScoreIntervalUnit("year");
         assertEquals("Wrong score interval unit", "year",
-                forecastViewerPage.getScoreIntervalUnit().getAttribute("value"));
+                forecastViewerPage.getScoreIntervalUnit().getValue());
     }
 
     @Test

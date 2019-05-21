@@ -105,13 +105,13 @@ public class MetricPage {
 
     public String getTagNames() {
         return $$(tagNames).stream().
-                map(element -> element.getAttribute("value")).
+                map(SelenideElement::getValue).
                 collect(Collectors.joining(","));
     }
 
     public String getTagValues() {
         return $$(tagValues).stream().
-                map(element -> element.getAttribute("value")).
+                map(SelenideElement::getValue).
                 collect(Collectors.joining(","));
     }
 

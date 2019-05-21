@@ -4,7 +4,6 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
 import java.util.List;
@@ -135,7 +134,7 @@ public class ForecastViewerPage {
     }
 
     public void waitUntilTooltipIsShown(SelenideElement element) {
-        actions().moveToElement(element).perform();
+        element.hover();
         try {
             Wait().withTimeout(Duration.ofMillis(500))
                     .pollingEvery(Duration.ofMillis(100))
@@ -144,9 +143,9 @@ public class ForecastViewerPage {
             fail("Tooltip's time is over");
         }
         //that is for tooltip does not cover the button after tooltip is shown
-        actions().moveToElement(getSubmitButton()).perform();
-        Wait().withTimeout(Duration.ofMillis(500)).
-                until(condition -> $(By.className("tooltip")).exists());
+        $("body").hover();
+        Wait().withTimeout(Duration.ofSeconds(1)).
+                until(condition -> !$(".tooltip").exists());
     }
 
     public ForecastViewerPage setDecomposeOptions(String threshold, String componentCount, String windowLength) {
@@ -200,11 +199,11 @@ public class ForecastViewerPage {
     }
 
     public int getCountOfForecastsInWidgetContainer() {
-        return $$(By.cssSelector("#widget-container rect.axi-legend-button")).size();
+        return $$("#widget-container rect.axi-legend-button").size();
     }
 
     public int getCountOfHistoryChartsInWidgetContainer() {
-        return $$(By.cssSelector("#widget-container circle.axi-legend-button")).size();
+        return $$("#widget-container circle.axi-legend-button").size();
     }
 
     public int getCountOfActiveComponentsInComponentContainer() {
@@ -233,7 +232,7 @@ public class ForecastViewerPage {
 
     public List<String> getSummaryContainerForecastNames() {
         return $(summaryContainer).$$(By.xpath("//thead//th")).stream().
-                map(WebElement::getText).collect(Collectors.toList());
+                map(SelenideElement::getText).collect(Collectors.toList());
     }
 
     public ElementsCollection getForecastsTabs() {

@@ -1,29 +1,21 @@
 package com.axibase.webtest.pageobjects;
 
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
-import java.util.stream.Collectors;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
-public class MetricIDsPage implements IDsPage {
+public class MetricIDsPage {
     private static final String BASE_URL = "/admin/metrics/uids";
 
     public MetricIDsPage() {
         open(createNewURL(BASE_URL));
     }
 
-    @Override
-    public String getValuesInTable() {
-        return $(By.id("buildInfo"))
-                .$$(By.cssSelector("tbody > tr > td:nth-child(1n)"))
-                .stream()
-                .map(WebElement::getText)
-                .collect(Collectors.toList())
-                .toString();
+    public SelenideElement getTable() {
+        return $(By.id("buildInfo"));
     }
 
 }
