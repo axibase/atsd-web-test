@@ -8,7 +8,7 @@ import java.time.Duration;
 import static com.axibase.webtest.PageUtils.urlPath;
 import static com.axibase.webtest.service.AtsdTest.generateAssertMessage;
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.Assert.*;
+import static org.testng.AssertJUnit.*;
 
 public class CommonAssertions {
 

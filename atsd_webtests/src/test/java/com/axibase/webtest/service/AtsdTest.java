@@ -1,23 +1,27 @@
 package com.axibase.webtest.service;
 
-import org.junit.Before;
-import org.junit.Rule;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
 
 import static com.codeborne.selenide.Selenide.open;
 import static com.codeborne.selenide.Selenide.title;
 import static com.codeborne.selenide.WebDriverRunner.url;
 
+@Listeners(ActionOnTestState.class)
 public abstract class AtsdTest {
     static {
         Config.getInstance().init();
     }
 
-    @Rule
-    public final ActionOnTestState action = new ActionOnTestState();
-
-    @Before
+    @BeforeMethod
     public void setUp() {
         login();
+    }
+
+    @AfterMethod(alwaysRun = true)
+    public void logout() {
+        new LoginService().logout();
     }
 
     public static String generateAssertMessage(String thread) {

@@ -5,29 +5,30 @@ import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AtsdTest;
 import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.SelenideElement;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 import org.openqa.selenium.By;
 
 import java.util.Optional;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
-import static org.junit.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertTrue;
+
 
 public class CSVImportParserAsSeriesTest extends AtsdTest {
     private static final String PARSER_NAME = "test-atsd-import-series-parser";
     private static final String PATH_TO_PARSER = CSVImportParserAsSeriesTest.class.getResource("test-atsd-import-series-parser.xml").getFile();
 
-    @Before
-    public void setUp() {
+    @BeforeMethod
+public void setUp() {
         super.setUp();
         goToCSVParsersImportPage();
     }
 
-    @After
-    public void cleanup() {
+    @AfterMethod
+public void cleanup() {
         goToCSVParsersPage();
         CommonActions.deleteAllRecords();
     }

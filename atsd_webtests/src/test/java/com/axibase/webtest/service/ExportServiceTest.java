@@ -3,7 +3,7 @@ package com.axibase.webtest.service;
 
 import com.google.common.net.UrlEscapers;
 import org.apache.commons.io.FileUtils;
-import org.junit.Test;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.io.IOException;
@@ -11,8 +11,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import static com.codeborne.selenide.Selenide.download;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertEquals;
+import static org.testng.AssertJUnit.assertTrue;
 
 /**
  * Created by sild on 02.02.15.

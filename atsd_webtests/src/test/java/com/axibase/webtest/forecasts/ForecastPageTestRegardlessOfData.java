@@ -6,14 +6,14 @@ import com.axibase.webtest.CommonSelects;
 import com.axibase.webtest.pages.ForecastViewerPage;
 import com.axibase.webtest.service.AtsdTest;
 import com.codeborne.selenide.SelenideElement;
-import org.junit.Before;
-import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selenide.*;
-import static org.junit.Assert.*;
+import static org.testng.AssertJUnit.*;
 
 public class ForecastPageTestRegardlessOfData extends AtsdTest {
     private ForecastViewerPage forecastViewerPage;
@@ -21,8 +21,8 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
             "metric=metric-for-regardless-of-data-test&" +
             "startDate=2015-03-04T14:24:40.000Z&horizonInterval=10-MINUTE&period=5-SECOND";
 
-    @Before
-    public void setUp() {
+    @BeforeMethod
+public void setUp() {
         super.setUp();
         loadData();
         forecastViewerPage = new ForecastViewerPage();

@@ -18,11 +18,10 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
-import org.junit.Before;
-import org.junit.Test;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -43,7 +42,7 @@ import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static com.codeborne.selenide.WebDriverRunner.url;
-import static org.junit.Assert.*;
+import static org.testng.AssertJUnit.*;
 
 public class ForecastPageTestDependingOnTheData extends AtsdTest {
     private static final String PAGE_URL = "/series/forecast";
@@ -59,8 +58,8 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     private long timeZoneHours = 0;
     private ForecastViewerPage forecastViewerPage;
 
-    @Before
-    public void setUp() {
+    @BeforeMethod
+public void setUp() {
         super.setUp();
         csvDataUploaderService = new CSVDataUploaderService();
         csvDataUploaderService.uploadWithParser(DATA_CSV, "test-atsd-import-series-parser");
@@ -246,7 +245,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
                 .addForecastTab();
 
         String[] names = forecastViewerPage.getForecastTabNames();
-        assertNotEquals("Forecast names in tabs are equals but they shouldn't be", names[0], names[1]);
+        assertFalse("Forecast names in tabs are equals but they shouldn't be", names[0].equals(names[1]));
 
         forecastViewerPage.setRegularizeOptions("Sum", "Linear", "10", "hour")
                 .switchForecastTab("Forecast 1");

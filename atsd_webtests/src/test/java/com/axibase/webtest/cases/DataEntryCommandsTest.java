@@ -6,9 +6,9 @@ import com.axibase.webtest.service.AtsdTest;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.apache.commons.lang3.ArrayUtils;
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
@@ -17,20 +17,20 @@ import static com.axibase.webtest.CommonActions.clickCheckboxByValueAttribute;
 import static com.axibase.webtest.CommonAssertions.assertExpectedTagsInTable;
 import static com.axibase.webtest.CommonAssertions.executeWithElement;
 import static com.codeborne.selenide.Condition.*;
-import static org.junit.Assert.*;
+import static org.testng.AssertJUnit.*;
 
 public class DataEntryCommandsTest extends AtsdTest {
     private final String ENTITY_NAME = "entity_name_data_entry_commands_test";
     private final String METRIC_NAME = "metric_name_data_entry_commands_test";
     private DataEntryPage dataEntryPage;
 
-    @Before
-    public void setUp() {
+    @BeforeMethod
+public void setUp() {
         super.setUp();
         dataEntryPage = new DataEntryPage();
     }
 
-//    @Test
+    @Test
     public void testMessageAdd() {
         String messageText = "\"Message text\"";
         String type = "message_tag_type_value";
@@ -71,7 +71,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertPropertiesKeysAndTags(propType, key_names, key_values, tag_names, tag_values);
     }
 
-//    @Test
+    @Test
     public void testSeriesAdd() {
         String metricText1 = "metric_text1";
         String metricText2 = "metric_text2";
@@ -147,8 +147,8 @@ public class DataEntryCommandsTest extends AtsdTest {
     }
 
     @Step
-    @After
-    public void cleanup() {
+    @AfterMethod
+public void cleanup() {
         dropRecord(new EntitiesTablePage(), ENTITY_NAME);
         dropRecord(new MetricsTablePage(), METRIC_NAME);
     }
@@ -256,7 +256,7 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Step
     private void assertSwitchElement(String errorMessage, String expectedValue, SelenideElement switchButton) {
         String script = "return element.checked";
-        assertEquals(errorMessage, Boolean.parseBoolean(expectedValue), executeWithElement(switchButton, script));
+        assertEquals(errorMessage, Boolean.parseBoolean(expectedValue), (boolean) executeWithElement(switchButton, script));
     }
 
     @Step("Check entity parameters")
