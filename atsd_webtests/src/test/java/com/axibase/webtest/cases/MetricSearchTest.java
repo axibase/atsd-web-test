@@ -10,40 +10,29 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
-import static org.testng.AssertJUnit.assertTrue;
-
 @RequiredArgsConstructor
 public class MetricSearchTest extends AtsdTest {
     private MetricsForEntityPage metricsForEntityPage;
+
+    private final static String[] ALL_METRICS = new String[]{"metricsearchtest_contains-hyphen1", "metricsearchtest_contains-hyphen2",
+            "metricsearchtest_contains.point1", "metricsearchtest_contains.point2", "metricsearchtest_contains.point3",
+            "metricsearchtest_contains_underscore"};
 
     @DataProvider(name = "masks")
     public static Object[][] data() {
         return new Object[][]{{"*con*.*", "metricsearchtest_contains.point1", "metricsearchtest_contains.point2", "metricsearchtest_contains.point3"},
                 {"*contains?po*", "metricsearchtest_contains.point1", "metricsearchtest_contains.point2", "metricsearchtest_contains.point3"},
-                {"*ins?*", "metricsearchtest_contains-hyphen1", "metricsearchtest_contains-hyphen2",
-                        "metricsearchtest_contains.point1", "metricsearchtest_contains.point2", "metricsearchtest_contains.point3",
-                        "metricsearchtest_contains_underscore"},
+                {"*ins?*", ALL_METRICS},
                 {"*ins-*", "metricsearchtest_contains-hyphen1", "metricsearchtest_contains-hyphen2"},
                 {"*s_*", "metricsearchtest_contains_underscore"},
                 {"*3", "metricsearchtest_contains.point3"},
-                {"", "metricsearchtest_contains-hyphen1", "metricsearchtest_contains-hyphen2",
-                        "metricsearchtest_contains.point1", "metricsearchtest_contains.point2", "metricsearchtest_contains.point3",
-                        "metricsearchtest_contains_underscore"},
-                {"?*", "metricsearchtest_contains-hyphen1", "metricsearchtest_contains-hyphen2",
-                        "metricsearchtest_contains.point1", "metricsearchtest_contains.point2", "metricsearchtest_contains.point3",
-                        "metricsearchtest_contains_underscore"},
-                {"?", "metricsearchtest_contains-hyphen1", "metricsearchtest_contains-hyphen2",
-                        "metricsearchtest_contains.point1", "metricsearchtest_contains.point2", "metricsearchtest_contains.point3",
-                        "metricsearchtest_contains_underscore"},
-                {".", "metricsearchtest_contains-hyphen1", "metricsearchtest_contains-hyphen2",
-                        "metricsearchtest_contains.point1", "metricsearchtest_contains.point2", "metricsearchtest_contains.point3",
-                        "metricsearchtest_contains_underscore"},
-                {"metricsearchtest", "metricsearchtest_contains-hyphen1", "metricsearchtest_contains-hyphen2",
-                        "metricsearchtest_contains.point1", "metricsearchtest_contains.point2", "metricsearchtest_contains.point3",
-                        "metricsearchtest_contains_underscore"},
-                {" metricsearchtest ", "metricsearchtest_contains-hyphen1", "metricsearchtest_contains-hyphen2",
-                        "metricsearchtest_contains.point1", "metricsearchtest_contains.point2", "metricsearchtest_contains.point3",
-                        "metricsearchtest_contains_underscore"},
+                {"", ALL_METRICS},
+                {"*", ALL_METRICS},
+                {"?*", ALL_METRICS},
+                {"*?", ALL_METRICS},
+                {"*.", ALL_METRICS},
+                {"metricsearchtest", ALL_METRICS},
+                {" metricsearchtest ", ALL_METRICS},
                 {"some-bad-mask", new String[]{}},
                 {"cd s", new String[]{}}
         };
@@ -52,16 +41,15 @@ public class MetricSearchTest extends AtsdTest {
     @BeforeClass
     public void generateData() {
         super.setUp();
-        new DataEntryPage().typeCommands("<#list 1..2 as i> \n" +
+        new DataEntryPage().sendCommands("<#list 1..2 as i> \n" +
                 "series e:metricsearchtest_entity m:metricsearchtest_contains-hyphen${i}=${i} \n" +
-                "</#list>\n" +
+                "</#list>",
 
                 "<#list 1..3 as i> \n" +
                 "series e:metricsearchtest_entity m:metricsearchtest_contains.point${i}=${i} \n" +
-                "</#list>\n" +
+                "</#list>",
 
-                "series e:metricsearchtest_entity m:metricsearchtest_contains_underscore=1 \n")
-                .sendCommands();
+                "series e:metricsearchtest_entity m:metricsearchtest_contains_underscore=1");
         super.logout();
     }
 

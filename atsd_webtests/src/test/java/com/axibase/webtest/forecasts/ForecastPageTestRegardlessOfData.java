@@ -1,10 +1,10 @@
 package com.axibase.webtest.forecasts;
 
-import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.CommonSelects;
 import com.axibase.webtest.pages.ForecastViewerPage;
 import com.axibase.webtest.service.AtsdTest;
+import com.axibase.webtest.service.CodeEditor;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -30,12 +30,12 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
 
     private void loadData() {
         open("/metrics/entry");
-        CommonActions.sendTextToCodeMirror($(By.name("commands")), "<#list 1..5 as i>\n" +
-                "series s:${1425482080 - i * 600} " +
-                "e:entity-for-regardless-of-data-test " +
-                "m:metric-for-regardless-of-data-test=${60 - 2*i}\n" +
-                "</#list>");
-        $(By.cssSelector("button[value=send]")).click();
+        new CodeEditor($(By.name("commands")))
+                .setValue("<#list 1..5 as i>\n" +
+                        "series s:${1425482080 - i * 600} " +
+                        "e:entity-for-regardless-of-data-test " +
+                        "m:metric-for-regardless-of-data-test=${60 - 2*i}\n" +
+                        "</#list>");
     }
 
     @Test

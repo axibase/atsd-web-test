@@ -4,6 +4,7 @@ import org.openqa.selenium.WebElement;
 
 import java.time.Duration;
 
+import static com.axibase.webtest.CommonActions.executeWithElement;
 import static com.axibase.webtest.PageUtils.urlPath;
 import static com.axibase.webtest.service.AtsdTest.generateAssertMessage;
 import static com.codeborne.selenide.Selenide.*;
@@ -74,16 +75,4 @@ public class CommonAssertions {
                 .until(driver -> driver.getTitle().equals(expectedTitle));
     }
 
-    /**
-     * Execute JavaScript with element as a parameter.
-     *
-     * @param element element that will be used in script
-     * @param script  script to be executed
-     * @param <T>     type of returned expression
-     * @return        script execution result
-     */
-    private static <T> T executeWithElement(WebElement element, String script) {
-        String iifeScript = "return (function (element) {" + script + ";})(arguments[0])";
-        return executeJavaScript(iifeScript, element);
-    }
 }

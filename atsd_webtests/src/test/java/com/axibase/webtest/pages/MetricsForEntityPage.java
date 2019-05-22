@@ -1,9 +1,9 @@
 package com.axibase.webtest.pages;
 
-import com.codeborne.selenide.ElementsCollection;
-import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
+
+import java.util.stream.Collectors;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.axibase.webtest.CommonActions.encode;
@@ -32,7 +32,10 @@ public class MetricsForEntityPage {
     }
 
     public String[] getMetricNames() {
-        return $$("#metricList > tbody > tr > td:nth-child(4n)")
+        int index = $$("#metricList > thead > tr > th").stream()
+                .map(SelenideElement::text).collect(Collectors.toList()).indexOf("Metric");
+
+        return $$("#metricList > tbody > tr > td:nth-child(" + (index +1) + "n)")
                 .stream().map(SelenideElement::text).toArray(String[]::new);
     }
 
