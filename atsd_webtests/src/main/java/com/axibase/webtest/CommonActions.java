@@ -1,15 +1,13 @@
 package com.axibase.webtest;
 
 import com.codeborne.selenide.SelenideElement;
-import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import org.openqa.selenium.By;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -81,19 +79,31 @@ public class CommonActions {
     }
 
     /**
+     * Encode string into UTF-8 format
+     *
+     * @param name - string to be encoded
+     * @return - encoded string
+     */
+    public static String encode(String name) {
+        try {
+            return URLEncoder.encode(name, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Wrong encoding type");
+        }
+    }
+
+    /**
      * Create URL with params from map
      *
-     * @param URLPrefix -  prefix without params
+     * @param URLPrefix - prefix without params
      * @param params    - string params
      * @return - new URL
      */
     public static String createNewURL(String URLPrefix, Map<String, String> params) {
-        List<NameValuePair> paramsForEncoding = new ArrayList<>();
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            paramsForEncoding.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-        }
         try {
-            return new URIBuilder(URLPrefix).addParameters(paramsForEncoding).build().toString();
+            final URIBuilder uriBuilder = new URIBuilder(URLPrefix);
+            params.forEach(uriBuilder::addParameter);
+            return uriBuilder.build().toString();
         } catch (URISyntaxException e) {
             throw new RuntimeException("Wrong URL", e);
         }
@@ -125,12 +135,12 @@ public class CommonActions {
         if (paramKeys.length != paramValues.length) {
             throw new IllegalStateException("Length of parameter arrays should be equal");
         }
-        List<NameValuePair> paramsForEncoding = new ArrayList<>();
-        for (int i = 0; i < paramKeys.length; i++) {
-            paramsForEncoding.add(new BasicNameValuePair(paramKeys[i], paramValues[i]));
-        }
         try {
-            return new URIBuilder(URLPrefix).addParameters(paramsForEncoding).build().toString();
+            final URIBuilder uriBuilder = new URIBuilder(URLPrefix);
+            for (int i = 0; i < paramKeys.length; i++) {
+                uriBuilder.addParameter(paramKeys[i], paramValues[i]);
+            }
+            return uriBuilder.build().toString();
         } catch (URISyntaxException e) {
             throw new RuntimeException("Wrong URL", e);
         }
@@ -147,18 +157,21 @@ public class CommonActions {
     }
 
     /**
-     * get all tags in the table
+     * Get all values in the specified column
      *
-     * @param table - the table with tags
-     * @return - string representation of tags in the table
+     * @param table      - the table with tags
+     * @param columnName - column name it the header of the table
+     * @return - column values
      */
-    public static String getValuesInTable(SelenideElement table) {
-        return table
-                .$$("tbody > tr > td:nth-child(2n)")
+    public static String[] getColumnValuesByColumnName(SelenideElement table, String columnName) {
+        int index = table.$$("thead > tr > th").stream()
+                .map(SelenideElement::text).collect(Collectors.toList()).indexOf(columnName);
+
+        return table.$$("tbody > tr > td:nth-child(" + (index + 1) + "n)")
                 .stream()
-                .map(SelenideElement::getText)
-                .collect(Collectors.toList())
-                .toString();
+                .map(SelenideElement::text)
+                .toArray(String[]::new);
     }
+
 
 }

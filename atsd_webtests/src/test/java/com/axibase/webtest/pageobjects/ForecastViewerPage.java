@@ -306,7 +306,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setGroupParameterV(String value) {
-        setNumericOption(value, $(groupParameterV));
+        $(groupParameterV).setValue(value);
         return this;
     }
 
@@ -315,7 +315,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setGroupParameterC(String value) {
-        setNumericOption(value, $(groupParameterC));
+        $(groupParameterC).setValue(value);
         return this;
     }
 
@@ -328,7 +328,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setAggregation(String value) {
-        setSelectionOption(value, $(aggregation));
+        $(aggregation).selectOption(value);
         return this;
     }
 
@@ -337,7 +337,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setInterpolation(String value) {
-        setSelectionOption(value, $(interpolation));
+        $(interpolation).selectOption(value);
         return this;
     }
 
@@ -346,7 +346,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setPeriodCount(String value) {
-        setNumericOption(value, $(periodCount));
+        $(periodCount).setValue(value);
         return this;
     }
 
@@ -366,7 +366,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setThreshold(String value) {
-        setNumericOption(value, $(threshold));
+        $(threshold).setValue(value);
         return this;
     }
 
@@ -375,7 +375,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setComponentCount(String value) {
-        setNumericOption(value, $(componentCount));
+        $(componentCount).setValue(value);
         return this;
     }
 
@@ -384,7 +384,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setWindowLength(String value) {
-        setNumericOption(value, $(windowLength));
+        $(windowLength).setValue(value);
         return this;
     }
 
@@ -411,7 +411,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setGroupCount(String value) {
-        setNumericOption(value, $(groupCount));
+        $(groupCount).setValue(value);
         return this;
     }
 
@@ -420,7 +420,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setClustering(String value) {
-        setSelectionOption(value, $(clustering));
+        $(clustering).selectOption(value);
         return this;
     }
 
@@ -429,7 +429,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setGroupUnion1(String value) {
-        setNumericOption(value, $(groupUnion1));
+        $(groupUnion1).setValue(value);
         return this;
     }
 
@@ -438,7 +438,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setGroupUnion2(String value) {
-        setNumericOption(value, $(groupUnion2));
+        $(groupUnion2).setValue(value);
         return this;
     }
 
@@ -447,7 +447,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setGroupUnion3(String value) {
-        setNumericOption(value, $(groupUnion3));
+        $(groupUnion3).setValue(value);
         return this;
     }
 
@@ -465,7 +465,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setGroupComponentIndex1(String value) {
-        setNumericOption(value, $(groupComponentIndex1));
+        $(groupComponentIndex1).setValue(value);
         return this;
     }
 
@@ -474,7 +474,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setGroupComponentIndex2(String value) {
-        setNumericOption(value, $(groupComponentIndex2));
+        $(groupComponentIndex2).setValue(value);
         return this;
     }
 
@@ -483,7 +483,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setGroupComponentIndex3(String value) {
-        setNumericOption(value, $(groupComponentIndex3));
+        $(groupComponentIndex3).setValue(value);
         return this;
     }
 
@@ -492,7 +492,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setAveragingFunction(String value) {
-        setSelectionOption(value, $(averagingFunction));
+        $(averagingFunction).selectOption(value);
         return this;
     }
 
@@ -501,7 +501,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setScoreIntervalCount(String value) {
-        setNumericOption(value, $(scoreIntervalCount));
+        $(scoreIntervalCount).setValue(value);
         return this;
     }
 
@@ -521,7 +521,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setStartDate(String value) {
-        setNumericOption(value, $(startDate));
+        $(startDate).setValue(value);
         return this;
     }
 
@@ -530,7 +530,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setStartTime(String value) {
-        setNumericOption(value, $(startTime));
+        $(startTime).setValue(value);
         return this;
     }
 
@@ -539,7 +539,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setEndDate(String value) {
-        setNumericOption(value, $(endDate));
+        $(endDate).setValue(value);
         return this;
     }
 
@@ -548,7 +548,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setEndTime(String value) {
-        setNumericOption(value, $(endTime));
+        $(endTime).setValue(value);
         return this;
     }
 
@@ -557,7 +557,7 @@ public class ForecastViewerPage {
     }
 
     public ForecastViewerPage setForecastHorizonCount(String value) {
-        setNumericOption(value, $(forecastHorizonCount));
+        $(forecastHorizonCount).setValue(value);
         return this;
     }
 
@@ -569,16 +569,6 @@ public class ForecastViewerPage {
         SelenideElement intervalInput = $(forecastHorizonUnit).$(By.xpath(".."));
         intervalInput.$(By.tagName("button")).click();
         intervalInput.$(By.className("dropdown-menu")).$(By.partialLinkText(value)).click();
-        return this;
-    }
-
-    public ForecastViewerPage setNumericOption(String value, SelenideElement element) {
-        element.setValue(value);
-        return this;
-    }
-
-    public ForecastViewerPage setSelectionOption(String value, SelenideElement element) {
-        element.selectOption(value);
         return this;
     }
 

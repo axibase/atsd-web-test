@@ -79,32 +79,4 @@ public class CommonAssertions {
         return executeJavaScript(iifeScript, element);
     }
 
-    /**
-     * Check that string contains all passed values
-     *
-     * @param errorMessage - message that will be shown if the table doesn't contains tags
-     * @param tags         - expected tags
-     * @param table        - the given table
-     */
-    @Step("Check if the given table contains \"{tags}\" ")
-    public static void assertExpectedTagsInTable(String errorMessage, String[] tags, SelenideElement table) {
-        for (String value : tags) {
-            assertTrue(errorMessage + value, CommonActions.getValuesInTable(table).contains(value));
-        }
-    }
-
-    /**
-     * Check that string contains all passed values
-     *
-     * @param errorMessage - message that will be shown if the table doesn't contains tags
-     * @param tags         - expected tags
-     * @param allTags      - the given table's tags
-     */
-    @Step("Check if the given table contains \"{tags}\" ")
-    public static void assertExpectedTagsInTable(String errorMessage, String[] tags, String allTags) {
-        for (String value : tags) {
-            assertTrue(errorMessage + value, (allTags).contains(value));
-        }
-    }
-
 }

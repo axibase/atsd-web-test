@@ -33,7 +33,6 @@ public class CSVImportParserAsSeriesTest extends AtsdTest {
 
         goToCSVParsersPage();
 
-
         final boolean isParserPresented = Optional.of($("#configurationList > tbody"))
                 .map(SelenideElement::getText)
                 .map(text -> text.contains(PARSER_NAME))

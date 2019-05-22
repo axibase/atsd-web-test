@@ -1,6 +1,9 @@
 package com.axibase.webtest.pageobjects;
 
+import com.axibase.webtest.modelobjects.Message;
 import org.openqa.selenium.By;
+
+import java.util.Arrays;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.codeborne.selenide.Selenide.*;
@@ -9,19 +12,24 @@ public class MessagesPage {
     private static final String BASE_URL = "/messages";
 
     private By type = By.id("type");
+    private By messageType = By.xpath("//*[contains(@id,'type_')]");
     private By source = By.id("source");
+    private By messageSource = By.xpath("//*[contains(@id,'source_')]");
     private By entity = By.id("entity");
     private By severity = By.id("severity");
+    private By messageSeverity = By.xpath("//*[contains(@id,'severity_')]");
     private By messagesList = By.id("messagesList");
     private By search = By.xpath("//*/button[text()='Search']");
     private By tableHeader = By.className("panel__header");
+    private By message = By.xpath("//*[contains(@id,'message_')]");
 
     public MessagesPage() {
         open(createNewURL(BASE_URL));
     }
 
-    public void search() {
+    public MessagesPage search() {
         $(search).click();
+        return this;
     }
 
     public MessagesPage openFilterPanel() {
@@ -40,6 +48,11 @@ public class MessagesPage {
         return this;
     }
 
+    public String getEntity() {
+        openFilterPanel();
+        return $(entity).val();
+    }
+
     public String[] getMessagesSeverity() {
         return $$(By.xpath("//td[contains(@id,'severity')]"))
                 .stream()
@@ -52,14 +65,52 @@ public class MessagesPage {
         return this;
     }
 
+    public String getMessageSeverity() {
+        return $(messageSeverity).getAttribute("data-value");
+    }
+
     public MessagesPage setSource(String value) {
         $(source).setValue(value);
         return this;
     }
 
+    public String getMessageSource() {
+        return $(messageSource).text();
+    }
+
     public MessagesPage setType(String value) {
         $(type).selectOption(value);
         return this;
+    }
+
+    public String getMessageType() {
+        return $(messageType).text();
+    }
+
+    public String getMessageText() {
+        return $(message).text();
+    }
+
+    public String[] getTagNames() {
+        return Arrays.stream(getMessageTags().split(",")).map(tag -> tag.split(" = ")[0].trim()).toArray(String[]::new);
+    }
+
+    public String[] getTagValues() {
+        return Arrays.stream(getMessageTags().split(",")).map(tag -> tag.split(" = ")[1].trim()).toArray(String[]::new);
+    }
+
+    public Message getMessage() {
+        return new Message().setEntityName(this.getEntity())
+                .setType(this.getMessageType())
+                .setSource(this.getMessageSource())
+                .setSeverity(this.getMessageSeverity())
+                .setTagNames(this.getTagNames())
+                .setTagValues(this.getTagValues())
+                .setMessageText(this.getMessageText());
+    }
+
+    private String getMessageTags() {
+        return $("#messagesList > tbody > tr > td:nth-child(7n)").text();
     }
 
 }

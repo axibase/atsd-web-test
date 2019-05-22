@@ -19,6 +19,7 @@ public class EntitiesTablePage implements Table {
 
     @Override
     public boolean isRecordPresent(String name) {
+        searchRecordByName(name);
         String xpathToEntity = String.format("//*[@id='entitiesList']//a[text()='%s']", name);
         try {
             Wait().withTimeout(Duration.ofSeconds(2))

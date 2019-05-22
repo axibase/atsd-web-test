@@ -4,6 +4,8 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 
+import static com.axibase.webtest.CommonAssertions.executeWithElement;
+
 public class CommonSelects {
 
     /**
@@ -31,6 +33,17 @@ public class CommonSelects {
      */
     public static String getFormattedInterval(SelenideElement countElement, SelenideElement unitElement) {
         return countElement.getValue() + "-" + unitElement.getValue();
+    }
+
+
+    /**
+     * Get value of the switch element (true/false)
+     *
+     * @param element - the switch element
+     * @return - value of the switch element
+     */
+    public static boolean getValueOfSwitchElement(SelenideElement element) {
+        return executeWithElement(element, "return element.checked");
     }
 
 }

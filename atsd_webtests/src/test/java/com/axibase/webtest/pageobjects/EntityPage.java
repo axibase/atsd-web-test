@@ -1,12 +1,12 @@
 package com.axibase.webtest.pageobjects;
 
+import com.axibase.webtest.modelobjects.Entity;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
-import java.util.stream.Collectors;
-
 import static com.axibase.webtest.CommonActions.createNewURL;
+import static com.axibase.webtest.CommonSelects.getValueOfSwitchElement;
 import static com.codeborne.selenide.Selenide.*;
 
 public class EntityPage {
@@ -56,16 +56,18 @@ public class EntityPage {
         return this;
     }
 
-    public String getTagNames() {
-        return $$(tagNames).stream().
-                map(SelenideElement::getValue).
-                collect(Collectors.joining(","));
+    public String[] getTagNames() {
+        return $$(tagNames).stream()
+                .map(SelenideElement::getValue)
+                .filter(val -> !val.isEmpty())
+                .toArray(String[]::new);
     }
 
-    public String getTagValues() {
-        return $$(tagValues).stream().
-                map(SelenideElement::getValue).
-                collect(Collectors.joining(","));
+    public String[] getTagValues() {
+        return $$(tagValues).stream()
+                .map(SelenideElement::getValue)
+                .filter(val -> !val.isEmpty())
+                .toArray(String[]::new);
     }
 
     public SelenideElement getEnabledSwitch() {
@@ -95,5 +97,16 @@ public class EntityPage {
         return this;
 
     }
+
+    public Entity getEntity() {
+        return new Entity().setEntityName(this.getEntityName().val())
+                .setInterpolation(this.getInterpolation().val())
+                .setLabel(this.getLabel().val())
+                .setStatus(getValueOfSwitchElement(this.getEnabledSwitch()))
+                .setTimeZone(this.getTimeZone().val())
+                .setTagNames(this.getTagNames())
+                .setTagValues(this.getTagValues());
+    }
+
 
 }

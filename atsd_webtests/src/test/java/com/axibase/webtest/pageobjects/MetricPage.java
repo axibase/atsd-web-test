@@ -1,12 +1,12 @@
 package com.axibase.webtest.pageobjects;
 
+import com.axibase.webtest.modelobjects.Metric;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
-import java.util.stream.Collectors;
-
 import static com.axibase.webtest.CommonActions.createNewURL;
+import static com.axibase.webtest.CommonSelects.getValueOfSwitchElement;
 import static com.codeborne.selenide.Selenide.*;
 
 public class MetricPage {
@@ -103,16 +103,19 @@ public class MetricPage {
         return this;
     }
 
-    public String getTagNames() {
-        return $$(tagNames).stream().
-                map(SelenideElement::getValue).
-                collect(Collectors.joining(","));
+    public String[] getTagNames() {
+        return $$(tagNames).stream()
+                .map(SelenideElement::getValue)
+                .filter(tag -> !tag.isEmpty())
+                .toArray(String[]::new);
     }
 
-    public String getTagValues() {
-        return $$(tagValues).stream().
-                map(SelenideElement::getValue).
-                collect(Collectors.joining(","));
+    public String[] getTagValues() {
+        return $$(tagValues).stream()
+                .map(SelenideElement::getValue)
+                .filter(tag -> !tag.isEmpty())
+                .toArray(String[]::new);
+
     }
 
     public SelenideElement getEnabledSwitch() {
@@ -203,6 +206,26 @@ public class MetricPage {
     public MetricPage setInterpolation(String value) {
         $(interpolation).selectOption(value);
         return this;
+    }
+
+    public Metric getMetric(){
+        return new Metric().setMetricName(this.getName().val())
+                .setStatus(getValueOfSwitchElement(this.getEnabledSwitch()))
+                .setLabel(this.getLabel().val())
+                .setDescription(this.getDescription().val())
+                .setDataType(this.getDataType().val())
+                .setInterpolationMode(this.getInterpolation().val())
+                .setUnits(this.getUnits().val())
+                .setFilterExpression(this.getPersistentFilter().val())
+                .setTimeZone(this.getTimeZone().val())
+                .setVersioning(getValueOfSwitchElement(this.getVersioningSwitch()))
+                .setInvalidAction(this.getInvalidAction().val())
+                .setPersistent(getValueOfSwitchElement(this.getPersistentSwitch()))
+                .setRetentionIntervalDays(Integer.parseInt(this.getRetentionIntervalDays().val()))
+                .setMinVal(Integer.parseInt(this.getMinValue().val()))
+                .setMaxVal(Integer.parseInt(this.getMaxValue().val()))
+                .setTagNames(this.getTagNames())
+                .setTagValues(this.getTagValues());
     }
 
 }

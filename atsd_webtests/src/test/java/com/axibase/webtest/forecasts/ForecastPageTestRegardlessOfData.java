@@ -269,7 +269,7 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
         assertTrue("The score interval should be displayed before the Component Threshold is filled",
                 intervalScore.isDisplayed());
 
-        threshold.sendKeys("5");
+        threshold.setValue("5");
         assertFalse("The score interval shouldn't be displayed after the Component Threshold is filled",
                 intervalScore.isDisplayed());
         threshold.click();
@@ -278,7 +278,7 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
 
         assertTrue("The Component Threshold should be enabled before the Score Interval if filled",
                 threshold.isEnabled());
-        intervalScore.sendKeys("5");
+        intervalScore.setValue("5");
         threshold.click();
         assertFalse("The Component Threshold shouldn't be enabled after the Score Interval if filled",
                 threshold.isEnabled());
@@ -289,8 +289,8 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
         forecastViewerPage.setGroupAuto();
         CommonAssertions.assertValid("The Group Count is validated but it have not to",
                 forecastViewerPage.getGroupCount());
-        forecastViewerPage.getComponentCount().sendKeys("3");
-        forecastViewerPage.getGroupCount().sendKeys("10");
+        forecastViewerPage.getComponentCount().setValue("3");
+        forecastViewerPage.getGroupCount().setValue("10");
         forecastViewerPage.clickSubmitButton();
         CommonAssertions.assertInvalid("The Group Count is not validated but it have to",
                 forecastViewerPage.getGroupCount());
@@ -349,13 +349,13 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
 
     private void checkHighlightOfSelectionElement(SelenideElement element, String value) {
         assertLackOfHighlight(element);
-        forecastViewerPage.setSelectionOption(value, element);
+        element.selectOption(value);
         assertPresenceOfHighlight(element);
     }
 
     private void checkHighlightOfNumericElement(SelenideElement element, String value) {
         assertLackOfHighlight(element);
-        forecastViewerPage.setNumericOption(value, element);
+        element.setValue(value);
         assertPresenceOfHighlight(element);
     }
 

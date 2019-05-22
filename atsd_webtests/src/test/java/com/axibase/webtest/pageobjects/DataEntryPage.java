@@ -26,4 +26,8 @@ public class DataEntryPage {
         return this;
     }
 
+    public boolean isCommandInserted(){
+        return $("form[action='/metrics/entry']").text().contains("commands successfully processed");
+    }
+
 }
