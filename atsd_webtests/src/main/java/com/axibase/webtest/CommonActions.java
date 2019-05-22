@@ -1,18 +1,15 @@
 package com.axibase.webtest;
 
-import org.apache.http.NameValuePair;
 import org.apache.http.client.utils.URIBuilder;
-import org.apache.http.message.BasicNameValuePair;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.net.URLEncoder;
 
 import static com.axibase.webtest.CommonConditions.clickable;
-import static com.codeborne.selenide.Selectors.*;
+import static com.codeborne.selenide.Selectors.byValue;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.actions;
 
@@ -73,21 +70,31 @@ public class CommonActions {
     }
 
     /**
-     * Create URL with params from map
+     * Create URL without params from string
      *
-     * @param URLPrefix -  prefix without params
-     * @param params    - string params
+     * @param URLPrefix - prefix without params
      * @return - new URL
      */
-    public static String createNewURL(String URLPrefix, Map<String, String> params) {
-        List<NameValuePair> paramsForEncoding = new ArrayList<>();
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            paramsForEncoding.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-        }
+    public static String createNewURL(String URLPrefix) {
         try {
-            return new URIBuilder(URLPrefix).addParameters(paramsForEncoding).build().toString();
+            return new URIBuilder(URLPrefix).build().toString();
         } catch (URISyntaxException e) {
             throw new RuntimeException("Wrong URL", e);
         }
     }
+
+    /**
+     * Encode string into UTF-8 format
+     *
+     * @param name - string to be encoded
+     * @return - encoded string
+     */
+    public static String encode(String name) {
+        try {
+            return URLEncoder.encode(name, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Wrong encoding type");
+        }
+    }
+
 }

@@ -1,25 +1,24 @@
 package com.axibase.webtest.pages;
 
-import com.axibase.webtest.CommonActions;
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import static com.axibase.webtest.CommonActions.createNewURL;
+import static com.axibase.webtest.CommonActions.encode;
 import static com.codeborne.selenide.Selenide.*;
 
 public class MetricsForEntityPage {
     private By searchQuery = By.id("searchQuery");
     private By searchButton = By.cssSelector("input[type='submit']");
 
-    public MetricsForEntityPage(String entityName, Map<String, String> params) {
-        open(CommonActions.createNewURL("/entities/" + entityName + "/metrics", params));
+    public MetricsForEntityPage(String entityName) {
+        open(createNewURL("/entities/" + encode(entityName) + "/metrics"));
     }
 
-    public MetricsForEntityPage setQuerySearch(String filter) {
-        $(searchQuery).setValue(filter);
+    public MetricsForEntityPage setQuerySearch(String query) {
+        $(searchQuery).setValue(query);
         return this;
     }
 
@@ -28,9 +27,13 @@ public class MetricsForEntityPage {
         return this;
     }
 
-    public List<String> getMetricNames() {
+    public MetricsForEntityPage search(String query) {
+        return setQuerySearch(query).search();
+    }
+
+    public String[] getMetricNames() {
         return $$("#metricList > tbody > tr > td:nth-child(4n)")
-                .stream().map(SelenideElement::text).collect(Collectors.toList());
+                .stream().map(SelenideElement::text).toArray(String[]::new);
     }
 
 }
