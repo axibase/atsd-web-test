@@ -1,5 +1,6 @@
 package com.axibase.webtest.pages;
 
+import com.axibase.webtest.service.InvalidDataEntryCommandException;
 import org.openqa.selenium.By;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
@@ -23,10 +24,13 @@ public class DataEntryPage {
 
     public DataEntryPage sendCommands() {
         $(sendButton).click();
+        if (!isCommandInserted()) {
+            throw new InvalidDataEntryCommandException($(".alert-error").text());
+        }
         return this;
     }
 
-    public boolean isCommandInserted(){
+    public boolean isCommandInserted() {
         return $("form[action='/metrics/entry']").text().contains("commands successfully processed");
     }
 

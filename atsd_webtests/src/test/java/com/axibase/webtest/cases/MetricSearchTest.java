@@ -52,8 +52,7 @@ public class MetricSearchTest extends AtsdTest {
     @BeforeClass
     public void generateData() {
         super.setUp();
-        DataEntryPage dataEntryPage = new DataEntryPage();
-        dataEntryPage.typeCommands("<#list 1..2 as i> \n" +
+        new DataEntryPage().typeCommands("<#list 1..2 as i> \n" +
                 "series e:metricsearchtest_entity m:metricsearchtest_contains-hyphen${i}=${i} \n" +
                 "</#list>\n" +
 
@@ -63,7 +62,6 @@ public class MetricSearchTest extends AtsdTest {
 
                 "series e:metricsearchtest_entity m:metricsearchtest_contains_underscore=1 \n")
                 .sendCommands();
-        assertTrue("Command is not inserted", dataEntryPage.isCommandInserted());
         super.logout();
     }
 
@@ -75,7 +73,7 @@ public class MetricSearchTest extends AtsdTest {
 
     @Test(dataProvider = "masks")
     public void testWildcardSearch(String mask, String[] expectedMetrics) {
-        String[] receivedMetrics = metricsForEntityPage.search(mask.trim())
+        String[] receivedMetrics = metricsForEntityPage.search(mask)
                 .getMetricNames();
         Assert.assertEqualsNoOrder(expectedMetrics, receivedMetrics);
     }
