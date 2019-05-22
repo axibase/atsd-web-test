@@ -20,12 +20,9 @@ public class CodeEditor {
                 "return element.CodeMirror.getInputField()"));
     }
 
-    public void setValue(String command) {
-        codeMirrorFieldElement.setValue(command);
-    }
+    public void sendKeys(String command) {
+        codeMirrorFieldElement.sendKeys(command);
 
-    public String text(){
-        return codeMirrorFieldElement.text();
     }
 
 }

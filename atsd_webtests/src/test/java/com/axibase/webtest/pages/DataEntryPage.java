@@ -36,7 +36,7 @@ public class DataEntryPage {
             fullCommand.append(command).append(" \n");
         }
         CodeEditor codeEditor = new CodeEditor($(By.name("commands")));
-        codeEditor.setValue(fullCommand.toString());
+        codeEditor.sendKeys(fullCommand.toString());
     }
 
 }

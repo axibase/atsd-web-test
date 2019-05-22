@@ -2,6 +2,7 @@ package com.axibase.webtest.forecasts;
 
 import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.CommonSelects;
+import com.axibase.webtest.pages.DataEntryPage;
 import com.axibase.webtest.pages.ForecastViewerPage;
 import com.axibase.webtest.service.AtsdTest;
 import com.axibase.webtest.service.CodeEditor;
@@ -30,8 +31,8 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
 
     private void loadData() {
         open("/metrics/entry");
-        new CodeEditor($(By.name("commands")))
-                .setValue("<#list 1..5 as i>\n" +
+        new DataEntryPage()
+                .sendCommands("<#list 1..5 as i>\n" +
                         "series s:${1425482080 - i * 600} " +
                         "e:entity-for-regardless-of-data-test " +
                         "m:metric-for-regardless-of-data-test=${60 - 2*i}\n" +
