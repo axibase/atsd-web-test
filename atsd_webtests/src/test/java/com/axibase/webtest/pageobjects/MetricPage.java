@@ -35,6 +35,7 @@ public class MetricPage {
 
     public MetricPage(String[] paramKeys, String[] paramValues) {
         open(createNewURL(BASE_URL, paramKeys, paramValues));
+        openSettingsPanel();
     }
 
     public MetricPage openSettingsPanel() {
@@ -208,7 +209,7 @@ public class MetricPage {
         return this;
     }
 
-    public Metric getMetric(){
+    public Metric getMetric() {
         return new Metric().setMetricName(this.getName().val())
                 .setStatus(getValueOfSwitchElement(this.getEnabledSwitch()))
                 .setLabel(this.getLabel().val())
@@ -221,9 +222,9 @@ public class MetricPage {
                 .setVersioning(getValueOfSwitchElement(this.getVersioningSwitch()))
                 .setInvalidAction(this.getInvalidAction().val())
                 .setPersistent(getValueOfSwitchElement(this.getPersistentSwitch()))
-                .setRetentionIntervalDays(Integer.parseInt(this.getRetentionIntervalDays().val()))
-                .setMinVal(Integer.parseInt(this.getMinValue().val()))
-                .setMaxVal(Integer.parseInt(this.getMaxValue().val()))
+                .setRetentionIntervalDays(this.getRetentionIntervalDays().val())
+                .setMinVal(this.getMinValue().val())
+                .setMaxVal(this.getMaxValue().val())
                 .setTagNames(this.getTagNames())
                 .setTagValues(this.getTagValues());
     }

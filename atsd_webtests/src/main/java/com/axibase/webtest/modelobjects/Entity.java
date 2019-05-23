@@ -7,11 +7,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Entity {
     private String entityName;
-    private boolean status;
-    private String label;
-    private String interpolation;
-    private String timeZone;
-    private String[] tagNames;
-    private String[] tagValues;
+    private boolean status = true;
+    private String label = "";
+    private String interpolation = "";
+    private String timeZone = "";
+    private String[] tagNames = new String[]{};
+    private String[] tagValues = new String[]{};
 
 }

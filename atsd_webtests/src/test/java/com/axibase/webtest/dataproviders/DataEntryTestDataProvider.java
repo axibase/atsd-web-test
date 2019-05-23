@@ -14,7 +14,11 @@ public class DataEntryTestDataProvider {
                         .setInterpolation("PREVIOUS")
                         .setTimeZone("CET")
                         .setTagNames(new String[]{"entity_tag_name1", "entity_tag_name2"})
-                        .setTagValues(new String[]{"entity_tag_value1", "entity_tag_value2"})}};
+                        .setTagValues(new String[]{"entity_tag_value1", "entity_tag_value2"})},
+
+                {"entity e:data-entry-commands-test_entity-test2",
+                        new Entity().setEntityName("data-entry-commands-test_entity-test2")}
+        };
     }
 
     @DataProvider(name = "metricTest")
@@ -34,11 +38,15 @@ public class DataEntryTestDataProvider {
                         .setVersioning(true)
                         .setInvalidAction("DISCARD")
                         .setPersistent(true)
-                        .setRetentionIntervalDays(20)
-                        .setMinVal(10)
-                        .setMaxVal(100)
+                        .setRetentionIntervalDays("20")
+                        .setMinVal("10")
+                        .setMaxVal("100")
                         .setTagNames(new String[]{"metric_tag_name1", "metric_tag_name2"})
-                        .setTagValues(new String[]{"metric_tag_value1", "metric_tag_value2"})}};
+                        .setTagValues(new String[]{"metric_tag_value1", "metric_tag_value2"})},
+
+                {"metric m:metric_name_data_entry_commands_test_metric-test2",
+                        new Metric().setMetricName("metric_name_data_entry_commands_test_metric-test2")}
+        };
     }
 
     @DataProvider(name = "propertyTest")
@@ -52,7 +60,16 @@ public class DataEntryTestDataProvider {
                         .setKeyNames(new String[]{"property_key_name1", "property_key_name2"})
                         .setKeyValues(new String[]{"property_key_value1", "property_key_value2"})
                         .setTagNames(new String[]{"property_tag_name1", "property_tag_name2"})
-                        .setTagValues(new String[]{"property_tag_value1", "property_tag_value2"})}};
+                        .setTagValues(new String[]{"property_tag_value1", "property_tag_value2"})},
+
+                {"property e:entity_name_data_entry_commands_test_property-test2 t:property_type2" +
+                        " v:property_tag_name=property_tag_value",
+                        new Property()
+                                .setEntityName("entity_name_data_entry_commands_test_property-test2")
+                                .setPropType("property_type2")
+                                .setTagNames(new String[]{"property_tag_name"})
+                                .setTagValues(new String[]{"property_tag_value"})}
+        };
     }
 
     @DataProvider(name = "messageTest")
@@ -66,18 +83,27 @@ public class DataEntryTestDataProvider {
                         .setSeverity("FATAL")
                         .setTagNames(new String[]{"message_tag_name1", "message_tag_name2"})
                         .setTagValues(new String[]{"message_tag_tag_value1", "message_tag_tag_value2"})
-                        .setMessageText("Message text")
-        }};
+                        .setMessageText("Message text")},
+
+                {"message e:entity_name_data_entry_commands_test_message-test2 m:\"Message text\"",
+                        new Message().setEntityName("entity_name_data_entry_commands_test_message-test2")
+                                .setMessageText("Message text")},
+
+                {"message e:entity_name_data_entry_commands_test_message-test3 t:source=test_source",
+                        new Message().setEntityName("entity_name_data_entry_commands_test_message-test3")
+                                .setSource("test_source")}
+        };
     }
 
     @DataProvider(name = "seriesTest")
     public static Object[][] seriesData() {
-        return new Object[][]{{"series e:entity_name_data_entry_commands_test_series-test " +
-                "m:metric_name_data_entry_commands_test_series-test=10" +
-                " x:metric_name_data_entry_commands_test=metric_text1 a:true t:series_tag_key1=series_tag_value1" +
+        return new Object[][]{{"series e:entity_name_data_entry_commands_test_series-test" +
+                " m:metric_name_data_entry_commands_test_series-test=10" +
+                " x:metric_name_data_entry_commands_test_series-test=metric_text1 a:true t:series_tag_key1=series_tag_value1" +
                 " t:series_tag_key2=series_tag_value2 s:1425482080 \n" +
-                "series e:entity_name_data_entry_commands_test m:metric_name_data_entry_commands_test=10" +
-                " x:metric_name_data_entry_commands_test=metric_text2 a:true t:series_tag_key1=series_tag_value1" +
+
+                "series e:entity_name_data_entry_commands_test_series-test  m:metric_name_data_entry_commands_test_series-test=10" +
+                " x:metric_name_data_entry_commands_test_series-test=metric_text2 a:true t:series_tag_key1=series_tag_value1" +
                 " t:series_tag_key2=series_tag_value2 s:1425482080",
 
                 new Series().setEntityName("entity_name_data_entry_commands_test_series-test")
@@ -86,7 +112,22 @@ public class DataEntryTestDataProvider {
                         .setMetricText("metric_text1; metric_text2")
                         .setTagNames(new String[]{"series_tag_key1", "series_tag_key2"})
                         .setTagValues(new String[]{"series_tag_value1", "series_tag_value2"})
-        }};
+        },
+
+                {"series e:entity_name_data_entry_commands_test_series-test2 " +
+                        "m:metric_name_data_entry_commands_test_series-test2=10",
+
+                        new Series().setEntityName("entity_name_data_entry_commands_test_series-test2")
+                                .setMetricName("metric_name_data_entry_commands_test_series-test2")
+                                .setMetricValue("10.0")},
+
+                {"series e:entity_name_data_entry_commands_test_series-test3 " +
+                        " x:metric_name_data_entry_commands_test_series-test3=metric_text",
+
+                        new Series().setEntityName("entity_name_data_entry_commands_test_series-test3")
+                                .setMetricName("metric_name_data_entry_commands_test_series-test3")
+                                .setMetricText("metric_text")}
+        };
     }
 
 }

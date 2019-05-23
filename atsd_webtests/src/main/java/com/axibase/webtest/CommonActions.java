@@ -4,9 +4,7 @@ import com.codeborne.selenide.SelenideElement;
 import org.apache.http.client.utils.URIBuilder;
 import org.openqa.selenium.By;
 
-import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
-import java.net.URLEncoder;
 import java.time.Duration;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -79,21 +77,7 @@ public class CommonActions {
     }
 
     /**
-     * Encode string into UTF-8 format
-     *
-     * @param name - string to be encoded
-     * @return - encoded string
-     */
-    public static String encode(String name) {
-        try {
-            return URLEncoder.encode(name, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Wrong encoding type");
-        }
-    }
-
-    /**
-     * Create URL with params from map
+     * Create encoded URL with params from map
      *
      * @param URLPrefix - prefix without params
      * @param params    - string params
@@ -101,7 +85,7 @@ public class CommonActions {
      */
     public static String createNewURL(String URLPrefix, Map<String, String> params) {
         try {
-            final URIBuilder uriBuilder = new URIBuilder(URLPrefix);
+            final URIBuilder uriBuilder = new URIBuilder().setPath(URLPrefix);
             params.forEach(uriBuilder::addParameter);
             return uriBuilder.build().toString();
         } catch (URISyntaxException e) {
@@ -110,21 +94,21 @@ public class CommonActions {
     }
 
     /**
-     * Create URL without params from string
+     * Create encoded URL without params from string
      *
      * @param URLPrefix -  prefix without params
      * @return - new URL
      */
     public static String createNewURL(String URLPrefix) {
         try {
-            return new URIBuilder(URLPrefix).build().toString();
+            return new URIBuilder().setPath(URLPrefix).build().toString();
         } catch (URISyntaxException e) {
             throw new RuntimeException("Wrong URL", e);
         }
     }
 
     /**
-     * Create URL with params from string
+     * Create encoded URL with params from string
      *
      * @param URLPrefix   - prefix without params
      * @param paramKeys   - string representation of key parameters
@@ -136,7 +120,7 @@ public class CommonActions {
             throw new IllegalStateException("Length of parameter arrays should be equal");
         }
         try {
-            final URIBuilder uriBuilder = new URIBuilder(URLPrefix);
+            final URIBuilder uriBuilder = new URIBuilder().setPath(URLPrefix);
             for (int i = 0; i < paramKeys.length; i++) {
                 uriBuilder.addParameter(paramKeys[i], paramValues[i]);
             }

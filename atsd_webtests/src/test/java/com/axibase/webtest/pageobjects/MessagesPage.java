@@ -91,12 +91,20 @@ public class MessagesPage {
         return $(message).text();
     }
 
-    public String[] getTagNames() {
-        return Arrays.stream(getMessageTags().split(",")).map(tag -> tag.split(" = ")[0].trim()).toArray(String[]::new);
+    public String[] getMessageTagNames() {
+        String[] result = new String[]{};
+        if (!getMessageTags().isEmpty()){
+            result = Arrays.stream(getMessageTags().split(",")).map(tag -> tag.split(" = ")[0].trim()).toArray(String[]::new);
+        }
+        return result;
     }
 
-    public String[] getTagValues() {
-        return Arrays.stream(getMessageTags().split(",")).map(tag -> tag.split(" = ")[1].trim()).toArray(String[]::new);
+    public String[] getMessageTagValues() {
+        String[] result = new String[]{};
+        if (!getMessageTags().isEmpty()){
+            result = Arrays.stream(getMessageTags().split(",")).map(tag -> tag.split(" = ")[1].trim()).toArray(String[]::new);
+        }
+        return result;
     }
 
     public Message getMessage() {
@@ -104,8 +112,8 @@ public class MessagesPage {
                 .setType(this.getMessageType())
                 .setSource(this.getMessageSource())
                 .setSeverity(this.getMessageSeverity())
-                .setTagNames(this.getTagNames())
-                .setTagValues(this.getTagValues())
+                .setTagNames(this.getMessageTagNames())
+                .setTagValues(this.getMessageTagValues())
                 .setMessageText(this.getMessageText());
     }
 

@@ -7,11 +7,11 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Message {
     private String entityName;
-    private String messageText;
-    private String type;
-    private String source;
-    private String severity;
-    private String[] tagNames;
-    private String[] tagValues;
+    private String messageText = "";
+    private String type = "default";
+    private String source = "default";
+    private String severity = "UNDEFINED";
+    private String[] tagNames = new String[]{};
+    private String[] tagValues = new String[]{};
 
 }

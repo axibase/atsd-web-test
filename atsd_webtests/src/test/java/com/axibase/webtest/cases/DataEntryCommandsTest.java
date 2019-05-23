@@ -31,11 +31,11 @@ public class DataEntryCommandsTest extends AtsdTest {
     }
 
     @Test(dataProvider = "messageTest", dataProviderClass = DataEntryTestDataProvider.class)
-    public void testMessageAdd(String insertMessage, Message expectedMessage) {
+    public void testMessageIsAdded(String insertMessage, Message expectedMessage) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
         entityName = expectedMessage.getEntityName();
 
-        assertEntityAdd();
+        assertEntityAdds();
         assertExpectedTagsInTable("Message tag key is not added into Message Tag Key IDs: ",
                 expectedMessage.getTagNames(), new MessageTagKeyIDsPage().getTable());
         assertExpectedTagsInTable("Message tag value is not added into Message Tag Value IDs: ",
@@ -45,17 +45,17 @@ public class DataEntryCommandsTest extends AtsdTest {
     }
 
     @Test(dataProvider = "propertyTest", dataProviderClass = DataEntryTestDataProvider.class)
-    public void testPropertyAdd(String insertMessage, Property expectedProperty) {
+    public void testPropertyIsAdded(String insertMessage, Property expectedProperty) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
         entityName = expectedProperty.getEntityName();
 
-        assertEntityAdd();
-        assertPropertyAdd(expectedProperty.getPropType());
+        assertEntityAdds();
+        assertPropertyAdds(expectedProperty.getPropType());
         assertPropertyKeysAndTags(expectedProperty);
     }
 
     @Test(dataProvider = "seriesTest", dataProviderClass = DataEntryTestDataProvider.class)
-    public void testSeriesAdd(String insertMessage, Series expectedSeries) {
+    public void testSeriesIsAdded(String insertMessage, Series expectedSeries) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
         entityName = expectedSeries.getEntityName();
         metricName = expectedSeries.getMetricName();
@@ -64,30 +64,43 @@ public class DataEntryCommandsTest extends AtsdTest {
                 expectedSeries.getTagNames(), new SeriesTagKeyIDsPage().getTable());
         assertExpectedTagsInTable("Series tag values is not added into Series Tag Values IDs: ",
                 expectedSeries.getTagValues(), new SeriesTagValueIDsPage().getTable());
-        assertSeriesAdd();
-        assertEntityAdd();
+        assertSeriesAdds();
+        assertEntityAdds();
         assertSeriesParams(expectedSeries);
     }
 
     @Test(dataProvider = "metricTest", dataProviderClass = DataEntryTestDataProvider.class)
-    public void testMetricAdd(String insertMessage, Metric expectedMetric) {
+    public void testMetricIsAdded(String insertMessage, Metric expectedMetric) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
         metricName = expectedMetric.getMetricName();
 
-        assertMetricAdd(expectedMetric.getMetricName());
+        assertMetricAdds(expectedMetric.getMetricName());
         Metric createdMetric = new MetricPage(new String[]{"metricName"}, new String[]{expectedMetric.getMetricName()})
                 .getMetric();
         assertEquals("Wrong created metric", expectedMetric, createdMetric);
     }
 
     @Test(dataProvider = "entityTest", dataProviderClass = DataEntryTestDataProvider.class)
-    public void testEntityAdd(String insertMessage, Entity expectedEntity) {
+    public void testEntityIsAdded(String insertMessage, Entity expectedEntity) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
         entityName = expectedEntity.getEntityName();
 
-        assertEntityAdd();
+        assertEntityAdds();
         Entity createdEntity = new EntityPage(expectedEntity.getEntityName()).getEntity();
         assertEquals("Wrong created entity", expectedEntity, createdEntity);
+    }
+
+    @Test
+    public void testMessageIsNotAdded() {
+        entityName = "data-entry-commands-test_message-is-not-added";
+        String insertMessage = "message e:" + entityName;
+        dataEntryPage.typeCommands(insertMessage).sendCommands();
+
+        EntitiesTablePage entitiesTablePage = new EntitiesTablePage();
+        assertFalse("Entity is added", entitiesTablePage.isRecordPresent(entityName));
+
+        MessagesPage messagesPage = new MessagesPage().setEntity(entityName).search();
+        assertEquals("Message is added into table", messagesPage.getCountOfMessages(), 0);
     }
 
     @Step
@@ -112,13 +125,13 @@ public class DataEntryCommandsTest extends AtsdTest {
     }
 
     @Step("Check entity adds into entities table")
-    private void assertEntityAdd() {
+    private void assertEntityAdds() {
         EntitiesTablePage entitiesTablePage = new EntitiesTablePage();
         assertTrue("Entity is not added", entitiesTablePage.isRecordPresent(entityName));
     }
 
     @Step("Check property adds")
-    private void assertPropertyAdd(String propertyType) {
+    private void assertPropertyAdds(String propertyType) {
         PropertiesTablePage propertiesTablePage = new PropertiesTablePage(entityName);
         assertTrue("Property is not added", propertiesTablePage.isPropertyPresent(propertyType));
     }
@@ -142,7 +155,7 @@ public class DataEntryCommandsTest extends AtsdTest {
     }
 
     @Step("Check series add by appropriate metric")
-    private void assertSeriesAdd() {
+    private void assertSeriesAdds() {
         MetricsSeriesTablePage metricsSeriesTablePage = new MetricsSeriesTablePage(metricName);
         assertTrue("Series is not added", metricsSeriesTablePage.isSeriesPresent());
     }
@@ -159,7 +172,7 @@ public class DataEntryCommandsTest extends AtsdTest {
     }
 
     @Step("Check metric adds into metrics table")
-    private void assertMetricAdd(String metricName) {
+    private void assertMetricAdds(String metricName) {
         MetricIDsPage metricIDsPage = new MetricIDsPage();
         assertTrue("Metric is not added into Metric IDs table",
                 Arrays.toString(getColumnValuesByColumnName(metricIDsPage.getTable(), "Metric")).contains(metricName));
@@ -173,8 +186,8 @@ public class DataEntryCommandsTest extends AtsdTest {
     private void assertMessageParameters(Message expectedMessage) {
         MessagesPage messagesPage = new MessagesPage().setEntity(expectedMessage.getEntityName()).search();
 
-        assertEquals("Wrong count of messages with the entity: " + expectedMessage.getEntityName(),
-                1, messagesPage.getCountOfMessages());
+//        assertEquals("Wrong count of messages with the entity: " + expectedMessage.getEntityName(),
+//                1, messagesPage.getCountOfMessages());
         assertEquals("Wrong created message", expectedMessage, messagesPage.getMessage());
     }
 

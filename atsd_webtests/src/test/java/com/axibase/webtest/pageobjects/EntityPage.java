@@ -24,6 +24,7 @@ public class EntityPage {
 
     public EntityPage(String entityName) {
         open(createNewURL(BASE_URL + entityName));
+        openSettingsPanel();
     }
 
     public EntityPage openSettingsPanel() {

@@ -7,9 +7,9 @@ import lombok.experimental.Accessors;
 @Accessors(chain = true)
 public class Property {
     private String entityName;
-    private String propType;
-    private String[] keyNames;
-    private String[] keyValues;
+    private String propType="";
+    private String[] keyNames = new String[]{};
+    private String[] keyValues = new String[]{};
     private String[] tagNames;
     private String[] tagValues;
 

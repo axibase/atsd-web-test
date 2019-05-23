@@ -8,8 +8,7 @@ import java.util.Arrays;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.axibase.webtest.CommonActions.getColumnValuesByColumnName;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 
 public class StatisticsPage {
     private final String BASE_URL = "/series/statistics";
@@ -55,18 +54,22 @@ public class StatisticsPage {
 
     public String getSampleDataTableText() {
         getSampleDataTab();
-        return getColumnValuesByColumnName($(sampleDataTable),"Text")[0];
+        return getColumnValuesByColumnName($(sampleDataTable), "Text")[0];
     }
 
     public String getSampleDataTableValue() {
         getSampleDataTab();
-        return getColumnValuesByColumnName($(sampleDataTable),"Value")[0];
+        return getColumnValuesByColumnName($(sampleDataTable), "Value")[0];
 
     }
 
     private String[] getSeriesTags() {
         getSeriesTab();
-        return getCaptionTableByName("Series Tags").$("tbody").text().split("\n");
+        String[] result = new String[]{};
+        if (!$$(By.xpath("//*[contains(text(),'Series Tags')]")).isEmpty()) {
+            result = getCaptionTableByName("Series Tags").$("tbody").text().split("\n");
+        }
+        return result;
     }
 
     private void getSampleDataTab() {

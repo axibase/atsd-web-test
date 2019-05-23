@@ -8,9 +8,9 @@ import lombok.experimental.Accessors;
 public class Series {
     private String entityName;
     private String metricName;
-    private String metricText;
-    private String metricValue;
-    private String[] tagNames;
-    private String[] tagValues;
+    private String metricText="";
+    private String metricValue="NaN";
+    private String[] tagNames = new String[]{};
+    private String[] tagValues = new String[]{};
 
 }
