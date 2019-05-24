@@ -3,6 +3,7 @@ package com.axibase.webtest.cases;
 import com.axibase.webtest.pages.DataEntryPage;
 import com.axibase.webtest.pages.MetricsForEntityPage;
 import com.axibase.webtest.service.AtsdTest;
+import io.qameta.allure.Step;
 import lombok.RequiredArgsConstructor;
 import org.testng.Assert;
 import org.testng.annotations.BeforeClass;
@@ -59,6 +60,7 @@ public class MetricSearchTest extends AtsdTest {
         metricsForEntityPage = new MetricsForEntityPage("metricsearchtest_entity");
     }
 
+    @Step("Check mask: {mask}")
     @Test(dataProvider = "masks")
     public void testWildcardSearch(String mask, String[] expectedMetrics) {
         String[] receivedMetrics = metricsForEntityPage.search(mask)
