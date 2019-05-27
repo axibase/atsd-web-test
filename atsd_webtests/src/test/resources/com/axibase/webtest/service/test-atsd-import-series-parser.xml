@@ -34,7 +34,12 @@
         <com.axibase.tsd.service.csv.WizardBasedCsvColumn>
           <semanticType class="com.axibase.tsd.model.csv.csvtype.SeriesSemanticType">SERIES_TAGS</semanticType>
           <column>Metric</column>
-          <key>tag_name</key>
+          <key>tag_name1</key>
+        </com.axibase.tsd.service.csv.WizardBasedCsvColumn>
+        <com.axibase.tsd.service.csv.WizardBasedCsvColumn>
+          <semanticType class="com.axibase.tsd.model.csv.csvtype.SeriesSemanticType">SERIES_TAGS</semanticType>
+          <column>Metric</column>
+          <key>tag_name2</key>
         </com.axibase.tsd.service.csv.WizardBasedCsvColumn>
       </a>
     </columns>

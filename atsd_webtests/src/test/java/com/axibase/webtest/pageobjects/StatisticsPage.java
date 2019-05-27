@@ -44,12 +44,12 @@ public class StatisticsPage {
 
     public String getMetricName() {
         getSeriesTab();
-        return getCaptionTableByName("Metric").$(By.xpath(".//tr[td[text()='Name']]")).text().split(" ")[1];
+        return getRowsNameValueInSeriesTab("Metric");
     }
 
     public String getEntityName() {
         getSeriesTab();
-        return getCaptionTableByName("Entity").$(By.xpath(".//tr[td[text()='Name']]")).text().split(" ")[1];
+        return getRowsNameValueInSeriesTab("Entity");
     }
 
     public String getSampleDataTableText() {
@@ -82,6 +82,10 @@ public class StatisticsPage {
 
     private SelenideElement getCaptionTableByName(String tableName) {
         return $(By.xpath("//caption[contains(text(),'" + tableName + "')]")).parent();
+    }
+
+    private String getRowsNameValueInSeriesTab(String metric) {
+        return getCaptionTableByName(metric).$(By.xpath(".//tr[td[text()='Name']]")).text().split(" ")[1];
     }
 
 }

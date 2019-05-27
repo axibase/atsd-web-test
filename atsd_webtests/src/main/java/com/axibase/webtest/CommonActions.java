@@ -33,10 +33,9 @@ public class CommonActions {
         $(By.className("btn-confirm"))
                 .shouldBe(clickable)
                 .click();
+        // If the confirm dialog is not confirmed
         if ($(By.className("btn-confirm")).exists()) {
             $(By.className("btn-confirm")).click();
-            System.out.println("oooops");
-
         }
         Wait().withTimeout(Duration.ofSeconds(2))
                 .until(condition -> !$(By.className("btn-confirm")).exists());

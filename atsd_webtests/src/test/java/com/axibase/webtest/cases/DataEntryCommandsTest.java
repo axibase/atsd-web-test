@@ -186,8 +186,8 @@ public class DataEntryCommandsTest extends AtsdTest {
     private void assertMessageParameters(Message expectedMessage) {
         MessagesPage messagesPage = new MessagesPage().setEntity(expectedMessage.getEntityName()).search();
 
-//        assertEquals("Wrong count of messages with the entity: " + expectedMessage.getEntityName(),
-//                1, messagesPage.getCountOfMessages());
+        assertEquals("Wrong count of messages with the entity: " + expectedMessage.getEntityName(),
+                1, messagesPage.getCountOfMessages());
         assertEquals("Wrong created message", expectedMessage, messagesPage.getMessage());
     }
 
