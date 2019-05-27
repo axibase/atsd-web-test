@@ -102,7 +102,7 @@ public class DataEntryTestDataProvider {
                 " x:dataentrycommandstest_testseriesisadded_metric-1=metric_text1 a:true t:series_tag_key1=series_tag_value1" +
                 " t:series_tag_key2=series_tag_value2 s:1425482080 \n" +
 
-                "series e:dataentrycommandstest_testseriesisadded_entity-2  m:dataentrycommandstest_testseriesisadded_metric-1=10" +
+                "series e:dataentrycommandstest_testseriesisadded_entity-1  m:dataentrycommandstest_testseriesisadded_metric-1=10" +
                 " x:dataentrycommandstest_testseriesisadded_metric-1=metric_text2 a:true t:series_tag_key1=series_tag_value1" +
                 " t:series_tag_key2=series_tag_value2 s:1425482080",
 

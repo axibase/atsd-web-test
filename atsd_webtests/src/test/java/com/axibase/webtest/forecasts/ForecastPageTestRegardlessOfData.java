@@ -8,6 +8,7 @@ import com.axibase.webtest.service.AtsdTest;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -21,10 +22,22 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
             "metric=metric-for-regardless-of-data-test&" +
             "startDate=2015-03-04T14:24:40.000Z&horizonInterval=10-MINUTE&period=5-SECOND";
 
+    @BeforeClass
+    public void generateData(){
+        super.setUp();
+        open("/metrics/entry");
+        CommonActions.sendTextToCodeMirror($(By.name("commands")), "<#list 1..5 as i>\n" +
+                "series s:${1425482080 - i * 600} " +
+                "e:entity-for-regardless-of-data-test " +
+                "m:metric-for-regardless-of-data-test=${60 - 2*i}\n" +
+                "</#list>");
+        $("button[value=send]").click();
+        super.logout();
+    }
+
     @BeforeMethod
     public void setUp() {
         super.setUp();
-        loadData();
         forecastViewerPage = new ForecastViewerPage();
         open(START_PAGE);
     }
@@ -398,16 +411,6 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
 
     private void storeCurrentWidgetContainerInJS() {
         executeJavaScript("self.widgetContainerForAtsdTest =  document.getElementById(\"widget-container\").__innerWidget__");
-    }
-
-    private void loadData() {
-        open("/metrics/entry");
-        CommonActions.sendTextToCodeMirror($(By.name("commands")), "<#list 1..5 as i>\n" +
-                "series s:${1425482080 - i * 600} " +
-                "e:entity-for-regardless-of-data-test " +
-                "m:metric-for-regardless-of-data-test=${60 - 2*i}\n" +
-                "</#list>");
-        $("button[value=send]").click();
     }
 
 }
