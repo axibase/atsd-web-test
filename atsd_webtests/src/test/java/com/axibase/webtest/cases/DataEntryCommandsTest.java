@@ -103,6 +103,16 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertEquals("Message is added into table", messagesPage.getCountOfMessages(), 0);
     }
 
+    @Test(dataProvider = "commandsTest", dataProviderClass = DataEntryTestDataProvider.class)
+    public void testCommands(String insertMessage, String[] expectedMetrics) {
+        dataEntryPage.typeCommands(insertMessage).sendCommands();
+
+        MetricsTablePage metricsTablePage = new MetricsTablePage();
+        for (String metric : expectedMetrics) {
+            assertTrue("Metric " + metric + " is not added", metricsTablePage.isRecordPresent(metric));
+        }
+    }
+
     @Step
     @AfterMethod
     public void cleanup() {
@@ -110,7 +120,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         dropRecord(new MetricsTablePage(), metricName);
     }
 
-    @Step("Drop {recordName} from table if it is exist")
+    @Step("Drop {recordName} from a table if it is exist")
     private <T extends Table> void dropRecord(T pageWithTable, String recordName) {
         pageWithTable.searchRecordByName(recordName);
         if (pageWithTable.isRecordPresent(recordName)) {
@@ -124,13 +134,13 @@ public class DataEntryCommandsTest extends AtsdTest {
         CommonActions.deleteRecord();
     }
 
-    @Step("Check entity adds into entities table")
+    @Step("Check the entity adds into entities table")
     private void assertEntityAdds() {
         EntitiesTablePage entitiesTablePage = new EntitiesTablePage();
         assertTrue("Entity is not added", entitiesTablePage.isRecordPresent(entityName));
     }
 
-    @Step("Check property adds")
+    @Step("Check the property adds")
     private void assertPropertyAdds(String propertyType) {
         PropertiesTablePage propertiesTablePage = new PropertiesTablePage(entityName);
         assertTrue("Property is not added", propertiesTablePage.isPropertyPresent(propertyType));
@@ -154,7 +164,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         Assert.assertEqualsNoOrder(allUnits, propertiesPage.getTagsAndKeys());
     }
 
-    @Step("Check series add by appropriate metric")
+    @Step("Check the series adds by appropriate metric")
     private void assertSeriesAdds() {
         MetricsSeriesTablePage metricsSeriesTablePage = new MetricsSeriesTablePage(metricName);
         assertTrue("Series is not added", metricsSeriesTablePage.isSeriesPresent());
@@ -171,7 +181,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertEquals("Wrong created series", expectedSeries, createdSeries);
     }
 
-    @Step("Check metric adds into metrics table")
+    @Step("Check the metric adds into metrics table")
     private void assertMetricAdds(String metricName) {
         MetricIDsPage metricIDsPage = new MetricIDsPage();
         assertTrue("Metric is not added into Metric IDs table",
@@ -182,7 +192,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertTrue("Metric is not added into table on Metric Page", metricsTablePage.isRecordPresent(metricName));
     }
 
-    @Step("Check message  parameters")
+    @Step("Check message parameters")
     private void assertMessageParameters(Message expectedMessage) {
         MessagesPage messagesPage = new MessagesPage().setEntity(expectedMessage.getEntityName()).search();
 

@@ -29,16 +29,6 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
         open(START_PAGE);
     }
 
-    private void loadData() {
-        open("/metrics/entry");
-        CommonActions.sendTextToCodeMirror($(By.name("commands")), "<#list 1..5 as i>\n" +
-                "series s:${1425482080 - i * 600} " +
-                "e:entity-for-regardless-of-data-test " +
-                "m:metric-for-regardless-of-data-test=${60 - 2*i}\n" +
-                "</#list>");
-        $("button[value=send]").click();
-    }
-
     @Test
     public void testUnionFieldInvalid() {
         forecastViewerPage.setGroupAuto()
@@ -408,6 +398,16 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
 
     private void storeCurrentWidgetContainerInJS() {
         executeJavaScript("self.widgetContainerForAtsdTest =  document.getElementById(\"widget-container\").__innerWidget__");
+    }
+
+    private void loadData() {
+        open("/metrics/entry");
+        CommonActions.sendTextToCodeMirror($(By.name("commands")), "<#list 1..5 as i>\n" +
+                "series s:${1425482080 - i * 600} " +
+                "e:entity-for-regardless-of-data-test " +
+                "m:metric-for-regardless-of-data-test=${60 - 2*i}\n" +
+                "</#list>");
+        $("button[value=send]").click();
     }
 
 }

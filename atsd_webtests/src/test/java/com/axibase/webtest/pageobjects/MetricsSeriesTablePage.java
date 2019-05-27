@@ -10,7 +10,6 @@ public class MetricsSeriesTablePage {
     private By metricList = By.id("metricList");
 
     public MetricsSeriesTablePage(String metricName) {
-
         open(createNewURL("/metrics/" + metricName + "/series"));
     }
 

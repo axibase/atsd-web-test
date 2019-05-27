@@ -4,8 +4,7 @@ import org.openqa.selenium.By;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.axibase.webtest.CommonActions.sendTextToCodeMirror;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.open;
+import static com.codeborne.selenide.Selenide.*;
 
 public class DataEntryPage {
     private final String BASE_URL = "/metrics/entry";
@@ -26,8 +25,8 @@ public class DataEntryPage {
         return this;
     }
 
-    public boolean isCommandInserted(){
-        return $("form[action='/metrics/entry']").text().contains("commands successfully processed");
+    public boolean isCommandInserted(int count){
+        return $$("form.commands .form-status").first().text().contains(count + " commands successfully processed");
     }
 
 }
