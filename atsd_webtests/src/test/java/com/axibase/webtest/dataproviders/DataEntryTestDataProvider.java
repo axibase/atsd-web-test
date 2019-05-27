@@ -130,8 +130,8 @@ public class DataEntryTestDataProvider {
         };
     }
 
-    @DataProvider(name = "commandsTest")
-    public static Object[][] commandsData() {
+    @DataProvider(name = "freemarkerCommandTest")
+    public static Object[][] commandData() {
         return new Object[][]{
                 {"<#assign values={\"dataentrycommandstest_testcommandwithassignmap_metric-1\": 10," +
                         " \"dataentrycommandstest_testcommandwithassignmap_metric-2\": 100} />\n" +
@@ -171,6 +171,19 @@ public class DataEntryTestDataProvider {
                                 "dataentrycommandstest_testcommandwithvalueassign_metric-30",
                                 "dataentrycommandstest_testcommandwithvalueassign_metric-40",
                                 "dataentrycommandstest_testcommandwithvalueassign_metric-50"}}
+        };
+    }
+
+    @DataProvider(name = "exampleSyntaxTest")
+    public static Object[][] exampleData() {
+        return new Object[][]{
+                {4, "<#list 1..20 as i>\n" +
+                        "series s:${(nowSeconds - i * 60)?c} e:{entity} m:{metric-name}=${(60 - 2*i)?c}\n" +
+                        "</#list>"},
+                {5, "<#assign values={\"metric-1\": 10, \"metric-2\": 100} />\n" +
+                        "<#list values as metric, value>\n" +
+                        "series e:{entity} m:${metric}=${value}\n" +
+                        "</#list>"}
         };
     }
 

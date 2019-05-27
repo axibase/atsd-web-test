@@ -10,6 +10,7 @@ public class DataEntryPage {
     private final String BASE_URL = "/metrics/entry";
 
     private By sendButton = By.cssSelector("button[value=send]");
+    private By formStatuses = By.cssSelector("form.commands .form-status");
 
     public DataEntryPage() {
         open(createNewURL(BASE_URL));
@@ -25,8 +26,34 @@ public class DataEntryPage {
         return this;
     }
 
-    public boolean isCommandInserted(int count){
-        return $$("form.commands .form-status").first().text().contains(count + " commands successfully processed");
+    public boolean isCommandInserted(int count) {
+        return $$(formStatuses).first().text().contains(count + " commands successfully processed");
+    }
+
+    public boolean isCommandValidated(){
+        return $$(formStatuses).first().text().equals("All commands are valid");
+    }
+
+    public DataEntryPage openHelpCommands() {
+        By commandsHelp = By.cssSelector("span[data-target=\"#commandsHelpPanel\"]");
+        if ($(commandsHelp).getAttribute("data-toggle").contains("collapse")) {
+            $(commandsHelp).click();
+        }
+        return this;
+    }
+
+    public String getCommandsWindowText() {
+        return $(".CodeMirror-code").text();
+    }
+
+    public DataEntryPage copyExampleByIndex(int index) {
+        $$("#commandsHelpText > span").get(index).findAll(By.xpath("./span")).last().click();
+        return this;
+    }
+
+    public DataEntryPage validate() {
+        $("button[value=validate]").click();
+        return this;
     }
 
 }
