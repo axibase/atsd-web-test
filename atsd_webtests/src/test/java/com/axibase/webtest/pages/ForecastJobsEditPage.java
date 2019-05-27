@@ -1,17 +1,17 @@
 package com.axibase.webtest.pages;
 
-import com.axibase.webtest.ElementUtils;
 import com.axibase.webtest.KeyValueForm;
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.Select;
 
 import java.util.*;
 
-public class ForecastJobsEditPage {
-    private WebDriver driver;
+import static com.codeborne.selenide.Selenide.$;
+import static com.codeborne.selenide.Selenide.$$;
 
+public class ForecastJobsEditPage {
     private By startDateField = By.id("settings.startTime");
     private By intervalCountField = By.id("settings.selectionInterval.intervalCount");
     private By intervalUnitField = By.id("settings.selectionInterval.intervalUnit");
@@ -37,6 +37,8 @@ public class ForecastJobsEditPage {
     private By aggregateStatisticField = By.id("settings.aggregateStatistics");
 
     private By algorithmField = By.id("settings.algorithm");
+    private By scoreIntervalCountField = By.id("settings.scoreInterval.intervalCount");
+    private By scoreIntervalUnitField = By.id("settings.scoreInterval.intervalUnit");
 
     private By forecastNameField = By.id("settings.name");
     private By forecastHorizonCountField = By.id("settings.storeInterval.intervalCount");
@@ -49,230 +51,273 @@ public class ForecastJobsEditPage {
     private By runButton = By.xpath("//input[@name='forecast']");
 
     private By forecastsTable = By.id("seriesList");
+    private By viewStoredForecastLink = By.xpath("//a[@data-original-title='View stored forecast']");
+    private By openForecastViewerLink = By.xpath("//a[@data-original-title='Open forecast viewer']");
 
-    public ForecastJobsEditPage(WebDriver driver) {
-        this.driver = driver;
+    private class Tag extends KeyValueForm {
+        Tag(int id) {
+            setKeyField("tags" + id + ".key");
+            setValueField("tags" + id + ".value");
+        }
+
+        @Override
+        public void setKeyField(String inspector) {
+            this.keyField = $(By.id(inspector));
+        }
+
+        @Override
+        public void setValueField(String inspector) {
+            this.valueField = $(By.id(inspector));
+        }
     }
 
     public ForecastJobsEditPage setStartDate(String value) {
-        return setStringAndNumericValue(value, driver.findElement(startDateField));
+        $(startDateField).setValue(value);
+        return this;
     }
 
-    public String getStartDate() {
-        return driver.findElement(startDateField).getAttribute("value");
+    public SelenideElement getStartDate() {
+        return $(startDateField);
     }
 
     public ForecastJobsEditPage setIntervalCount(String value) {
-        return setStringAndNumericValue(value, driver.findElement(intervalCountField));
+        $(intervalCountField).setValue(value);
+        return this;
     }
 
-    public String getIntervalCount() {
-        return driver.findElement(intervalCountField).getAttribute("value");
+    public SelenideElement getIntervalCount() {
+        return $(intervalCountField);
     }
 
     public ForecastJobsEditPage setIntervalUnit(String value) {
-        return setSelectionValue(value, driver.findElement(intervalUnitField));
+        $(intervalUnitField).selectOption(value);
+        return this;
     }
 
-    public String getIntervalUnit() {
-        return ElementUtils.getSelectedOption(driver.findElement(intervalUnitField));
+    public SelenideElement getIntervalUnit() {
+        return $(intervalUnitField);
     }
 
     public ForecastJobsEditPage setEndDate(String value) {
-        return setStringAndNumericValue(value, driver.findElement(endDateField));
+        $(endDateField).setValue(value);
+        return this;
     }
 
-    public String getEndDate() {
-        return driver.findElement(endDateField).getAttribute("value");
+    public SelenideElement getEndDate() {
+        return $(endDateField);
     }
 
     public ForecastJobsEditPage setMetric(String value) {
-        return setStringAndNumericValue(value, driver.findElement(metricField));
+        $(metricField).setValue(value);
+        return this;
     }
 
-    public String getMetric() {
-        return driver.findElement(metricField).getAttribute("value");
+    public SelenideElement getMetric() {
+        return $(metricField);
     }
 
-    public List<String> getErrorMetic() {
-        List<String> result = new ArrayList<>();
-        for (WebElement element: driver.findElements(errorMetric)) {
-            result.add(element.getText());
-        }
-
-        return result;
+    public void isPresentErrorMetric() {
+        $(errorMetric).shouldBe(Condition.visible);
     }
 
     public ForecastJobsEditPage setEntity(String value) {
-        return setStringAndNumericValue(value, driver.findElement(entityField));
+        $(entityField).setValue(value);
+        return this;
     }
 
-    public String getEntity() {
-        return driver.findElement(entityField).getAttribute("value");
+    public SelenideElement getEntity() {
+        return $(entityField);
     }
 
     public ForecastJobsEditPage setTagKey(String value, int index) {
         setNeededNumberTags(index);
-        return setStringAndNumericValue(value, tagValueFields.get(index - 1).getKeyField());
+        tagValueFields.get(index - 1).getKeyField().setValue(value);
+        return this;
     }
 
     public ForecastJobsEditPage setTagValue(String value, int index) {
         setNeededNumberTags(index);
-        return setStringAndNumericValue(value, tagValueFields.get(index - 1).getValueField());
+        tagValueFields.get(index - 1).getValueField().setValue(value);
+        return this;
     }
 
     public List<Tag> getTagValueFields() {
         isInitializeTagValueFields();
         return tagValueFields;
-//        List<Map<String, String>> result = new ArrayList<>();
-//        for (Tag tag: tagValueFields) {
-//            Map<String, String> tagPair = new HashMap<>();
-//            String key = tag.getKeyField().getAttribute("value");
-//            String value = tag.getValueField().getAttribute("value");
-//            tagPair.put(key, value);
-//            result.add(tagPair);
-//        }
-//        return result;
     }
 
     public ForecastJobsEditPage clickAddTagButton() {
         isInitializeTagValueFields();
-        driver.findElement(addTagButton).click();
+        $(addTagButton).click();
 
         tagValueFields.add(new Tag(tagValueFields.size()));
         return this;
     }
 
     public ForecastJobsEditPage setSeriesSelectionIntervalCount(String value) {
-        return setStringAndNumericValue(value, driver.findElement(seriesSelectionIntervalCountField));
+        $(seriesSelectionIntervalCountField).setValue(value);
+        return this;
     }
 
     public ForecastJobsEditPage setSeriesSelectionIntervalUnit(String value) {
-        return setSelectionValue(value, driver.findElement(seriesSelectionIntervalUnitField));
+        $(seriesSelectionIntervalUnitField).selectOption(value);
+        return this;
     }
 
     public ExportPage clickExportSelectLink() {
-        driver.findElement(exportSelectLink).click();
-        return new ExportPage(driver);
+        $(exportSelectLink).click();
+        return new ExportPage();
     }
 
     public ForecastJobsEditPage setSampleFilter(String value) {
-        return setStringAndNumericValue(value, driver.findElement(sampleFilterField));
+        $(sampleFilterField).setValue(value);
+        return this;
     }
 
-    public String getSampleFilter() {
-        return driver.findElement(sampleFilterField).getAttribute("value");
+    public SelenideElement getSampleFilter() {
+        return $(sampleFilterField);
     }
 
     public ForecastJobsEditPage setGroupBy(String value) {
-        return setSelectionValue(value, driver.findElement(groupByField));
+        $(groupByField).selectOption(value);
+        return this;
+    }
+
+    public SelenideElement getGroupBy() {
+        return $(groupByField);
     }
 
     public ForecastJobsEditPage setRequiredTagKeys(String value) {
-        return setStringAndNumericValue(value, driver.findElement(requiredTagKeysField));
+        $(requiredTagKeysField).setValue(value);
+        return this;
+    }
+
+    public SelenideElement getRequiredTagKeys() {
+        return $(requiredTagKeysField).shouldBe(Condition.visible);
     }
 
     public ForecastJobsEditPage clickAutoAggregateCheckBox() {
-        driver.findElement(autoAggregateCheckBox).click();
+        $(autoAggregateCheckBox).click();
         return this;
     }
 
     public boolean isSelectedAutoAggregate() {
-        return driver.findElement(autoAggregateCheckBox).isSelected();
-    }
-
-    public String getAggregationPeriodCount() {
-        return driver.findElement(aggregationPeriodCountField).getAttribute("value");
+        return $(autoAggregateCheckBox).isSelected();
     }
 
     public ForecastJobsEditPage setAggregationPeriodCount(String value) {
-        return setStringAndNumericValue(value, driver.findElement(aggregationPeriodCountField));
+        $(aggregationPeriodCountField).setValue(value);
+        return this;
     }
 
-    public String getAggregationPeriodUnit() {
-        return ElementUtils.getSelectedOption(driver.findElement(aggregationPeriodUnitField));
+    public SelenideElement getAggregationPeriodCount() {
+        return $(aggregationPeriodCountField);
     }
 
     public ForecastJobsEditPage setAggregationPeriodUnit(String value) {
-        return setSelectionValue(value, driver.findElement(aggregationPeriodUnitField));
+        $(aggregationPeriodUnitField).selectOption(value);
+        return this;
     }
 
-    public String getAggregateStatistic() {
-        return ElementUtils.getSelectedOption(driver.findElement(aggregateStatisticField));
+    public SelenideElement getAggregationPeriodUnit() {
+        return $(aggregationPeriodUnitField);
     }
 
     public ForecastJobsEditPage setAggregateStatistic(String value) {
-        return setSelectionValue(value, driver.findElement(aggregateStatisticField));
+        $(aggregateStatisticField).selectOption(value);
+        return this;
+    }
+
+    public SelenideElement getAggregateStatistic() {
+        return $(aggregateStatisticField);
     }
 
     public ForecastJobsEditPage setAlgorithm(String value) {
-        return setSelectionValue(value, driver.findElement(algorithmField));
+        $(algorithmField).selectOption(value);
+        return this;
+    }
+
+    public ForecastJobsEditPage setScoreIntervalCount(String value) {
+        $(scoreIntervalCountField).setValue(value);
+        return this;
+    }
+
+    public SelenideElement getScoreIntervalCount() {
+        return $(scoreIntervalCountField);
+    }
+
+    public ForecastJobsEditPage setScoreIntervalUnit(String value) {
+        $(scoreIntervalUnitField).selectOption(value);
+        return this;
+    }
+
+    public SelenideElement getScoreIntervalUnit() {
+        return $(scoreIntervalUnitField);
     }
 
     public ForecastJobsEditPage setForecastName(String value) {
-        return setStringAndNumericValue(value, driver.findElement(forecastNameField));
+        $(forecastNameField).setValue(value);
+        return this;
     }
 
-    public String getForecastName() {
-        return driver.findElement(forecastNameField).getAttribute("value");
+    public SelenideElement getForecastName() {
+        return $(forecastNameField);
     }
 
-    public ForecastJobsEditPage setForecastHorizonCountField(String value) {
-        return setStringAndNumericValue(value, driver.findElement(forecastHorizonCountField));
+    public ForecastJobsEditPage setForecastHorizonCount(String value) {
+        $(forecastHorizonCountField).setValue(value);
+        return this;
     }
 
-    public String getForecastHorizonCountField() {
-        return driver.findElement(forecastHorizonCountField).getAttribute("value");
+    public SelenideElement getForecastHorizonCount() {
+        return $(forecastHorizonCountField);
     }
 
-    public ForecastJobsEditPage setForecastHorizonUnitField(String value) {
-        return setStringAndNumericValue(value, driver.findElement(forecastHorizonUnitField));
+    public ForecastJobsEditPage setForecastHorizonUnit(String value) {
+        $(forecastHorizonUnitField).selectOption(value);
+        return this;
     }
 
-    public String getForecastHorizonUnitField() {
-        return  ElementUtils.getSelectedOption(driver.findElement(forecastHorizonUnitField));
+    public SelenideElement getForecastHorizonUnit() {
+        return $(forecastHorizonUnitField);
     }
 
     public ForecastJobsEditPage setStoreUnderMetric(String value) {
-        return setStringAndNumericValue(value, driver.findElement(storeUnderMetricField));
+        $(storeUnderMetricField).setValue(value);
+        return this;
     }
 
-    public String getStoreUnderMetric() {
-        return driver.findElement(storeUnderMetricField).getAttribute("value");
+    public SelenideElement getStoreUnderMetric() {
+        return $(storeUnderMetricField);
     }
 
     public ExportPage clickExportStoreLink() {
-        driver.findElement(exportStoreLink).click();
-        return new ExportPage(driver);
+        $(exportStoreLink).click();
+        return new ExportPage();
     }
 
     public ForecastJobsEditPage clickSaveButton() {
-        driver.findElement(saveButton).click();
-        return new ForecastJobsEditPage(driver);
+        $(saveButton).click();
+        return new ForecastJobsEditPage();
     }
 
     public ForecastJobsEditPage clickRunButton() {
-        driver.findElement(runButton).click();
-        return new ForecastJobsEditPage(driver);
+        $(runButton).click();
+        return new ForecastJobsEditPage();
     }
 
-    public Set<List<String>> getListForecasts() {
-        Set<List<String>> result = new HashSet<>();
+    public ElementsCollection getForecastTable() {
+        return $$(forecastsTable);
+    }
 
-        if (driver.findElements(forecastsTable).isEmpty()) {
-            return result;
-        }
+    public PortalViewPage clickViewStoredForecast() {
+        $(viewStoredForecastLink).click();
+        return new PortalViewPage();
+    }
 
-        List<WebElement> rows = driver.findElement(forecastsTable).findElements(By.xpath("./tbody/tr"));
-        for (WebElement row: rows) {
-            List<String> listValueOfCells = new ArrayList<>();
-            List<WebElement> elements = row.findElements(By.xpath("./td"));
-            for (WebElement element: elements) {
-                listValueOfCells.add(element.getText());
-            }
-            result.add(listValueOfCells);
-        }
-        return result;
+    public ForecastViewerPage clickOpenForecastViewer() {
+        $(openForecastViewerLink).click();
+        return new ForecastViewerPage();
     }
 
     private void setNeededNumberTags(int index) {
@@ -286,39 +331,9 @@ public class ForecastJobsEditPage {
     private void isInitializeTagValueFields() {
         if (tagValueFields == null) {
             tagValueFields = new ArrayList<>();
-            for (int i = 0; i < driver.findElements(tagPairs).size(); i++) {
+            for (int i = 0; i < $$(tagPairs).size(); i++) {
                 tagValueFields.add(new Tag(i));
             }
-        }
-    }
-
-    private ForecastJobsEditPage setStringAndNumericValue(String value, WebElement element) {
-        element.clear();
-        element.sendKeys(value);
-        return this;
-    }
-
-    private ForecastJobsEditPage setSelectionValue(String value, WebElement element) {
-        Select select = new Select(element);
-        select.selectByValue(value);
-        return this;
-    }
-
-    private class Tag extends KeyValueForm {
-
-        Tag(int id) {
-            setKeyField("tags" + id + ".key");
-            setValueField("tags" + id + ".value");
-        }
-
-        @Override
-        public void setKeyField(String inspector) {
-            this.keyField = driver.findElement(By.id(inspector));
-        }
-
-        @Override
-        public void setValueField(String inspector) {
-            this.valueField = driver.findElement(By.id(inspector));
         }
     }
 }

@@ -2,7 +2,7 @@ package com.axibase.webtest.forecasts;
 
 import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.CommonSelects;
-import com.axibase.webtest.pages.ForecastSettingsPage;
+import com.axibase.webtest.pages.ForecastJobsEditPage;
 import com.axibase.webtest.pages.ForecastViewerPage;
 import com.axibase.webtest.pages.PortalPage;
 import com.axibase.webtest.service.AtsdTest;
@@ -108,11 +108,11 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
         open(URL_FOR_GROUPING_WITH_TAGS);
         forecastViewerPage.scheduleForecast();
         switchToNewWindowTab();
-        ForecastSettingsPage forecastSettings = new ForecastSettingsPage();
+        ForecastJobsEditPage forecastJobsEditPage = new ForecastJobsEditPage();
         assertEquals("Wrong type of grouping in forecast settings", "Metric - Entity - Defined Tags",
-                forecastSettings.getGroupingType());
+                forecastJobsEditPage.getGroupBy());
         assertEquals("Wrong tags in grouping in forecast settings", "host name",
-                forecastSettings.getGroupingTags());
+                forecastJobsEditPage.getRequiredTagKeys());
     }
 
     @Test
@@ -121,9 +121,9 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
         open(URL_FOR_GROUPING_WITHOUT_TAGS);
         forecastViewerPage.scheduleForecast();
         switchToNewWindowTab();
-        ForecastSettingsPage forecastSettings = new ForecastSettingsPage();
+        ForecastJobsEditPage forecastJobsEditPage = new ForecastJobsEditPage();
         assertEquals("Wrong type of grouping in forecast settings", "Metric - Entity",
-                forecastSettings.getGroupingType());
+                forecastJobsEditPage.getGroupBy());
     }
 
     @Test

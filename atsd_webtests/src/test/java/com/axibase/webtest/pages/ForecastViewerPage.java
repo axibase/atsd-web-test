@@ -1,5 +1,6 @@
 package com.axibase.webtest.pages;
 
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.*;
@@ -65,11 +66,9 @@ public class ForecastViewerPage {
     private By forecastHorizonCount = By.id("horizon-count");
     private By forecastHorizonUnit = By.id("horizon-unit");
 
-    private By groupingByURL = By.cssSelector("#settings > .controls");
+    private By widgetContainer = By.id("widget-container");
 
-    public ForecastViewerPage() {
-        this.driver = getWebDriver();
-    }
+    private By groupingByURL = By.cssSelector("#settings > .controls");
 
     public void scheduleForecast() {
         $(forecastSettings).click();
@@ -330,7 +329,7 @@ public class ForecastViewerPage {
         return $(submitButton);
     }
 
-    public WebElement getAggregation() {
+    public SelenideElement getAggregation() {
         return $(aggregation);
     }
 
@@ -348,7 +347,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getPeriodCount() {
+    public SelenideElement getPeriodCount() {
         return $(periodCount);
     }
 
@@ -357,7 +356,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getPeriodUnit() {
+    public SelenideElement getPeriodUnit() {
         return $(periodUnit);
     }
 
@@ -503,7 +502,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getScoreIntervalCount() {
+    public SelenideElement getScoreIntervalCount() {
         return $(scoreIntervalCount);
     }
 
@@ -512,7 +511,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getScoreIntervalUnit() {
+    public SelenideElement getScoreIntervalUnit() {
         return $(scoreIntervalUnit);
     }
 
@@ -523,7 +522,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getStartDate() {
+    public SelenideElement getStartDate() {
         return $(startDate);
     }
 
@@ -532,7 +531,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getStartTime() {
+    public SelenideElement getStartTime() {
         return $(startTime);
     }
 
@@ -541,7 +540,7 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getEndDate() {
+    public SelenideElement getEndDate() {
         return $(endDate);
     }
 
@@ -550,33 +549,37 @@ public class ForecastViewerPage {
         return this;
     }
 
-    public WebElement getEndTime() {
+    public SelenideElement getEndTime() {
         return $(endTime);
     }
 
     public ForecastViewerPage setEndTime(String value) {
-        setNumericOption(value, $(endTime));
+        setNumericOption(value, driver.findElement(endTime));
         return this;
     }
 
-    public WebElement getForecastHorizonCount() {
+    public SelenideElement getForecastHorizonCount() {
         return $(forecastHorizonCount);
     }
 
     public ForecastViewerPage setForecastHorizonCount(String value) {
-        setNumericOption(value, $(forecastHorizonCount));
+        setNumericOption(value, driver.findElement(forecastHorizonCount));
         return this;
     }
 
-    public WebElement getForecastHorizonUnit() {
+    public SelenideElement getForecastHorizonUnit() {
         return $(forecastHorizonUnit);
     }
 
     public ForecastViewerPage setForecastHorizonUnit(String value) {
-        WebElement intervalInput = $(forecastHorizonUnit).findElement(By.xpath(".."));
+        WebElement intervalInput = driver.findElement(forecastHorizonUnit).findElement(By.xpath(".."));
         intervalInput.findElement(By.tagName("button")).click();
         intervalInput.findElement(By.className("dropdown-menu")).findElement(By.partialLinkText(value)).click();
         return this;
+    }
+
+    public SelenideElement getWidgetContainer() {
+        return $(widgetContainer);
     }
 
     public ForecastViewerPage setNumericOption(String value, WebElement element) {

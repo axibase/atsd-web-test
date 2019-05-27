@@ -1,28 +1,27 @@
 package com.axibase.webtest;
 
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 public abstract class KeyValueForm {
-//    protected String key;
-//    protected String value;
-    protected WebElement keyField;
-    protected WebElement valueField;
+    protected SelenideElement keyField;
+    protected SelenideElement valueField;
 
-    public WebElement getKeyField() {
+    public SelenideElement getKeyField() {
         return this.keyField;
     }
 
-    public WebElement getValueField() {
+    public SelenideElement getValueField() {
         return this.valueField;
     }
 
     public String getKey() {
-        return this.keyField.getAttribute("value");
+        return this.keyField.getValue();
     }
 
     public String getValue() {
-        return this.valueField.getAttribute("value");
+        return this.valueField.getValue();
     }
 
     public abstract void setKeyField(String inspector);
