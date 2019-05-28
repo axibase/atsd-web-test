@@ -1,6 +1,6 @@
 <list>
   <com.axibase.tsd.model.csv.WizardBasedCsvConfiguration>
-    <name>test-atsd-import-series-parser</name>
+    <name>test-atsd-_g-forecast-viewer-parser</name>
     <enabled>true</enabled>
     <delimiter>,</delimiter>
     <recordDelimiter>&#xd;</recordDelimiter>
@@ -20,7 +20,7 @@
         <com.axibase.tsd.service.csv.WizardBasedCsvColumn>
           <semanticType class="com.axibase.tsd.model.csv.csvtype.SeriesSemanticType">SERIES_TIMESTAMP</semanticType>
           <column>Timestamp</column>
-          <key>yyyy-MM-dd HH:mm:ss.SSS</key>
+          <key>yyyy-MM-dd HH:mm:ss</key>
         </com.axibase.tsd.service.csv.WizardBasedCsvColumn>
         <com.axibase.tsd.service.csv.WizardBasedCsvColumn>
           <semanticType class="com.axibase.tsd.model.csv.csvtype.SeriesSemanticType">SERIES_ENTITY</semanticType>
@@ -33,13 +33,13 @@
         </com.axibase.tsd.service.csv.WizardBasedCsvColumn>
         <com.axibase.tsd.service.csv.WizardBasedCsvColumn>
           <semanticType class="com.axibase.tsd.model.csv.csvtype.SeriesSemanticType">SERIES_TAGS</semanticType>
-          <column>Metric</column>
-          <key>tag_name1</key>
+          <column>host</column>
+          <key>host</key>
         </com.axibase.tsd.service.csv.WizardBasedCsvColumn>
         <com.axibase.tsd.service.csv.WizardBasedCsvColumn>
           <semanticType class="com.axibase.tsd.model.csv.csvtype.SeriesSemanticType">SERIES_TAGS</semanticType>
-          <column>Metric</column>
-          <key>tag_name2</key>
+          <column>name</column>
+          <key>name</key>
         </com.axibase.tsd.service.csv.WizardBasedCsvColumn>
       </a>
     </columns>
