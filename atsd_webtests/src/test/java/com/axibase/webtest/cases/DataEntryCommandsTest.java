@@ -101,7 +101,7 @@ public class DataEntryCommandsTest extends AtsdTest {
     }
 
     @Test(dataProvider = "freemarkerCommandTest", dataProviderClass = DataEntryTestDataProvider.class)
-    public void testCommands(String insertMessage, String[] expectedMetrics) {
+    public void testValidCommands(String insertMessage, String[] expectedMetrics) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
 
         MetricsTablePage metricsTablePage = new MetricsTablePage();
@@ -118,6 +118,13 @@ public class DataEntryCommandsTest extends AtsdTest {
 
         dataEntryPage.validate();
         assertTrue(dataEntryPage.isCommandValidated(), "Command: \n" + expectedCommand + "\nis not passed validation\n");
+    }
+
+    @Test(dataProvider = "invalidFreemarkerCommandTest",  dataProviderClass = DataEntryTestDataProvider.class)
+    public void testInvalidCommands(String insertMessage){
+        dataEntryPage.typeCommands(insertMessage).sendCommands().validate();
+
+        assertFalse(dataEntryPage.isCommandValidated(), "Wrong command is accepted");
     }
 
     @Step("Check the entity adds into entities table")

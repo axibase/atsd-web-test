@@ -187,4 +187,19 @@ public class DataEntryTestDataProvider {
         };
     }
 
+    @DataProvider(name = "invalidFreemarkerCommandTest")
+    public static Object[][] invalidCommandData() {
+        return new Object[][]{
+                {"entity"},
+                {"<#list 1..5 as i> \n" +
+                        "series e:dataentrycommandstest_testinvalidcommands_entity " +
+                        "m:dataentrycommandstest_testinvalidcommands_metric-${k*2}=10 \n" +
+                        "</#list> "},
+                {"<#assign />\n" +
+                        "<#list 1..5 as i>\n" +
+                        "series e:dataentrycommandstest_testinvalidcommands_entity " +
+                        "m:dataentrycommandstest_testinvalidcommands_metric-${i * startIndex}=5\n" +
+                        "</#list>"}};
+    }
+
 }
