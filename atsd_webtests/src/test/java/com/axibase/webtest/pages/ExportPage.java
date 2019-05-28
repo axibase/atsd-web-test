@@ -91,16 +91,16 @@ public class ExportPage {
         return $(forecastName);
     }
 
-    public boolean isSelectedFilter() {
-        return $(filterCheckBox).isSelected();
+    public SelenideElement getFilterCheckBox() {
+        return $(filterCheckBox);
     }
 
     public SelenideElement getValueFilter() {
         return $(valueFilterField);
     }
 
-    public boolean isSelectedAggregate() {
-        return $(aggregateCheckbox).isSelected();
+    public SelenideElement getAggregateCheckBox() {
+        return $(aggregateCheckbox);
     }
 
     public ElementsCollection getAggregationChosen() {

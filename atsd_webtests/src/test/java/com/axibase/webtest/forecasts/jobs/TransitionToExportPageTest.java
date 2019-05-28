@@ -5,6 +5,8 @@ import com.axibase.webtest.KeyValueForm;
 import com.axibase.webtest.pages.ExportPage;
 import com.axibase.webtest.pages.ForecastJobsEditPage;
 import com.axibase.webtest.service.AtsdTest;
+import com.codeborne.selenide.Condition;
+import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Issue;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -18,8 +20,6 @@ import java.util.List;
 import static com.codeborne.selenide.Selenide.executeJavaScript;
 import static com.codeborne.selenide.Selenide.open;
 import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertFalse;
-import static org.testng.AssertJUnit.assertTrue;
 
 public class TransitionToExportPageTest extends AtsdTest {
     private ForecastJobsEditPage forecastJobsEditPage;
@@ -58,13 +58,11 @@ public class TransitionToExportPageTest extends AtsdTest {
         private final String intervalUnit;
         private final String endDate;
         private final String dateType;
-
     }
 
     @Data
     @RequiredArgsConstructor
     private class AggregateForm {
-        private final boolean aggregateCheckBox;
         private final List<String> aggregationChosenField;
         private final String aggregationIntervalCountField;
         private final String aggregationIntervalUnitField;
@@ -87,6 +85,17 @@ public class TransitionToExportPageTest extends AtsdTest {
         SelectForm actualParameters = getCheckedParametersFromExportPage();
 
         assertEquals("Mismatch of data", expectedParameters, actualParameters);
+    }
+
+    @Issue("6236")
+    @Test
+    public void testSelectExportType() {
+        exportPage = forecastJobsEditPage.clickExportSelectLink();
+
+        ElementUtils.goToNextWindow();
+
+        exportPage.getForecastName().shouldBe(Condition.not(Condition.visible));
+        assertEquals("Mismatch of data", exportPage.getDataType().getValue(), PlaceOfCall.HISTORY.toString());
     }
 
     @Issue("6236")
@@ -311,8 +320,7 @@ public class TransitionToExportPageTest extends AtsdTest {
         exportPage = forecastJobsEditPage.clickExportSelectLink();
 
         ElementUtils.goToNextWindow();
-
-        assertFalse("Section aggregate is selected", exportPage.isSelectedAggregate());
+        exportPage.getAggregateCheckBox().shouldBe(Condition.not(Condition.selected));
     }
 
     @Issue("6236")
@@ -322,19 +330,7 @@ public class TransitionToExportPageTest extends AtsdTest {
 
         ElementUtils.goToNextWindow();
 
-        assertFalse("Section filter is selected", exportPage.isSelectedFilter());
-    }
-
-    @Issue("6236")
-    @Test
-    public void testFilterIsSelected() {
-        forecastJobsEditPage.setSampleFilter("value < 40");
-        executeJavaScript("scroll(0,-1000);");
-        exportPage = forecastJobsEditPage.clickExportSelectLink();
-
-        ElementUtils.goToNextWindow();
-
-        assertTrue("Section filter is not selected", exportPage.isSelectedFilter());
+        exportPage.getFilterCheckBox().shouldBe(Condition.not(Condition.selected));
     }
 
     @Issue("6236")
@@ -346,6 +342,7 @@ public class TransitionToExportPageTest extends AtsdTest {
 
         String expectedParameter = forecastJobsEditPage.getSampleFilter().getValue();
         ElementUtils.goToNextWindow();
+        exportPage.getFilterCheckBox().shouldBe(Condition.selected);
         String actualParameter = exportPage.getValueFilter().getValue();
 
         assertEquals("Mismatch of data", expectedParameter, actualParameter);
@@ -537,8 +534,10 @@ public class TransitionToExportPageTest extends AtsdTest {
         exportPage = forecastJobsEditPage.clickExportStoreLink();
 
         ElementUtils.goToNextWindow();
+        SelenideElement forecastName = exportPage.getForecastName();
 
-        assertEquals("Mismatch of data", exportPage.getForecastName().getValue(), EMPTY_STR);
+        forecastName.shouldBe(Condition.visible);
+        assertEquals("Mismatch of data", forecastName.getValue(), EMPTY_STR);
     }
 
     @Issue("6236")
@@ -550,6 +549,7 @@ public class TransitionToExportPageTest extends AtsdTest {
 
         ElementUtils.goToNextWindow();
 
+        exportPage.getForecastName().shouldBe(Condition.visible);
         assertEquals("Mismatch of data", exportPage.getDataType().getValue(), PlaceOfCall.FORECAST.toString());
     }
 
@@ -562,7 +562,7 @@ public class TransitionToExportPageTest extends AtsdTest {
 
         ElementUtils.goToNextWindow();
 
-        assertFalse("Section aggregate is selected", exportPage.isSelectedAggregate());
+        exportPage.getAggregateCheckBox().shouldBe(Condition.not(Condition.selected));
     }
 
     @Issue("6236")
@@ -574,8 +574,10 @@ public class TransitionToExportPageTest extends AtsdTest {
         exportPage = forecastJobsEditPage.clickExportStoreLink();
 
         ElementUtils.goToNextWindow();
+        SelenideElement forecastName = exportPage.getForecastName();
 
-        assertEquals("Mismatch of data", exportPage.getForecastName().getValue(), FORECAST_NAME);
+        forecastName.shouldBe(Condition.visible);
+        assertEquals("Mismatch of data", forecastName.getValue(), FORECAST_NAME);
     }
 
     @Issue("6236")
@@ -696,15 +698,11 @@ public class TransitionToExportPageTest extends AtsdTest {
             case HISTORY: dateType = PlaceOfCall.HISTORY.toString();
                 metric = forecastJobsEditPage.getMetric().getValue();
                 intervalCount = forecastJobsEditPage.getIntervalCount().getValue();
+                intervalUnit = forecastJobsEditPage.getIntervalUnit().getSelectedText();
+
 
                 if (startDate.isEmpty() && endDate.isEmpty()) {
                     endDate = NOW;
-                }
-
-                if (!startDate.isEmpty() && !endDate.isEmpty()) {
-                    intervalUnit = "Day";
-                } else {
-                    intervalUnit = forecastJobsEditPage.getIntervalUnit().getSelectedText();
                 }
 
                 break;
@@ -743,15 +741,14 @@ public class TransitionToExportPageTest extends AtsdTest {
     private AggregateForm getAggregateFormOfForecastJobsEditPage() {
         List<String> listAggregationChosen = Arrays.asList(forecastJobsEditPage.getAggregateStatistic().getSelectedText());
         return new AggregateForm(
-                true,
                 listAggregationChosen,
                 forecastJobsEditPage.getAggregationPeriodCount().getValue(),
                 forecastJobsEditPage.getAggregationPeriodUnit().getSelectedText());
     }
 
     private AggregateForm getAggregateFormOfExportPage() {
+        exportPage.getAggregateCheckBox().shouldBe(Condition.selected);
         return new AggregateForm(
-                exportPage.isSelectedAggregate(),
                 exportPage.getAggregationChosen().texts(),
                 exportPage.getAggregationPeriodCount().getValue(),
                 exportPage.getAggregationPeriodUnit().getSelectedText());
