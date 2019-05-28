@@ -22,7 +22,6 @@ public class CodeEditor {
 
     public void sendKeys(String command) {
         codeMirrorFieldElement.sendKeys(command);
-
     }
 
 }
