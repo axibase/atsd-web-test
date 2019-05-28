@@ -6,8 +6,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+
 import static com.axibase.webtest.PageUtils.urlPath;
 import static com.axibase.webtest.service.AccountService.CREATE_ACCOUNT_TITLE;
+import static com.codeborne.selenide.Selenide.Wait;
 import static com.codeborne.selenide.Selenide.title;
 import static org.testng.AssertJUnit.assertEquals;
 import static org.testng.AssertJUnit.assertTrue;
@@ -26,7 +29,7 @@ public class CreateAdminAccountTest extends AtsdTest {
     public void createAdminUser() {
         if (!LoginService.TITLE.equals(title())) {
             log.info("Trying to create admin...");
-            CommonAssertions.assertPageTitleEquals(CREATE_ACCOUNT_TITLE);
+            Wait().withTimeout(Duration.ofSeconds(2)).until(condition -> title().equals(CREATE_ACCOUNT_TITLE));
             assertTrue(generateAssertMessage("Can't create account"), accountService.createAdmin());
             assertEquals(generateAssertMessage("Should get redirect on home page"), "/", urlPath());
         } else {
