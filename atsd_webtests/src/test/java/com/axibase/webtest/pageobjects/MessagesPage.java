@@ -6,6 +6,7 @@ import org.openqa.selenium.By;
 import java.util.Arrays;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
+import static com.axibase.webtest.CommonActions.getColumnValuesByColumnName;
 import static com.codeborne.selenide.Selenide.*;
 
 public class MessagesPage {
@@ -93,7 +94,7 @@ public class MessagesPage {
 
     public String[] getMessageTagNames() {
         String[] result = new String[]{};
-        if (!getMessageTags().isEmpty()){
+        if (!getMessageTags().isEmpty()) {
             result = Arrays.stream(getMessageTags().split(",")).map(tag -> tag.split(" = ")[0].trim()).toArray(String[]::new);
         }
         return result;
@@ -101,7 +102,7 @@ public class MessagesPage {
 
     public String[] getMessageTagValues() {
         String[] result = new String[]{};
-        if (!getMessageTags().isEmpty()){
+        if (!getMessageTags().isEmpty()) {
             result = Arrays.stream(getMessageTags().split(",")).map(tag -> tag.split(" = ")[1].trim()).toArray(String[]::new);
         }
         return result;
@@ -118,7 +119,7 @@ public class MessagesPage {
     }
 
     private String getMessageTags() {
-        return $("#messagesList > tbody > tr > td:nth-child(7n)").text();
+        return getColumnValuesByColumnName($("#messagesList"), "Tags")[0];
     }
 
 }

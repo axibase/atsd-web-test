@@ -4,12 +4,13 @@ import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.$$;
+import static com.codeborne.selenide.Selenide.open;
 
-public class PropertiesPage {
+public class PropertyPage {
     private final String BASE_URL = "/properties";
 
-    public PropertiesPage(String entityName, String[] paramKeys, String[] paramValues) {
+    public PropertyPage(String entityName, String[] paramKeys, String[] paramValues) {
         open(createNewURL("/entities/" + entityName + BASE_URL, paramKeys, paramValues));
     }
 

@@ -30,7 +30,7 @@ public class DataEntryPage {
         return $$(formStatuses).first().text().contains(count + " commands successfully processed");
     }
 
-    public boolean isCommandValidated(){
+    public boolean isCommandValidated() {
         return $$(formStatuses).first().text().equals("All commands are valid");
     }
 

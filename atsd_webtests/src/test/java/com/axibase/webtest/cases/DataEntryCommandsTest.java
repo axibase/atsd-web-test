@@ -1,6 +1,5 @@
 package com.axibase.webtest.cases;
 
-import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.dataproviders.DataEntryTestDataProvider;
 import com.axibase.webtest.modelobjects.*;
 import com.axibase.webtest.pageobjects.*;
@@ -8,14 +7,12 @@ import com.axibase.webtest.service.AtsdTest;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.testng.Assert;
-import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
 import java.util.stream.Stream;
 
-import static com.axibase.webtest.CommonActions.clickCheckboxByValueAttribute;
 import static com.axibase.webtest.CommonActions.getColumnValuesByColumnName;
 import static org.testng.Assert.*;
 
@@ -117,31 +114,10 @@ public class DataEntryCommandsTest extends AtsdTest {
     public void textExamples(int exampleIndex, String expectedCommand) {
         dataEntryPage.openHelpCommands()
                 .copyExampleByIndex(exampleIndex);
-        assertEquals(expectedCommand, dataEntryPage.getCommandsWindowText(),"Command is wrong copied\n");
+        assertEquals(expectedCommand, dataEntryPage.getCommandsWindowText(), "Command is wrong copied\n");
 
         dataEntryPage.validate();
         assertTrue(dataEntryPage.isCommandValidated(), "Command: \n" + expectedCommand + "\nis not passed validation\n");
-    }
-
-    @Step
-    @AfterMethod
-    public void cleanup() {
-        dropRecord(new EntitiesTablePage(), entityName);
-        dropRecord(new MetricsTablePage(), metricName);
-    }
-
-    @Step("Drop {recordName} from a table if it is exist")
-    private <T extends Table> void dropRecord(T pageWithTable, String recordName) {
-        pageWithTable.searchRecordByName(recordName);
-        if (pageWithTable.isRecordPresent(recordName)) {
-            removeRecordByCheckbox(recordName);
-        }
-        assertFalse(pageWithTable.isRecordPresent(recordName), recordName + " is not deleted\n");
-    }
-
-    private void removeRecordByCheckbox(String value) {
-        clickCheckboxByValueAttribute(value);
-        CommonActions.deleteRecord();
     }
 
     @Step("Check the entity adds into entities table")
@@ -164,7 +140,7 @@ public class DataEntryCommandsTest extends AtsdTest {
 
     @Step("Check properties keys and tags")
     private void assertPropertyKeysAndTags(Property expectedProperty) {
-        PropertiesPage propertiesPage = new PropertiesPage(expectedProperty.getEntityName(),
+        PropertyPage propertiesPage = new PropertyPage(expectedProperty.getEntityName(),
                 new String[]{"type"}, new String[]{expectedProperty.getPropType()});
 
         Object[] allUnits = Stream.of(expectedProperty.getKeyNames(), expectedProperty.getKeyValues(),
