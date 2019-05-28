@@ -2,7 +2,6 @@ package com.axibase.webtest.pageobjects;
 
 import org.openqa.selenium.By;
 
-import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.axibase.webtest.CommonActions.sendTextToCodeMirror;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -13,7 +12,7 @@ public class DataEntryPage {
     private By formStatuses = By.cssSelector("form.commands .form-status");
 
     public DataEntryPage() {
-        open(createNewURL(BASE_URL));
+        open(BASE_URL);
     }
 
     public DataEntryPage typeCommands(String command) {

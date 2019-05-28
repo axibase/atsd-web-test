@@ -5,6 +5,8 @@ import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
+import java.util.Map;
+
 import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.axibase.webtest.CommonSelects.getValueOfSwitchElement;
 import static com.codeborne.selenide.Selenide.*;
@@ -33,8 +35,8 @@ public class MetricPage {
     private By invalidAction = By.id("metric.invalidValueAction");
     private By interpolation = By.id("metric.interpolate");
 
-    public MetricPage(String[] paramKeys, String[] paramValues) {
-        open(createNewURL(BASE_URL, paramKeys, paramValues));
+    public MetricPage(Map<String, String> params) {
+        open(createNewURL(BASE_URL, params));
         openSettingsPanel();
     }
 

@@ -5,6 +5,7 @@ import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
 import java.util.Arrays;
+import java.util.Map;
 
 import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.axibase.webtest.CommonActions.getColumnValuesByColumnName;
@@ -19,8 +20,8 @@ public class StatisticsPage {
     private By seriesTab = By.xpath("//*[@href='#series-tab']");
 
 
-    public StatisticsPage(String[] paramKeys, String[] paramValues) {
-        open(createNewURL(BASE_URL, paramKeys, paramValues));
+    public StatisticsPage(Map<String, String> params) {
+        open(createNewURL(BASE_URL, params));
     }
 
     public Series getSeries() {

@@ -11,6 +11,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.stream.Stream;
 
 import static com.axibase.webtest.CommonActions.getColumnValuesByColumnName;
@@ -72,7 +73,9 @@ public class DataEntryCommandsTest extends AtsdTest {
         metricName = expectedMetric.getMetricName();
 
         assertMetricAdds(expectedMetric.getMetricName());
-        Metric createdMetric = new MetricPage(new String[]{"metricName"}, new String[]{expectedMetric.getMetricName()})
+        Metric createdMetric = new MetricPage(new HashMap<String, String>() {{
+            put("metricName", expectedMetric.getMetricName());
+        }})
                 .getMetric();
         assertEquals(expectedMetric, createdMetric, "Wrong created metric\n");
     }
@@ -120,8 +123,8 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertTrue(dataEntryPage.isCommandValidated(), "Command: \n" + expectedCommand + "\nis not passed validation\n");
     }
 
-    @Test(dataProvider = "invalidFreemarkerCommandTest",  dataProviderClass = DataEntryTestDataProvider.class)
-    public void testInvalidCommands(String insertMessage){
+    @Test(dataProvider = "invalidFreemarkerCommandTest", dataProviderClass = DataEntryTestDataProvider.class)
+    public void testInvalidCommands(String insertMessage) {
         dataEntryPage.typeCommands(insertMessage).sendCommands().validate();
 
         assertFalse(dataEntryPage.isCommandValidated(), "Wrong command is accepted");
@@ -148,7 +151,9 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Step("Check properties keys and tags")
     private void assertPropertyKeysAndTags(Property expectedProperty) {
         PropertyPage propertiesPage = new PropertyPage(expectedProperty.getEntityName(),
-                new String[]{"type"}, new String[]{expectedProperty.getPropType()});
+                new HashMap<String, String>() {{
+                    put("type", expectedProperty.getPropType());
+                }});
 
         Object[] allUnits = Stream.of(expectedProperty.getKeyNames(), expectedProperty.getKeyValues(),
                 expectedProperty.getTagNames(), expectedProperty.getTagValues())
@@ -166,9 +171,13 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Step("Check series parameters")
     private void assertSeriesParams(Series expectedSeries) {
         StatisticsPage statisticsPage = new StatisticsPage(
-                Stream.concat(Stream.of("entity", "metric"), Arrays.stream(expectedSeries.getTagNames())).toArray(String[]::new),
-                Stream.concat(Stream.of(entityName, metricName),
-                        Arrays.stream(expectedSeries.getTagValues())).toArray(String[]::new));
+                new HashMap<String, String>() {{
+                    put("entity", entityName);
+                    put("metric", metricName);
+                    for (int i = 0; i < expectedSeries.getTagNames().length; i++) {
+                        put(expectedSeries.getTagNames()[i], expectedSeries.getTagValues()[i]);
+                    }
+                }});
 
         Series createdSeries = statisticsPage.getSeries();
         assertEquals(expectedSeries, createdSeries, "Wrong created series\n");

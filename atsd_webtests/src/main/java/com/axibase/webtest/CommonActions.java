@@ -93,53 +93,6 @@ public class CommonActions {
     }
 
     /**
-     * Create encoded URL without params from string
-     *
-     * @param URLPrefix -  prefix without params
-     * @return - new URL
-     */
-    public static String createNewURL(String URLPrefix) {
-        try {
-            return new URIBuilder().setPath(URLPrefix).build().toString();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Wrong URL", e);
-        }
-    }
-
-    /**
-     * Create encoded URL with params from string
-     *
-     * @param URLPrefix   - prefix without params
-     * @param paramKeys   - string representation of key parameters
-     * @param paramValues - string representation of value parameters
-     * @return - new URL
-     */
-    public static String createNewURL(String URLPrefix, String[] paramKeys, String[] paramValues) {
-        if (paramKeys.length != paramValues.length) {
-            throw new IllegalStateException("Length of parameter arrays should be equal");
-        }
-        try {
-            final URIBuilder uriBuilder = new URIBuilder().setPath(URLPrefix);
-            for (int i = 0; i < paramKeys.length; i++) {
-                uriBuilder.addParameter(paramKeys[i], paramValues[i]);
-            }
-            return uriBuilder.build().toString();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Wrong URL", e);
-        }
-    }
-
-    /**
-     * Find checkbox by its value and select it
-     *
-     * @param value - value of the checkbox
-     */
-    public static void clickCheckboxByValueAttribute(String value) {
-        String xpath = String.format("//*/input[@type='checkbox' and @value='%s']", value);
-        $(By.xpath(xpath)).click();
-    }
-
-    /**
      * Get all values in the specified column
      *
      * @param table      - the table with tags
@@ -155,6 +108,5 @@ public class CommonActions {
                 .map(SelenideElement::text)
                 .toArray(String[]::new);
     }
-
 
 }

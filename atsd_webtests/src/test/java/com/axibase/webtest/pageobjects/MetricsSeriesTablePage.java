@@ -1,16 +1,19 @@
 package com.axibase.webtest.pageobjects;
 
+import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 
-import static com.axibase.webtest.CommonActions.createNewURL;
+import java.net.URLEncoder;
+
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class MetricsSeriesTablePage {
     private By metricList = By.id("metricList");
 
+    @SneakyThrows
     public MetricsSeriesTablePage(String metricName) {
-        open(createNewURL("/metrics/" + metricName + "/series"));
+        open("/metrics/" + URLEncoder.encode(metricName, "UTF-8") + "/series");
     }
 
     public boolean isSeriesPresent() {

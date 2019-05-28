@@ -5,7 +5,6 @@ import org.openqa.selenium.By;
 
 import java.util.Arrays;
 
-import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.axibase.webtest.CommonActions.getColumnValuesByColumnName;
 import static com.codeborne.selenide.Selenide.*;
 
@@ -25,7 +24,7 @@ public class MessagesPage {
     private By message = By.xpath("//*[contains(@id,'message_')]");
 
     public MessagesPage() {
-        open(createNewURL(BASE_URL));
+        open(BASE_URL);
     }
 
     public MessagesPage search() {

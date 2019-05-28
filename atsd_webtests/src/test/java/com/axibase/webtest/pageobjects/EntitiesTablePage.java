@@ -5,7 +5,6 @@ import org.openqa.selenium.TimeoutException;
 
 import java.time.Duration;
 
-import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.codeborne.selenide.Selenide.*;
 
 public class EntitiesTablePage implements Table {
@@ -14,7 +13,7 @@ public class EntitiesTablePage implements Table {
     private By searchQuery = By.id("searchQuery");
 
     public EntitiesTablePage() {
-        open(createNewURL(BASE_URL));
+        open(BASE_URL);
     }
 
     @Override

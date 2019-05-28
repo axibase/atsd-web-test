@@ -2,7 +2,6 @@ package com.axibase.webtest.pageobjects;
 
 import org.openqa.selenium.By;
 
-import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.codeborne.selenide.Selenide.*;
 
 public class MetricsTablePage implements Table {
@@ -11,8 +10,7 @@ public class MetricsTablePage implements Table {
     private By searchQuery = By.id("searchQuery");
 
     public MetricsTablePage() {
-
-        open(createNewURL(BASE_URL));
+        open(BASE_URL);
     }
 
     @Override
