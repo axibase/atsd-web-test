@@ -1,5 +1,6 @@
 FROM ubuntu:16.04
 
+ENV DEPLOYMENT_TYPE web-test
 LABEL com.axibase.maintainer="ATSD Developers <dev-atsd@axibase.com>"
 
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv-keys 26AEE425A57967CFB323846008796A6514F3CB79 \
