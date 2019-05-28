@@ -46,9 +46,9 @@ public class Config {
                     log.error("Can't read required properties");
                     System.exit(1);
                 }
-                final String chromedriverPath = properties.getProperty(CHROME_DRIVER_PROPERTY_NAME);
-                if (chromedriverPath != null) {
-                    System.setProperty(CHROME_DRIVER_PROPERTY_NAME, chromedriverPath);
+                final String chromeDriverPath = properties.getProperty(CHROME_DRIVER_PROPERTY_NAME);
+                if (chromeDriverPath != null) {
+                    System.setProperty(CHROME_DRIVER_PROPERTY_NAME, chromeDriverPath);
                 }
                 final String browserFromProperties = properties.getProperty(SELENIDE_BROWSER_PROPERTY_NAME, "chrome");
                 Configuration.baseUrl = url;
