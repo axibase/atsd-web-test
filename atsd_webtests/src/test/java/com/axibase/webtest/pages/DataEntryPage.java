@@ -5,7 +5,6 @@ import com.axibase.webtest.service.InvalidDataEntryCommandException;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 
-import static com.axibase.webtest.CommonActions.createNewURL;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
@@ -15,7 +14,7 @@ public class DataEntryPage {
     private final static By SEND_BUTTON = By.cssSelector("button[value=send]");
 
     public DataEntryPage() {
-        open(createNewURL(BASE_URL));
+        open(BASE_URL);
     }
 
     public DataEntryPage sendCommands(String... commands) {
@@ -27,7 +26,7 @@ public class DataEntryPage {
         return this;
     }
 
-    private boolean isCommandFailed(){
+    private boolean isCommandFailed() {
         return !$("form[action='/metrics/entry']").text().contains("commands successfully processed");
     }
 

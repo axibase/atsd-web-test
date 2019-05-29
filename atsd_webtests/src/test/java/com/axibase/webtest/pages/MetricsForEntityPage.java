@@ -1,20 +1,21 @@
 package com.axibase.webtest.pages;
 
 import com.codeborne.selenide.SelenideElement;
+import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 
+import java.net.URLEncoder;
 import java.util.stream.Collectors;
 
-import static com.axibase.webtest.CommonActions.createNewURL;
-import static com.axibase.webtest.CommonActions.encode;
 import static com.codeborne.selenide.Selenide.*;
 
 public class MetricsForEntityPage {
     private By searchQuery = By.id("searchQuery");
     private By searchButton = By.cssSelector("input[type='submit']");
 
+    @SneakyThrows
     public MetricsForEntityPage(String entityName) {
-        open(createNewURL("/entities/" + encode(entityName) + "/metrics"));
+        open("/entities/" + URLEncoder.encode(entityName, "UTF-8") + "/metrics");
     }
 
     public MetricsForEntityPage setQuerySearch(String query) {

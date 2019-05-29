@@ -1,12 +1,7 @@
 package com.axibase.webtest;
 
-import org.apache.http.client.utils.URIBuilder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URISyntaxException;
-import java.net.URLEncoder;
 
 import static com.axibase.webtest.CommonConditions.clickable;
 import static com.codeborne.selenide.Selectors.byValue;
@@ -52,34 +47,6 @@ public class CommonActions {
     public static void uploadFile(String file) {
         $("input[type='file']").sendKeys(file);
         $("input[type='submit']").click();
-    }
-
-    /**
-     * Create URL without params from string
-     *
-     * @param URLPrefix - prefix without params
-     * @return - new URL
-     */
-    public static String createNewURL(String URLPrefix) {
-        try {
-            return new URIBuilder(URLPrefix).build().toString();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Wrong URL", e);
-        }
-    }
-
-    /**
-     * Encode string into UTF-8 format
-     *
-     * @param name - string to be encoded
-     * @return - encoded string
-     */
-    public static String encode(String name) {
-        try {
-            return URLEncoder.encode(name, "UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("Wrong encoding type");
-        }
     }
 
     /**
