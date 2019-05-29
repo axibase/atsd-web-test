@@ -1,8 +1,8 @@
 package com.axibase.webtest.service;
 
 
-import com.axibase.webtest.CommonAssertions;
 import lombok.extern.slf4j.Slf4j;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -29,7 +29,7 @@ public class CreateAdminAccountTest extends AtsdTest {
     public void createAdminUser() {
         if (!LoginService.TITLE.equals(title())) {
             log.info("Trying to create admin...");
-            Wait().withTimeout(Duration.ofSeconds(2)).until(condition -> title().equals(CREATE_ACCOUNT_TITLE));
+            Wait().withTimeout(Duration.ofSeconds(2)).until(ExpectedConditions.titleIs(CREATE_ACCOUNT_TITLE));
             assertTrue(generateAssertMessage("Can't create account"), accountService.createAdmin());
             assertEquals(generateAssertMessage("Should get redirect on home page"), "/", urlPath());
         } else {
