@@ -35,7 +35,9 @@ public class MetricSearchTest extends AtsdTest {
                 {"metricsearchtest", ALL_METRICS},
                 {" metricsearchtest ", ALL_METRICS},
                 {"some-bad-mask", new String[]{}},
-                {"cd s", new String[]{}}
+                {"cd s", new String[]{}},
+                {"metric*searchtest*", ALL_METRICS},
+                {"metric*searchtest", new String[]{}}
         };
     }
 
