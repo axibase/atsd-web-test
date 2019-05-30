@@ -174,6 +174,7 @@ public class DataEntryTestDataProvider {
         };
     }
 
+    // 4 and 5 - index of examples in the command helper window
     @DataProvider(name = "exampleSyntaxTest")
     public static Object[][] exampleData() {
         return new Object[][]{

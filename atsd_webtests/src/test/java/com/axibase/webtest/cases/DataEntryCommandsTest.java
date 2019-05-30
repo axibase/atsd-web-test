@@ -8,6 +8,7 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
@@ -28,6 +29,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         dataEntryPage = new DataEntryPage();
     }
 
+    @Parameters({"insertMessage", "expectedMessage"})
     @Test(dataProvider = "messageTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testMessageIsAdded(String insertMessage, Message expectedMessage) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
@@ -42,6 +44,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertMessageParameters(expectedMessage);
     }
 
+    @Parameters({"insertMessage", "expectedProperty"})
     @Test(dataProvider = "propertyTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testPropertyIsAdded(String insertMessage, Property expectedProperty) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
@@ -52,6 +55,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertPropertyKeysAndTags(expectedProperty);
     }
 
+    @Parameters({"insertMessage", "expectedSeries"})
     @Test(dataProvider = "seriesTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testSeriesIsAdded(String insertMessage, Series expectedSeries) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
@@ -67,6 +71,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertSeriesParams(expectedSeries);
     }
 
+    @Parameters({"insertMessage", "expectedMetric"})
     @Test(dataProvider = "metricTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testMetricIsAdded(String insertMessage, Metric expectedMetric) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
@@ -80,6 +85,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertEquals(expectedMetric, createdMetric, "Wrong created metric\n");
     }
 
+    @Parameters({"insertMessage", "expectedEntity"})
     @Test(dataProvider = "entityTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testEntityIsAdded(String insertMessage, Entity expectedEntity) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
@@ -103,6 +109,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertEquals(messagesPage.getCountOfMessages(), 0, "Message is added into table\n");
     }
 
+    @Parameters({"insertMessage", "expectedMetrics"})
     @Test(dataProvider = "freemarkerCommandTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testValidCommands(String insertMessage, String[] expectedMetrics) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
@@ -113,6 +120,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         }
     }
 
+    @Parameters({"exampleIndex", "expectedCommand"})
     @Test(dataProvider = "exampleSyntaxTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void textExamples(int exampleIndex, String expectedCommand) {
         dataEntryPage.openHelpCommands()
@@ -123,6 +131,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertTrue(dataEntryPage.isCommandValidated(), "Command: \n" + expectedCommand + "\nis not passed validation\n");
     }
 
+    @Parameters({"insertMessage"})
     @Test(dataProvider = "invalidFreemarkerCommandTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testInvalidCommands(String insertMessage) {
         dataEntryPage.typeCommands(insertMessage).sendCommands().validate();
