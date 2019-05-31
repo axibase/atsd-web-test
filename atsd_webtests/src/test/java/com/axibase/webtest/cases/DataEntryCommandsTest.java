@@ -78,9 +78,7 @@ public class DataEntryCommandsTest extends AtsdTest {
         String metricName = expectedMetric.getMetricName();
 
         assertMetricAdds(metricName);
-        Metric createdMetric = new MetricPage(new HashMap<String, String>() {{
-            put("metricName", metricName);
-        }})
+        Metric createdMetric = new MetricPage(Collections.singletonMap("metricName", metricName))
                 .getMetric();
         assertEquals(expectedMetric, createdMetric, "Wrong created metric\n");
     }
