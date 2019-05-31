@@ -1,6 +1,7 @@
 package com.axibase.webtest.pageobjects;
 
 import com.axibase.webtest.modelobjects.Message;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 
 import java.util.Arrays;
@@ -94,7 +95,8 @@ public class MessagesPage {
     public String[] getMessageTagNames() {
         String[] result = new String[]{};
         if (!getMessageTags().isEmpty()) {
-            result = Arrays.stream(getMessageTags().split(",")).map(tag -> tag.split(" = ")[0].trim()).toArray(String[]::new);
+            result = Arrays.stream(getMessageTags().split(","))
+                    .map(tag -> StringUtils.substringBefore(tag, " = ").trim()).toArray(String[]::new);
         }
         return result;
     }
@@ -102,7 +104,8 @@ public class MessagesPage {
     public String[] getMessageTagValues() {
         String[] result = new String[]{};
         if (!getMessageTags().isEmpty()) {
-            result = Arrays.stream(getMessageTags().split(",")).map(tag -> tag.split(" = ")[1].trim()).toArray(String[]::new);
+            result = Arrays.stream(getMessageTags().split(","))
+                    .map(tag -> StringUtils.substringAfter(tag, " = ").trim()).toArray(String[]::new);
         }
         return result;
     }

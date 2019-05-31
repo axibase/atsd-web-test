@@ -12,7 +12,9 @@ import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.axibase.webtest.CommonActions.getColumnValuesByColumnName;
@@ -20,8 +22,6 @@ import static org.testng.Assert.*;
 
 public class DataEntryCommandsTest extends AtsdTest {
     private DataEntryPage dataEntryPage;
-    private String entityName;
-    private String metricName;
 
     @BeforeMethod
     public void setUp() {
@@ -33,14 +33,14 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Test(dataProvider = "messageTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testMessageIsAdded(String insertMessage, Message expectedMessage) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
-        entityName = expectedMessage.getEntityName();
+        String entityName = expectedMessage.getEntityName();
 
-        assertEntityAdds();
+        assertEntityAdds(entityName);
         assertExpectedTagsInTable("Message tag key is not added into Message Tag Key IDs: ",
                 expectedMessage.getTagNames(), new MessageTagKeyIDsPage().getTable());
         assertExpectedTagsInTable("Message tag value is not added into Message Tag Value IDs: ",
                 expectedMessage.getTagValues(), new MessageTagValueIDsPage().getTable());
-        assertMessageAddByEntityName();
+        assertMessageAddByEntityName(entityName);
         assertMessageParameters(expectedMessage);
     }
 
@@ -48,10 +48,10 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Test(dataProvider = "propertyTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testPropertyIsAdded(String insertMessage, Property expectedProperty) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
-        entityName = expectedProperty.getEntityName();
+        String entityName = expectedProperty.getEntityName();
 
-        assertEntityAdds();
-        assertPropertyAdds(expectedProperty.getPropType());
+        assertEntityAdds(entityName);
+        assertPropertyAdds(expectedProperty.getPropType(), entityName);
         assertPropertyKeysAndTags(expectedProperty);
     }
 
@@ -59,15 +59,15 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Test(dataProvider = "seriesTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testSeriesIsAdded(String insertMessage, Series expectedSeries) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
-        entityName = expectedSeries.getEntityName();
-        metricName = expectedSeries.getMetricName();
+        String entityName = expectedSeries.getEntityName();
+        String metricName = expectedSeries.getMetricName();
 
         assertExpectedTagsInTable("Series tag keys is not added into Series Tag Key IDs: ",
                 expectedSeries.getTagNames(), new SeriesTagKeyIDsPage().getTable());
         assertExpectedTagsInTable("Series tag values is not added into Series Tag Values IDs: ",
                 expectedSeries.getTagValues(), new SeriesTagValueIDsPage().getTable());
-        assertSeriesAdds();
-        assertEntityAdds();
+        assertSeriesAdds(metricName);
+        assertEntityAdds(entityName);
         assertSeriesParams(expectedSeries);
     }
 
@@ -75,11 +75,11 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Test(dataProvider = "metricTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testMetricIsAdded(String insertMessage, Metric expectedMetric) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
-        metricName = expectedMetric.getMetricName();
+        String metricName = expectedMetric.getMetricName();
 
-        assertMetricAdds(expectedMetric.getMetricName());
+        assertMetricAdds(metricName);
         Metric createdMetric = new MetricPage(new HashMap<String, String>() {{
-            put("metricName", expectedMetric.getMetricName());
+            put("metricName", metricName);
         }})
                 .getMetric();
         assertEquals(expectedMetric, createdMetric, "Wrong created metric\n");
@@ -89,16 +89,16 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Test(dataProvider = "entityTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testEntityIsAdded(String insertMessage, Entity expectedEntity) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
-        entityName = expectedEntity.getEntityName();
+        String entityName = expectedEntity.getEntityName();
 
-        assertEntityAdds();
+        assertEntityAdds(entityName);
         Entity createdEntity = new EntityPage(expectedEntity.getEntityName()).getEntity();
         assertEquals(expectedEntity, createdEntity, "Wrong created entity\n");
     }
 
     @Test
     public void testMessageIsNotAdded() {
-        entityName = "data-entry-commands-test_message-is-not-added";
+        String entityName = "data-entry-commands-test_message-is-not-added";
         String insertMessage = "message e:" + entityName;
         dataEntryPage.typeCommands(insertMessage).sendCommands();
 
@@ -140,19 +140,19 @@ public class DataEntryCommandsTest extends AtsdTest {
     }
 
     @Step("Check the entity adds into entities table")
-    private void assertEntityAdds() {
+    private void assertEntityAdds(String entityName) {
         EntitiesTablePage entitiesTablePage = new EntitiesTablePage();
         assertTrue(entitiesTablePage.isRecordPresent(entityName), "Entity is not added\n");
     }
 
     @Step("Check the property adds")
-    private void assertPropertyAdds(String propertyType) {
+    private void assertPropertyAdds(String propertyType, String entityName) {
         PropertiesTablePage propertiesTablePage = new PropertiesTablePage(entityName);
         assertTrue(propertiesTablePage.isPropertyPresent(propertyType), "Property is not added\n");
     }
 
     @Step("Check message adds into message table by its entity name")
-    private void assertMessageAddByEntityName() {
+    private void assertMessageAddByEntityName(String entityName) {
         MessagesPage messagesPage = new MessagesPage().setEntity(entityName).search();
         assertTrue(messagesPage.getCountOfMessages() > 0, "Message is not added into table\n");
     }
@@ -160,33 +160,32 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Step("Check properties keys and tags")
     private void assertPropertyKeysAndTags(Property expectedProperty) {
         PropertyPage propertiesPage = new PropertyPage(expectedProperty.getEntityName(),
-                new HashMap<String, String>() {{
-                    put("type", expectedProperty.getPropType());
-                }});
+                Collections.singletonMap("type", expectedProperty.getPropType()));
 
         Object[] allUnits = Stream.of(expectedProperty.getKeyNames(), expectedProperty.getKeyValues(),
                 expectedProperty.getTagNames(), expectedProperty.getTagValues())
                 .flatMap(Arrays::stream)
                 .toArray();
+        // compare all tags and keys pairs without order
         Assert.assertEqualsNoOrder(allUnits, propertiesPage.getTagsAndKeys());
     }
 
     @Step("Check the series adds by appropriate metric")
-    private void assertSeriesAdds() {
+    private void assertSeriesAdds(String metricName) {
         MetricsSeriesTablePage metricsSeriesTablePage = new MetricsSeriesTablePage(metricName);
         assertTrue(metricsSeriesTablePage.isSeriesPresent(), "Series is not added\n");
     }
 
     @Step("Check series parameters")
     private void assertSeriesParams(Series expectedSeries) {
-        StatisticsPage statisticsPage = new StatisticsPage(
-                new HashMap<String, String>() {{
-                    put("entity", entityName);
-                    put("metric", metricName);
-                    for (int i = 0; i < expectedSeries.getTagNames().length; i++) {
-                        put(expectedSeries.getTagNames()[i], expectedSeries.getTagValues()[i]);
-                    }
-                }});
+        Map<String, String> expectedParameters = new HashMap<>();
+        expectedParameters.put("entity", expectedSeries.getEntityName());
+        expectedParameters.put("metric", expectedSeries.getMetricName());
+        for (int i = 0; i < expectedSeries.getTagNames().length; i++) {
+            expectedParameters.put(expectedSeries.getTagNames()[i], expectedSeries.getTagValues()[i]);
+        }
+
+        StatisticsPage statisticsPage = new StatisticsPage(expectedParameters);
 
         Series createdSeries = statisticsPage.getSeries();
         assertEquals(expectedSeries, createdSeries, "Wrong created series\n");
