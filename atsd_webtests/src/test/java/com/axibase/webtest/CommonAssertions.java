@@ -8,6 +8,7 @@ import static com.axibase.webtest.CommonActions.executeWithElement;
 import static com.axibase.webtest.PageUtils.urlPath;
 import static com.axibase.webtest.service.AtsdTest.generateAssertMessage;
 import static com.codeborne.selenide.Selenide.*;
+import static org.openqa.selenium.support.ui.ExpectedConditions.titleIs;
 import static org.testng.AssertJUnit.*;
 
 public class CommonAssertions {
@@ -72,7 +73,7 @@ public class CommonAssertions {
         Wait().withMessage(() -> "Page title must be set to " + expectedTitle)
                 .withTimeout(Duration.ofSeconds(3))
                 .pollingEvery(Duration.ofMillis(200))
-                .until(driver -> driver.getTitle().equals(expectedTitle));
+                .until(titleIs(expectedTitle));
     }
 
 }
