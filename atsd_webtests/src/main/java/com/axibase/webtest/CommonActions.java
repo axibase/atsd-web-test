@@ -4,9 +4,9 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import static com.axibase.webtest.CommonConditions.clickable;
-import static com.codeborne.selenide.Selectors.*;
+import static com.codeborne.selenide.Selectors.byValue;
 import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.actions;
+import static com.codeborne.selenide.Selenide.executeJavaScript;
 
 public class CommonActions {
 
@@ -40,21 +40,6 @@ public class CommonActions {
     }
 
     /**
-     * Find CodeMirror editor window and send text to it
-     *
-     * @param relatedTextArea - next to the CodeMirror element
-     * @param text            - text to send
-     */
-    public static void sendTextToCodeMirror(WebElement relatedTextArea, String text) {
-        if (!relatedTextArea.getTagName().equals("textarea")) {
-            throw new IllegalStateException("this is not a textarea");
-        }
-
-        actions().sendKeys(relatedTextArea.findElement(By.xpath("./following-sibling::*[contains(@class,CodeMirror)]")),
-                text).build().perform();
-    }
-
-    /**
      * Uploads specified file via <b>Choose File</b> button.
      *
      * @param file file to be uploaded
@@ -63,4 +48,18 @@ public class CommonActions {
         $("input[type='file']").sendKeys(file);
         $("input[type='submit']").click();
     }
+
+    /**
+     * Execute JavaScript with element as a parameter.
+     *
+     * @param element element that will be used in script
+     * @param script  script to be executed
+     * @param <T>     type of returned expression
+     * @return script execution result
+     */
+    public static <T> T executeWithElement(WebElement element, String script) {
+        String iifeScript = "return (function (element) {" + script + ";})(arguments[0])";
+        return executeJavaScript(iifeScript, element);
+    }
+
 }

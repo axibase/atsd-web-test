@@ -26,11 +26,12 @@ public class CreateAdminAccountTest extends AtsdTest {
     public void createAdminUser() {
         if (!LoginService.TITLE.equals(title())) {
             log.info("Trying to create admin...");
-            CommonAssertions.assertPageTitleEquals(CREATE_ACCOUNT_TITLE);
+            CommonAssertions.assertPageTitleAfterLoadEquals(CREATE_ACCOUNT_TITLE);
             assertTrue(generateAssertMessage("Can't create account"), accountService.createAdmin());
             assertEquals(generateAssertMessage("Should get redirect on home page"), "/", urlPath());
         } else {
             log.info("User already created");
         }
     }
+
 }
