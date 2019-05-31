@@ -4,7 +4,9 @@ import com.codeborne.selenide.SelenideElement;
 import org.apache.http.client.utils.URIBuilder;
 import org.openqa.selenium.By;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
+import java.net.URLEncoder;
 import java.time.Duration;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -107,6 +109,20 @@ public class CommonActions {
                 .stream()
                 .map(SelenideElement::text)
                 .toArray(String[]::new);
+    }
+
+    /**
+     * Encode the string with UTF-8 encoding
+     *
+     * @param string - the string to be encoded
+     * @return - the encoded string
+     */
+    public static String urlEncode(String string) {
+        try {
+            return URLEncoder.encode(string, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Wrong string to encode", e);
+        }
     }
 
 }

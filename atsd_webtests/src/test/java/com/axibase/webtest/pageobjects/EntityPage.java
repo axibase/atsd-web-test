@@ -1,12 +1,10 @@
 package com.axibase.webtest.pageobjects;
 
+import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.modelobjects.Entity;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
-import lombok.SneakyThrows;
 import org.openqa.selenium.By;
-
-import java.net.URLEncoder;
 
 import static com.axibase.webtest.CommonSelects.getValueOfSwitchElement;
 import static com.codeborne.selenide.Selenide.*;
@@ -24,9 +22,8 @@ public class EntityPage {
     private By interpolation = By.id("interpolate");
     private By timeZone = By.id("timeZone");
 
-    @SneakyThrows
     public EntityPage(String entityName) {
-        open(BASE_URL + URLEncoder.encode(entityName, "UTF-8"));
+        open(BASE_URL + CommonActions.urlEncode(entityName));
         openSettingsPanel();
     }
 

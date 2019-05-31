@@ -1,9 +1,7 @@
 package com.axibase.webtest.pageobjects;
 
-import lombok.SneakyThrows;
+import com.axibase.webtest.CommonActions;
 import org.openqa.selenium.By;
-
-import java.net.URLEncoder;
 
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
@@ -11,9 +9,8 @@ import static com.codeborne.selenide.Selenide.open;
 public class MetricsSeriesTablePage {
     private By metricList = By.id("metricList");
 
-    @SneakyThrows
     public MetricsSeriesTablePage(String metricName) {
-        open("/metrics/" + URLEncoder.encode(metricName, "UTF-8") + "/series");
+        open("/metrics/" + CommonActions.urlEncode(metricName) + "/series");
     }
 
     public boolean isSeriesPresent() {

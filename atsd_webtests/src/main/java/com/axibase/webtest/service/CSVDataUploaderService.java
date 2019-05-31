@@ -1,10 +1,9 @@
 package com.axibase.webtest.service;
 
+import com.axibase.webtest.CommonActions;
 import com.codeborne.selenide.SelenideElement;
-import lombok.SneakyThrows;
 import org.openqa.selenium.By;
 
-import java.net.URLEncoder;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -51,9 +50,8 @@ public class CSVDataUploaderService extends Service {
         $(By.xpath(".//input[@type='submit']")).click();
     }
 
-    @SneakyThrows
     private void uploadCSVFileByPath(String pathToCSVFile, String parserName) {
-        open(CSV_IMPORT_PATH + URLEncoder.encode(parserName, "UTF-8"));
+        open(CSV_IMPORT_PATH + CommonActions.urlEncode(parserName));
         $(By.id("file")).sendKeys(pathToCSVFile);
         $(By.id("upload-btn")).click();
     }
