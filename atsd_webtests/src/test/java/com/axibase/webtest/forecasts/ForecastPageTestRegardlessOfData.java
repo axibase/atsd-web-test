@@ -5,14 +5,13 @@ import com.axibase.webtest.CommonSelects;
 import com.axibase.webtest.pages.DataEntryPage;
 import com.axibase.webtest.pages.ForecastViewerPage;
 import com.axibase.webtest.service.AtsdTest;
-import com.axibase.webtest.service.CodeEditor;
-import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.executeJavaScript;
+import static com.codeborne.selenide.Selenide.open;
 import static org.testng.AssertJUnit.*;
 
 public class ForecastPageTestRegardlessOfData extends AtsdTest {
@@ -30,13 +29,11 @@ public class ForecastPageTestRegardlessOfData extends AtsdTest {
     }
 
     private void loadData() {
-        open("/metrics/entry");
-        new DataEntryPage()
-                .sendCommands("<#list 1..5 as i>\n" +
-                        "series s:${1425482080 - i * 600} " +
-                        "e:entity-for-regardless-of-data-test " +
-                        "m:metric-for-regardless-of-data-test=${60 - 2*i}\n" +
-                        "</#list>");
+        new DataEntryPage().sendCommands("<#list 1..5 as i>\n" +
+                "series s:${1425482080 - i * 600} " +
+                "e:entity-for-regardless-of-data-test " +
+                "m:metric-for-regardless-of-data-test=${60 - 2*i}\n" +
+                "</#list>");
     }
 
     @Test
