@@ -165,13 +165,13 @@ public class DataEntryCommandsTest extends AtsdTest {
 
     @Step("Check properties keys and tags")
     private void assertPropertyKeysAndTags(Property expectedProperty) {
-        PropertyPage propertiesPage = new PropertyPage(expectedProperty.getEntityName(),
-                Collections.singletonMap("type", expectedProperty.getPropType()));
-
         Object[] allUnits = Stream.of(expectedProperty.getKeyNames(), expectedProperty.getKeyValues(),
                 expectedProperty.getTagNames(), expectedProperty.getTagValues())
                 .flatMap(Arrays::stream)
                 .toArray();
+
+        PropertyPage propertiesPage = new PropertyPage(expectedProperty.getEntityName(),
+                Collections.singletonMap("type", expectedProperty.getPropType()));
         // compare all tags and keys pairs without order
         Assert.assertEqualsNoOrder(allUnits, propertiesPage.getTagsAndKeys());
     }
@@ -215,9 +215,9 @@ public class DataEntryCommandsTest extends AtsdTest {
 
     @Step("Check if the given IDs table tags of the expected element")
     private void assertExpectedTagsInTable(String errorMessage, String[] tags, SelenideElement table) {
+        String[] tablesTags = getColumnValuesByColumnName(table, "Name");
         for (String value : tags) {
-            assertTrue(ArrayUtils.contains(getColumnValuesByColumnName(table, "Name"), value),
-                    errorMessage + value);
+            assertTrue(ArrayUtils.contains(tablesTags, value), errorMessage + value);
         }
     }
 
