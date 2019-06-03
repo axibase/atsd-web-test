@@ -3,6 +3,7 @@ package com.axibase.webtest;
 import com.codeborne.selenide.SelenideElement;
 import org.apache.http.client.utils.URIBuilder;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URISyntaxException;
@@ -99,7 +100,7 @@ public class CommonActions {
      *
      * @param table      - the table with tags
      * @param columnName - column name it the header of the table
-     * @return - column values
+     * @return - column text values
      */
     public static String[] getColumnValuesByColumnName(SelenideElement table, String columnName) {
         int index = table.$$("thead > tr > th").stream()
@@ -123,6 +124,19 @@ public class CommonActions {
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException("Wrong string to encode", e);
         }
+    }
+
+    /**
+     * Execute JavaScript with element as a parameter.
+     *
+     * @param element element that will be used in script
+     * @param script  script to be executed
+     * @param <T>     type of returned expression
+     * @return script execution result
+     */
+    public static <T> T executeWithElement(WebElement element, String script) {
+        String iifeScript = "return (function (element) {" + script + ";})(arguments[0])";
+        return executeJavaScript(iifeScript, element);
     }
 
 }

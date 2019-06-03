@@ -1,9 +1,8 @@
 package com.axibase.webtest.pageobjects;
 
 import com.axibase.webtest.CommonActions;
+import org.apache.commons.lang3.ArrayUtils;
 import org.openqa.selenium.By;
-
-import java.util.Arrays;
 
 import static com.axibase.webtest.CommonActions.getColumnValuesByColumnName;
 import static com.codeborne.selenide.Selenide.$;
@@ -17,8 +16,8 @@ public class PropertiesTablePage {
     }
 
     public boolean isPropertyPresent(String propertyName) {
-        return Arrays.asList(getColumnValuesByColumnName($(By.id("property-types-table")), "Type"))
-                .contains(propertyName);
+        return ArrayUtils.contains(
+                getColumnValuesByColumnName($(By.id("property-types-table")), "Type"), propertyName);
     }
 
 

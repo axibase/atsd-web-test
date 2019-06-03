@@ -1,13 +1,14 @@
 package com.axibase.webtest;
 
 import com.codeborne.selenide.SelenideElement;
-import io.qameta.allure.Step;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.time.Duration;
 
 import static com.axibase.webtest.PageUtils.urlPath;
 import static com.axibase.webtest.service.AtsdTest.generateAssertMessage;
-import static com.codeborne.selenide.Selenide.*;
+import static com.codeborne.selenide.Selenide.Wait;
+import static com.codeborne.selenide.Selenide.title;
 import static org.testng.AssertJUnit.*;
 
 public class CommonAssertions {
@@ -20,7 +21,7 @@ public class CommonAssertions {
      */
     public static void assertValid(String errorMessage, SelenideElement element) {
         String script = "return element.checkValidity()";
-        Boolean result = executeWithElement(element, script);
+        Boolean result = CommonActions.executeWithElement(element, script);
         assertTrue(errorMessage, result);
     }
 
@@ -32,7 +33,7 @@ public class CommonAssertions {
      */
     public static void assertInvalid(String errorMessage, SelenideElement element) {
         String script = "return element.checkValidity()";
-        Boolean result = executeWithElement(element, script);
+        Boolean result = CommonActions.executeWithElement(element, script);
         assertFalse(errorMessage, result);
     }
 
@@ -63,20 +64,7 @@ public class CommonAssertions {
         Wait().withMessage(() -> "Page title must be set to " + expectedTitle)
                 .withTimeout(Duration.ofSeconds(3))
                 .pollingEvery(Duration.ofMillis(200))
-                .until(driver -> driver.getTitle().equals(expectedTitle));
-    }
-
-    /**
-     * Execute JavaScript with element as a parameter.
-     *
-     * @param element element that will be used in script
-     * @param script  script to be executed
-     * @param <T>     type of returned expression
-     * @return script execution result
-     */
-    public static <T> T executeWithElement(SelenideElement element, String script) {
-        String iifeScript = "return (function (element) {" + script + ";})(arguments[0])";
-        return executeJavaScript(iifeScript, element);
+                .until(ExpectedConditions.titleIs(expectedTitle));
     }
 
 }

@@ -1,5 +1,8 @@
 package com.axibase.webtest.pageobjects;
 
+import com.axibase.webtest.service.CodeEditor;
+import com.axibase.webtest.service.InvalidDataEntryCommandException;
+import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 
 import static com.axibase.webtest.CommonActions.sendTextToCodeMirror;
@@ -25,8 +28,8 @@ public class DataEntryPage {
         return this;
     }
 
-    public boolean isCommandInserted(int count) {
-        return $$(formStatuses).first().text().contains(count + " commands successfully processed");
+    public boolean isCommandInserted() {
+        return $$(formStatuses).first().text().contains(" commands successfully processed");
     }
 
     public boolean isCommandValidated() {
@@ -53,6 +56,24 @@ public class DataEntryPage {
     public DataEntryPage validate() {
         $("button[value=validate]").click();
         return this;
+    }
+
+    public DataEntryPage sendCommands(String... commands) {
+        typeCommands(commands);
+        $(sendButton).click();
+        if (isCommandFailed()) {
+            throw new InvalidDataEntryCommandException($(".alert-error").text());
+        }
+        return this;
+    }
+
+    private boolean isCommandFailed() {
+        return !$("form[action='/metrics/entry']").text().contains("commands successfully processed");
+    }
+
+    private void typeCommands(String[] commands) {
+        CodeEditor codeEditor = new CodeEditor($(By.name("commands")));
+        codeEditor.sendKeys(StringUtils.join(commands, " \n"));
     }
 
 }

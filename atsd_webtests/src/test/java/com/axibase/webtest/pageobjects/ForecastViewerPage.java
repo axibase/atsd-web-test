@@ -1,5 +1,6 @@
 package com.axibase.webtest.pageobjects;
 
+import com.axibase.webtest.CommonActions;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
@@ -9,7 +10,6 @@ import java.time.Duration;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.axibase.webtest.CommonAssertions.executeWithElement;
 import static com.codeborne.selenide.Selenide.*;
 import static org.testng.Assert.fail;
 
@@ -240,7 +240,7 @@ public class ForecastViewerPage {
     }
 
     public boolean isForecastAddButtonPresent() {
-        return (Boolean) executeWithElement($(addButton), "return arguments[0]!=null");
+        return (Boolean) CommonActions.executeWithElement($(addButton), "return arguments[0]!=null");
     }
 
     public boolean isForecastAddButtonVisible() {
@@ -248,7 +248,7 @@ public class ForecastViewerPage {
     }
 
     public boolean isForecastRemoveButtonPresent() {
-        return (Boolean) executeWithElement($(removeButton), "return arguments[0]!=null");
+        return (Boolean) CommonActions.executeWithElement($(removeButton), "return arguments[0]!=null");
     }
 
     public boolean isForecastRemoveButtonVisible() {

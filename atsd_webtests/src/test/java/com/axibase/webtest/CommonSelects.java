@@ -4,8 +4,6 @@ import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
 import org.openqa.selenium.By;
 
-import static com.axibase.webtest.CommonAssertions.executeWithElement;
-
 public class CommonSelects {
 
     /**
@@ -43,7 +41,7 @@ public class CommonSelects {
      * @return - value of the switch element
      */
     public static boolean getValueOfSwitchElement(SelenideElement element) {
-        return executeWithElement(element, "return element.checked");
+        return CommonActions.executeWithElement(element, "return element.checked");
     }
 
 }

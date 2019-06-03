@@ -130,7 +130,7 @@ public class DataEntryTestDataProvider {
         };
     }
 
-    @DataProvider(name = "freemarkerCommandTest")
+    @DataProvider(name = "validFreemarkerCommandTest")
     public static Object[][] commandData() {
         return new Object[][]{
                 {"<#assign values={\"dataentrycommandstest_testcommandwithassignmap_metric-1\": 10," +

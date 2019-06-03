@@ -6,6 +6,7 @@ import com.axibase.webtest.pageobjects.*;
 import com.axibase.webtest.service.AtsdTest;
 import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Step;
+import org.apache.commons.lang3.ArrayUtils;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
@@ -33,13 +34,12 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Test(dataProvider = "messageTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testMessageIsAdded(String insertMessage, Message expectedMessage) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
+        assertTrue(dataEntryPage.isCommandInserted());
+
         String entityName = expectedMessage.getEntityName();
 
         assertEntityAdds(entityName);
-        assertExpectedTagsInTable("Message tag key is not added into Message Tag Key IDs: ",
-                expectedMessage.getTagNames(), new MessageTagKeyIDsPage().getTable());
-        assertExpectedTagsInTable("Message tag value is not added into Message Tag Value IDs: ",
-                expectedMessage.getTagValues(), new MessageTagValueIDsPage().getTable());
+        assertMessageTagsAreAddedIntoIdsTable(expectedMessage);
         assertMessageAddByEntityName(entityName);
         assertMessageParameters(expectedMessage);
     }
@@ -48,6 +48,8 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Test(dataProvider = "propertyTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testPropertyIsAdded(String insertMessage, Property expectedProperty) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
+        assertTrue(dataEntryPage.isCommandInserted());
+
         String entityName = expectedProperty.getEntityName();
 
         assertEntityAdds(entityName);
@@ -59,13 +61,12 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Test(dataProvider = "seriesTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testSeriesIsAdded(String insertMessage, Series expectedSeries) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
+        assertTrue(dataEntryPage.isCommandInserted());
+
         String entityName = expectedSeries.getEntityName();
         String metricName = expectedSeries.getMetricName();
 
-        assertExpectedTagsInTable("Series tag keys is not added into Series Tag Key IDs: ",
-                expectedSeries.getTagNames(), new SeriesTagKeyIDsPage().getTable());
-        assertExpectedTagsInTable("Series tag values is not added into Series Tag Values IDs: ",
-                expectedSeries.getTagValues(), new SeriesTagValueIDsPage().getTable());
+        assertSeriesTagsAreAddedIntoIdsTable(expectedSeries);
         assertSeriesAdds(metricName);
         assertEntityAdds(entityName);
         assertSeriesParams(expectedSeries);
@@ -75,8 +76,11 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Test(dataProvider = "metricTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testMetricIsAdded(String insertMessage, Metric expectedMetric) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
+        assertTrue(dataEntryPage.isCommandInserted());
+
         String metricName = expectedMetric.getMetricName();
 
+        assertMetricIsAddedIntoIdsTable(metricName);
         assertMetricAdds(metricName);
         Metric createdMetric = new MetricPage(Collections.singletonMap("metricName", metricName))
                 .getMetric();
@@ -87,8 +91,9 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Test(dataProvider = "entityTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testEntityIsAdded(String insertMessage, Entity expectedEntity) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
-        String entityName = expectedEntity.getEntityName();
+        assertTrue(dataEntryPage.isCommandInserted());
 
+        String entityName = expectedEntity.getEntityName();
         assertEntityAdds(entityName);
         Entity createdEntity = new EntityPage(expectedEntity.getEntityName()).getEntity();
         assertEquals(expectedEntity, createdEntity, "Wrong created entity\n");
@@ -98,7 +103,9 @@ public class DataEntryCommandsTest extends AtsdTest {
     public void testMessageIsNotAdded() {
         String entityName = "data-entry-commands-test_message-is-not-added";
         String insertMessage = "message e:" + entityName;
+
         dataEntryPage.typeCommands(insertMessage).sendCommands();
+        assertTrue(dataEntryPage.isCommandInserted());
 
         EntitiesTablePage entitiesTablePage = new EntitiesTablePage();
         assertFalse(entitiesTablePage.isRecordPresent(entityName), "Entity is added\n");
@@ -108,9 +115,10 @@ public class DataEntryCommandsTest extends AtsdTest {
     }
 
     @Parameters({"insertMessage", "expectedMetrics"})
-    @Test(dataProvider = "freemarkerCommandTest", dataProviderClass = DataEntryTestDataProvider.class)
+    @Test(dataProvider = "validFreemarkerCommandTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testValidCommands(String insertMessage, String[] expectedMetrics) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
+        assertTrue(dataEntryPage.isCommandInserted());
 
         MetricsTablePage metricsTablePage = new MetricsTablePage();
         for (String metric : expectedMetrics) {
@@ -132,7 +140,7 @@ public class DataEntryCommandsTest extends AtsdTest {
     @Parameters({"insertMessage"})
     @Test(dataProvider = "invalidFreemarkerCommandTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testInvalidCommands(String insertMessage) {
-        dataEntryPage.typeCommands(insertMessage).sendCommands().validate();
+        dataEntryPage.typeCommands(insertMessage).validate();
 
         assertFalse(dataEntryPage.isCommandValidated(), "Wrong command is accepted");
     }
@@ -191,10 +199,6 @@ public class DataEntryCommandsTest extends AtsdTest {
 
     @Step("Check the metric adds into metrics table")
     private void assertMetricAdds(String metricName) {
-        MetricIDsPage metricIDsPage = new MetricIDsPage();
-        assertTrue(Arrays.toString(getColumnValuesByColumnName(metricIDsPage.getTable(),
-                "Metric")).contains(metricName), "Metric is not added into Metric IDs table\n");
-
         MetricsTablePage metricsTablePage = new MetricsTablePage();
         metricsTablePage.searchRecordByName(metricName);
         assertTrue(metricsTablePage.isRecordPresent(metricName), "Metric is not added into table on Metric Page\n");
@@ -209,12 +213,34 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertEquals(expectedMessage, messagesPage.getMessage(), "Wrong created message\n");
     }
 
-    @Step("Check if the given table contains \"{tags}\" ")
+    @Step("Check if the given IDs table tags of the expected element")
     private void assertExpectedTagsInTable(String errorMessage, String[] tags, SelenideElement table) {
         for (String value : tags) {
-            assertTrue(Arrays.toString(getColumnValuesByColumnName(table, "Name")).contains(value),
+            assertTrue(ArrayUtils.contains(getColumnValuesByColumnName(table, "Name"), value),
                     errorMessage + value);
         }
+    }
+
+    @Step
+    private void assertMessageTagsAreAddedIntoIdsTable(Message expectedMessage) {
+        assertExpectedTagsInTable("Message tag key is not added into Message Tag Key IDs: ",
+                expectedMessage.getTagNames(), new MessageTagKeyIDsPage().getTable());
+        assertExpectedTagsInTable("Message tag value is not added into Message Tag Value IDs: ",
+                expectedMessage.getTagValues(), new MessageTagValueIDsPage().getTable());
+    }
+
+    @Step
+    private void assertSeriesTagsAreAddedIntoIdsTable(Series expectedSeries) {
+        assertExpectedTagsInTable("Series tag keys is not added into Series Tag Key IDs: ",
+                expectedSeries.getTagNames(), new SeriesTagKeyIDsPage().getTable());
+        assertExpectedTagsInTable("Series tag values is not added into Series Tag Values IDs: ",
+                expectedSeries.getTagValues(), new SeriesTagValueIDsPage().getTable());
+    }
+
+    @Step
+    private void assertMetricIsAddedIntoIdsTable(String metricName) {
+        assertTrue(ArrayUtils.contains(getColumnValuesByColumnName(new MetricIDsPage().getTable(),
+                "Metric"), metricName), "Metric is not added into Metric IDs table\n");
     }
 
 }
