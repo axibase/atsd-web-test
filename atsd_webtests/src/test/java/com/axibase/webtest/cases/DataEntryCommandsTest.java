@@ -12,6 +12,7 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.axibase.webtest.CommonActions.getColumnValuesByColumnName;
+import static com.codeborne.selenide.Selenide.Wait;
 import static org.testng.Assert.*;
 
 public class DataEntryCommandsTest extends AtsdTest {
@@ -165,13 +167,15 @@ public class DataEntryCommandsTest extends AtsdTest {
 
     @Step("Check properties keys and tags")
     private void assertPropertyKeysAndTags(Property expectedProperty) {
+        PropertyPage propertiesPage = new PropertyPage(expectedProperty.getEntityName(),
+                Collections.singletonMap("type", expectedProperty.getPropType()));
+        Wait().withTimeout(Duration.ofSeconds(2)).until(condition -> propertiesPage.getTagsAndKeys().length > 0);
+
         Object[] allUnits = Stream.of(expectedProperty.getKeyNames(), expectedProperty.getKeyValues(),
                 expectedProperty.getTagNames(), expectedProperty.getTagValues())
                 .flatMap(Arrays::stream)
                 .toArray();
 
-        PropertyPage propertiesPage = new PropertyPage(expectedProperty.getEntityName(),
-                Collections.singletonMap("type", expectedProperty.getPropType()));
         // compare all tags and keys pairs without order
         Assert.assertEqualsNoOrder(allUnits, propertiesPage.getTagsAndKeys());
     }
