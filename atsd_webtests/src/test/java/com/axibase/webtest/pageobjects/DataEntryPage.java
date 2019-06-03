@@ -6,10 +6,10 @@ import static com.axibase.webtest.CommonActions.sendTextToCodeMirror;
 import static com.codeborne.selenide.Selenide.*;
 
 public class DataEntryPage {
-    private final String BASE_URL = "/metrics/entry";
+    private static final String BASE_URL = "/metrics/entry";
 
-    private By sendButton = By.cssSelector("button[value=send]");
-    private By formStatuses = By.cssSelector("form.commands .form-status");
+    private final By sendButton = By.cssSelector("button[value=send]");
+    private final By formStatuses = By.cssSelector("form.commands .form-status");
 
     public DataEntryPage() {
         open(BASE_URL);

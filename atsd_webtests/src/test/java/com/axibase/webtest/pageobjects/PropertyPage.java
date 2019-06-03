@@ -11,7 +11,7 @@ import static com.codeborne.selenide.Selenide.$$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class PropertyPage {
-    private final String BASE_URL = "/properties";
+    private static final String BASE_URL = "/properties";
 
     public PropertyPage(String entityName, Map<String, String> params) {
         open(createNewURL("/entities/" + CommonActions.urlEncode(entityName) + BASE_URL, params));

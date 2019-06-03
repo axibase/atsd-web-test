@@ -7,7 +7,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class MetricsSeriesTablePage {
-    private By metricList = By.id("metricList");
+    private final By metricList = By.id("metricList");
 
     public MetricsSeriesTablePage(String metricName) {
         open("/metrics/" + CommonActions.urlEncode(metricName) + "/series");

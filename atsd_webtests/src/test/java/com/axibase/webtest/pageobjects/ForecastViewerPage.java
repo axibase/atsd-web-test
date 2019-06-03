@@ -14,56 +14,56 @@ import static com.codeborne.selenide.Selenide.*;
 import static org.testng.Assert.fail;
 
 public class ForecastViewerPage {
-    private By breadcrumb = By.className("breadcrumb");
-    private By forecastTabsPanel = By.id("group-toggle-list");
-    private By componentContainer = By.id("singular-values-container");
-    private By summaryContainer = By.id("summary-container");
+    private final By breadcrumb = By.className("breadcrumb");
+    private final By forecastTabsPanel = By.id("group-toggle-list");
+    private final By componentContainer = By.id("singular-values-container");
+    private final By summaryContainer = By.id("summary-container");
 
-    private By forecastSettings = By.id("save-forecast-btn");
-    private By portal = By.id("save-config-btn");
-    private By downloadingPortal = By.id("get-config-btn");
-    private By statistics = By.xpath("//*[@id='settings']//footer//*[@class='icon-sum']");
+    private final By forecastSettings = By.id("save-forecast-btn");
+    private final By portal = By.id("save-config-btn");
+    private final By downloadingPortal = By.id("get-config-btn");
+    private final By statistics = By.xpath("//*[@id='settings']//footer//*[@class='icon-sum']");
 
-    private By submitButton = By.id("group-save-btn");
-    private By removeButton = By.id("remove-group-btn");
-    private By addButton = By.id("add-group-btn");
+    private final By submitButton = By.id("group-save-btn");
+    private final By removeButton = By.id("remove-group-btn");
+    private final By addButton = By.id("add-group-btn");
 
-    private By aggregation = By.id("aggregation");
-    private By interpolation = By.id("interpolation");
-    private By periodCount = By.id("period-count");
-    private By periodUnit = By.id("period-unit");
+    private final By aggregation = By.id("aggregation");
+    private final By interpolation = By.id("interpolation");
+    private final By periodCount = By.id("period-count");
+    private final By periodUnit = By.id("period-unit");
 
-    private By threshold = By.id("decompose-threshold");
-    private By componentCount = By.id("decompose-limit");
-    private By windowLength = By.id("decompose-length");
+    private final By threshold = By.id("decompose-threshold");
+    private final By componentCount = By.id("decompose-limit");
+    private final By windowLength = By.id("decompose-length");
 
-    private By groupOff = By.id("grouping-type-none");
-    private By groupAuto = By.id("grouping-type-auto");
-    private By groupCount = By.id("grouping-auto-count");
-    private By clustering = By.id("grouping-auto-clustering-method");
-    private By stack = By.xpath("//*[@id='grouping-auto-stack']/parent::div");
-    private By groupUnion1 = By.id("grouping-auto-union-0");
-    private By groupUnion2 = By.id("grouping-auto-union-1");
-    private By groupUnion3 = By.id("grouping-auto-union-2");
-    private By groupParameterV = By.id("grouping-auto-clustering-v");
-    private By groupParameterC = By.id("grouping-auto-clustering-c");
-    private By groupManual = By.id("grouping-type-manual");
-    private By groupComponentIndex1 = By.id("grouping-manual-groups-0");
-    private By groupComponentIndex2 = By.id("grouping-manual-groups-1");
-    private By groupComponentIndex3 = By.id("grouping-manual-groups-2");
+    private final By groupOff = By.id("grouping-type-none");
+    private final By groupAuto = By.id("grouping-type-auto");
+    private final By groupCount = By.id("grouping-auto-count");
+    private final By clustering = By.id("grouping-auto-clustering-method");
+    private final By stack = By.xpath("//*[@id='grouping-auto-stack']/parent::div");
+    private final By groupUnion1 = By.id("grouping-auto-union-0");
+    private final By groupUnion2 = By.id("grouping-auto-union-1");
+    private final By groupUnion3 = By.id("grouping-auto-union-2");
+    private final By groupParameterV = By.id("grouping-auto-clustering-v");
+    private final By groupParameterC = By.id("grouping-auto-clustering-c");
+    private final By groupManual = By.id("grouping-type-manual");
+    private final By groupComponentIndex1 = By.id("grouping-manual-groups-0");
+    private final By groupComponentIndex2 = By.id("grouping-manual-groups-1");
+    private final By groupComponentIndex3 = By.id("grouping-manual-groups-2");
 
-    private By averagingFunction = By.id("reconstruct-avg");
-    private By scoreIntervalCount = By.id("forecast-score-interval-count");
-    private By scoreIntervalUnit = By.id("forecast-score-interval-unit");
+    private final By averagingFunction = By.id("reconstruct-avg");
+    private final By scoreIntervalCount = By.id("forecast-score-interval-count");
+    private final By scoreIntervalUnit = By.id("forecast-score-interval-unit");
 
-    private By startDate = By.id("startdate");
-    private By startTime = By.id("starttime");
-    private By endDate = By.id("enddate");
-    private By endTime = By.id("endtime");
-    private By forecastHorizonCount = By.id("horizon-count");
-    private By forecastHorizonUnit = By.id("horizon-unit");
+    private final By startDate = By.id("startdate");
+    private final By startTime = By.id("starttime");
+    private final By endDate = By.id("enddate");
+    private final By endTime = By.id("endtime");
+    private final By forecastHorizonCount = By.id("horizon-count");
+    private final By forecastHorizonUnit = By.id("horizon-unit");
 
-    private By groupingByURL = By.cssSelector("#settings > .controls");
+    private final By groupingByURL = By.cssSelector("#settings > .controls");
 
     public ForecastViewerPage() {
     }

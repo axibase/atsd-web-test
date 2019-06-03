@@ -2,6 +2,7 @@ package com.axibase.webtest.pageobjects;
 
 import com.axibase.webtest.modelobjects.Series;
 import com.codeborne.selenide.SelenideElement;
+import org.apache.commons.lang3.ArrayUtils;
 import org.openqa.selenium.By;
 
 import java.util.Arrays;
@@ -12,12 +13,12 @@ import static com.axibase.webtest.CommonActions.getColumnValuesByColumnName;
 import static com.codeborne.selenide.Selenide.*;
 
 public class StatisticsPage {
-    private final String BASE_URL = "/series/statistics";
+    private static final String BASE_URL = "/series/statistics";
 
-    private By sampleDataTable = By.id("sample-data");
+    private final By sampleDataTable = By.id("sample-data");
 
-    private By sampleDataTab = By.xpath("//*[@href='#sample-data-tab']");
-    private By seriesTab = By.xpath("//*[@href='#series-tab']");
+    private final By sampleDataTab = By.xpath("//*[@href='#sample-data-tab']");
+    private final By seriesTab = By.xpath("//*[@href='#series-tab']");
 
 
     public StatisticsPage(Map<String, String> params) {
@@ -66,7 +67,7 @@ public class StatisticsPage {
 
     private String[] getSeriesTags() {
         getSeriesTab();
-        String[] result = new String[]{};
+        String[] result = ArrayUtils.EMPTY_STRING_ARRAY;
         if (!$$(By.xpath("//*[contains(text(),'Series Tags')]")).isEmpty()) {
             result = getCaptionTableByName("Series Tags").$("tbody").text().split("\n");
         }

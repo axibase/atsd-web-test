@@ -12,28 +12,28 @@ import static com.axibase.webtest.CommonSelects.getValueOfSwitchElement;
 import static com.codeborne.selenide.Selenide.*;
 
 public class MetricPage {
-    private final String BASE_URL = "/metrics/metric.xhtml";
+    private static final String BASE_URL = "/metrics/metric.xhtml";
 
-    private By name = By.id("metric.name");
-    private By label = By.id("metric.label");
-    private By description = By.id("metric.description");
-    private By units = By.id("metric.units");
-    private By minValue = By.id("metric.minValue");
-    private By maxValue = By.id("metric.maxValue");
-    private By tagNames = By.className("tag-key");
-    private By tagValues = By.className("tag-value");
-    private By addTag = By.className("add-tag-button");
+    private final By name = By.id("metric.name");
+    private final By label = By.id("metric.label");
+    private final By description = By.id("metric.description");
+    private final By units = By.id("metric.units");
+    private final By minValue = By.id("metric.minValue");
+    private final By maxValue = By.id("metric.maxValue");
+    private final By tagNames = By.className("tag-key");
+    private final By tagValues = By.className("tag-value");
+    private final By addTag = By.className("add-tag-button");
 
-    private By enabledSwitch = By.id("metric.enabled");
-    private By persistentSwitch = By.id("metric.persistent");
-    private By persistentFilter = By.id("metric.filter");
-    private By retentionIntervalDays = By.id("metric.retentionIntervalDays");
-    private By seriesRetentionDays = By.id("metric.seriesRetentionDays");
-    private By dataType = By.id("metric.dataType");
-    private By timeZone = By.id("metric.timeZone");
-    private By versioningSwitch = By.id("metric.versioning");
-    private By invalidAction = By.id("metric.invalidValueAction");
-    private By interpolation = By.id("metric.interpolate");
+    private final By enabledSwitch = By.id("metric.enabled");
+    private final By persistentSwitch = By.id("metric.persistent");
+    private final By persistentFilter = By.id("metric.filter");
+    private final By retentionIntervalDays = By.id("metric.retentionIntervalDays");
+    private final By seriesRetentionDays = By.id("metric.seriesRetentionDays");
+    private final By dataType = By.id("metric.dataType");
+    private final By timeZone = By.id("metric.timeZone");
+    private final By versioningSwitch = By.id("metric.versioning");
+    private final By invalidAction = By.id("metric.invalidValueAction");
+    private final By interpolation = By.id("metric.interpolate");
 
     public MetricPage(Map<String, String> params) {
         open(createNewURL(BASE_URL, params));

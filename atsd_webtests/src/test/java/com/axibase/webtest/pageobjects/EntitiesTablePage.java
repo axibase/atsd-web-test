@@ -8,9 +8,9 @@ import java.time.Duration;
 import static com.codeborne.selenide.Selenide.*;
 
 public class EntitiesTablePage implements Table {
-    private final String BASE_URL = "/entities";
+    private static final String BASE_URL = "/entities";
 
-    private By searchQuery = By.id("searchQuery");
+    private final By searchQuery = By.id("searchQuery");
 
     public EntitiesTablePage() {
         open(BASE_URL);

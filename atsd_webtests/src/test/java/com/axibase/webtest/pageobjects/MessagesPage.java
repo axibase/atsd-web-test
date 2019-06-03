@@ -1,6 +1,7 @@
 package com.axibase.webtest.pageobjects;
 
 import com.axibase.webtest.modelobjects.Message;
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 
@@ -12,17 +13,17 @@ import static com.codeborne.selenide.Selenide.*;
 public class MessagesPage {
     private static final String BASE_URL = "/messages";
 
-    private By type = By.id("type");
-    private By messageType = By.xpath("//*[contains(@id,'type_')]");
-    private By source = By.id("source");
-    private By messageSource = By.xpath("//*[contains(@id,'source_')]");
-    private By entity = By.id("entity");
-    private By severity = By.id("severity");
-    private By messageSeverity = By.xpath("//*[contains(@id,'severity_')]");
-    private By messagesList = By.id("messagesList");
-    private By search = By.xpath("//*/button[text()='Search']");
-    private By tableHeader = By.className("panel__header");
-    private By message = By.xpath("//*[contains(@id,'message_')]");
+    private final By type = By.id("type");
+    private final By messageType = By.xpath("//*[contains(@id,'type_')]");
+    private final By source = By.id("source");
+    private final By messageSource = By.xpath("//*[contains(@id,'source_')]");
+    private final By entity = By.id("entity");
+    private final By severity = By.id("severity");
+    private final By messageSeverity = By.xpath("//*[contains(@id,'severity_')]");
+    private final By messagesList = By.id("messagesList");
+    private final By search = By.xpath("//*/button[text()='Search']");
+    private final By tableHeader = By.className("panel__header");
+    private final By message = By.xpath("//*[contains(@id,'message_')]");
 
     public MessagesPage() {
         open(BASE_URL);
@@ -93,7 +94,7 @@ public class MessagesPage {
     }
 
     public String[] getMessageTagNames() {
-        String[] result = new String[]{};
+        String[] result = ArrayUtils.EMPTY_STRING_ARRAY;
         if (!getMessageTags().isEmpty()) {
             result = Arrays.stream(getMessageTags().split(","))
                     .map(tag -> StringUtils.substringBefore(tag, " = ").trim()).toArray(String[]::new);
@@ -102,7 +103,7 @@ public class MessagesPage {
     }
 
     public String[] getMessageTagValues() {
-        String[] result = new String[]{};
+        String[] result = ArrayUtils.EMPTY_STRING_ARRAY;
         if (!getMessageTags().isEmpty()) {
             result = Arrays.stream(getMessageTags().split(","))
                     .map(tag -> StringUtils.substringAfter(tag, " = ").trim()).toArray(String[]::new);

@@ -5,9 +5,9 @@ import org.openqa.selenium.By;
 import static com.codeborne.selenide.Selenide.*;
 
 public class MetricsTablePage implements Table {
-    private final String BASE_URL = "/metrics";
+    private static final String BASE_URL = "/metrics";
 
-    private By searchQuery = By.id("searchQuery");
+    private final By searchQuery = By.id("searchQuery");
 
     public MetricsTablePage() {
         open(BASE_URL);

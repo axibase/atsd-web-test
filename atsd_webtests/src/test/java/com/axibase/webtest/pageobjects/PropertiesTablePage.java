@@ -10,7 +10,7 @@ import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.open;
 
 public class PropertiesTablePage {
-    private final String BASE_URL = "/properties";
+    private static final String BASE_URL = "/properties";
 
     public PropertiesTablePage(String entityName) {
         open("/entities/" + CommonActions.urlEncode(entityName) + BASE_URL);

@@ -10,17 +10,17 @@ import static com.axibase.webtest.CommonSelects.getValueOfSwitchElement;
 import static com.codeborne.selenide.Selenide.*;
 
 public class EntityPage {
-    private final String BASE_URL = "/entities/";
+    private static final String BASE_URL = "/entities/";
 
-    private By entityName = By.id("entityName");
-    private By label = By.id("label");
-    private By tagNames = By.className("tag-key");
-    private By tagValues = By.className("tag-value");
-    private By addTag = By.className("add-tag-button");
+    private final By entityName = By.id("entityName");
+    private final By label = By.id("label");
+    private final By tagNames = By.className("tag-key");
+    private final By tagValues = By.className("tag-value");
+    private final By addTag = By.className("add-tag-button");
 
-    private By enabledSwitch = By.id("enabled");
-    private By interpolation = By.id("interpolate");
-    private By timeZone = By.id("timeZone");
+    private final By enabledSwitch = By.id("enabled");
+    private final By interpolation = By.id("interpolate");
+    private final By timeZone = By.id("timeZone");
 
     public EntityPage(String entityName) {
         open(BASE_URL + CommonActions.urlEncode(entityName));

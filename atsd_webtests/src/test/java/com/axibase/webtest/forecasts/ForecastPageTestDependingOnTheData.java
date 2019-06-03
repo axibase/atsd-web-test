@@ -6,8 +6,8 @@ import com.axibase.webtest.pageobjects.ForecastViewerPage;
 import com.axibase.webtest.pageobjects.PortalPage;
 import com.axibase.webtest.service.AtsdTest;
 import com.axibase.webtest.service.CSVDataUploaderService;
-import com.axibase.webtest.service.Config;
 import com.axibase.webtest.service.CSVImportParserAsSeriesTest;
+import com.axibase.webtest.service.Config;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.SelenideElement;
 import org.apache.commons.net.util.Base64;
@@ -42,6 +42,7 @@ import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static com.codeborne.selenide.WebDriverRunner.url;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.AssertJUnit.*;
 
 public class ForecastPageTestDependingOnTheData extends AtsdTest {
@@ -245,7 +246,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
                 .addForecastTab();
 
         String[] names = forecastViewerPage.getForecastTabNames();
-        assertFalse("Forecast names in tabs are equals but they shouldn't be", names[0].equals(names[1]));
+        assertNotEquals(names[1], names[0], "Forecast names in tabs are equals but they shouldn't be");
 
         forecastViewerPage.setRegularizeOptions("Sum", "Linear", "10", "hour")
                 .switchForecastTab("Forecast 1");

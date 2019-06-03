@@ -2,6 +2,7 @@ package com.axibase.webtest.modelobjects;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.apache.commons.lang3.ArrayUtils;
 
 @Data
 @Accessors(chain = true)
@@ -21,7 +22,7 @@ public class Metric {
     private String retentionIntervalDays = "0";
     private String minVal = "";
     private String maxVal = "";
-    private String[] tagNames = new String[]{};
-    private String[] tagValues = new String[]{};
+    private String[] tagNames = ArrayUtils.EMPTY_STRING_ARRAY;
+    private String[] tagValues = ArrayUtils.EMPTY_STRING_ARRAY;
 
 }

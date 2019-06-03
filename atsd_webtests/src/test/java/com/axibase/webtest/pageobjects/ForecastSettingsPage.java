@@ -6,8 +6,8 @@ import org.openqa.selenium.support.ui.Select;
 import static com.codeborne.selenide.Selenide.$;
 
 public class ForecastSettingsPage {
-    private By groupingType = By.id("groupingType");
-    private By groupingTags = By.id("settings.requiredTagKeys");
+    private final By groupingType = By.id("groupingType");
+    private final By groupingTags = By.id("settings.requiredTagKeys");
 
     public String getGroupingType() {
         return new Select($(groupingType)).getFirstSelectedOption().getText();
