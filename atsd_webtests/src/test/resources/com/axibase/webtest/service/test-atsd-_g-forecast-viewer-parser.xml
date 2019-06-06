@@ -1,0 +1,55 @@
+<list>
+  <com.axibase.tsd.model.csv.WizardBasedCsvConfiguration>
+    <name>test-atsd-_g-forecast-viewer-parser</name>
+    <enabled>true</enabled>
+    <delimiter>,</delimiter>
+    <recordDelimiter>&#xd;</recordDelimiter>
+    <padding></padding>
+    <comment>#</comment>
+    <textQualifier>&quot;</textQualifier>
+    <decimalSeparator>.</decimalSeparator>
+    <groupingSeparator>,</groupingSeparator>
+    <skipLines>0</skipLines>
+    <processEvents>false</processEvents>
+    <ignoreParseErrors>true</ignoreParseErrors>
+    <timeZone>UTC</timeZone>
+    <header/>
+    <commandType>SERIES</commandType>
+    <columns class="java.util.Arrays$ArrayList">
+      <a class="com.axibase.tsd.service.csv.WizardBasedCsvColumn-array">
+        <com.axibase.tsd.service.csv.WizardBasedCsvColumn>
+          <semanticType class="com.axibase.tsd.model.csv.csvtype.SeriesSemanticType">SERIES_TIMESTAMP</semanticType>
+          <column>Timestamp</column>
+          <key>yyyy-MM-dd HH:mm:ss</key>
+        </com.axibase.tsd.service.csv.WizardBasedCsvColumn>
+        <com.axibase.tsd.service.csv.WizardBasedCsvColumn>
+          <semanticType class="com.axibase.tsd.model.csv.csvtype.SeriesSemanticType">SERIES_ENTITY</semanticType>
+          <column>Entity</column>
+        </com.axibase.tsd.service.csv.WizardBasedCsvColumn>
+        <com.axibase.tsd.service.csv.WizardBasedCsvColumn>
+          <semanticType class="com.axibase.tsd.model.csv.csvtype.SeriesSemanticType">SERIES_METRIC</semanticType>
+          <column>Value</column>
+          <key>${Metric}</key>
+        </com.axibase.tsd.service.csv.WizardBasedCsvColumn>
+        <com.axibase.tsd.service.csv.WizardBasedCsvColumn>
+          <semanticType class="com.axibase.tsd.model.csv.csvtype.SeriesSemanticType">SERIES_TAGS</semanticType>
+          <column>host</column>
+          <key>host</key>
+        </com.axibase.tsd.service.csv.WizardBasedCsvColumn>
+        <com.axibase.tsd.service.csv.WizardBasedCsvColumn>
+          <semanticType class="com.axibase.tsd.model.csv.csvtype.SeriesSemanticType">SERIES_TAGS</semanticType>
+          <column>name</column>
+          <key>name</key>
+        </com.axibase.tsd.service.csv.WizardBasedCsvColumn>
+      </a>
+    </columns>
+    <encoding>UTF-8</encoding>
+    <headerType>FIRST_LINE</headerType>
+    <ignoredNanPatterns/>
+    <nullPatterns class="empty-set"/>
+    <csvExampleInOriginalEncoding></csvExampleInOriginalEncoding>
+    <stopCondition>NONE</stopCondition>
+    <timestampLocale>ENGLISH</timestampLocale>
+    <maxColumns>256</maxColumns>
+  </com.axibase.tsd.model.csv.WizardBasedCsvConfiguration>
+</list>

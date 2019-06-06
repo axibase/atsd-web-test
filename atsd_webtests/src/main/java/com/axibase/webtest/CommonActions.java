@@ -1,12 +1,19 @@
 package com.axibase.webtest;
 
+import com.codeborne.selenide.SelenideElement;
+import org.apache.http.client.utils.URIBuilder;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URISyntaxException;
+import java.net.URLEncoder;
+import java.time.Duration;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import static com.axibase.webtest.CommonConditions.clickable;
-import static com.codeborne.selenide.Selectors.byValue;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.executeJavaScript;
+import static com.codeborne.selenide.Selenide.*;
 
 public class CommonActions {
 
@@ -19,15 +26,23 @@ public class CommonActions {
     }
 
     /**
-     * Clicks <b>Delete</b> on multi-tool button and confirms item delete in dialog window.
+     * Clicks <b>Delete</b> button and confirms item delete in dialog window.
      */
     public static void deleteRecord() {
         $(By.className("btn-edit"))
                 .$(By.className("caret")).click();
-        $(byValue("Delete")).click();
+        $(By.xpath("//*[.='Delete'] | " +
+                "//*[@value='Delete']")).click();
         $(By.className("btn-confirm"))
                 .shouldBe(clickable)
                 .click();
+        // If the confirm dialog is not confirmed
+        if ($(By.className("btn-confirm")).exists()) {
+            $(By.className("btn-confirm")).click();
+        }
+        Wait().withTimeout(Duration.ofSeconds(2))
+                .until(condition -> !$(By.className("btn-confirm")).exists());
+
     }
 
     /**
@@ -40,6 +55,20 @@ public class CommonActions {
     }
 
     /**
+     * Find CodeMirror editor window and send text to it
+     *
+     * @param relatedTextArea - next to the CodeMirror element
+     * @param command         - text to send
+     */
+    public static void sendTextToCodeMirror(SelenideElement relatedTextArea, String command) {
+        if (!relatedTextArea.getTagName().equals("textarea")) {
+            throw new IllegalStateException("this is not a textarea");
+        }
+        actions().sendKeys(relatedTextArea.$(By.xpath("./following-sibling::*[contains(@class,CodeMirror)]")),
+                command).build().perform();
+    }
+
+    /**
      * Uploads specified file via <b>Choose File</b> button.
      *
      * @param file file to be uploaded
@@ -47,6 +76,54 @@ public class CommonActions {
     public static void uploadFile(String file) {
         $("input[type='file']").sendKeys(file);
         $("input[type='submit']").click();
+    }
+
+    /**
+     * Create encoded URL with params from map
+     *
+     * @param URLPrefix - prefix without params
+     * @param params    - string params
+     * @return - new URL
+     */
+    public static String createNewURL(String URLPrefix, Map<String, String> params) {
+        try {
+            final URIBuilder uriBuilder = new URIBuilder().setPath(URLPrefix);
+            params.forEach(uriBuilder::addParameter);
+            return uriBuilder.build().toString();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException("Wrong URL", e);
+        }
+    }
+
+    /**
+     * Get all values in the specified column
+     *
+     * @param table      - the table with tags
+     * @param columnName - column name it the header of the table
+     * @return - column text values
+     */
+    public static String[] getColumnValuesByColumnName(SelenideElement table, String columnName) {
+        int index = table.$$("thead > tr > th").stream()
+                .map(SelenideElement::text).collect(Collectors.toList()).indexOf(columnName);
+
+        return table.$$("tbody > tr > td:nth-child(" + (index + 1) + "n)")
+                .stream()
+                .map(SelenideElement::text)
+                .toArray(String[]::new);
+    }
+
+    /**
+     * Encode the string with UTF-8 encoding
+     *
+     * @param string - the string to be encoded
+     * @return - the encoded string
+     */
+    public static String urlEncode(String string) {
+        try {
+            return URLEncoder.encode(string, "UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("Wrong string to encode", e);
+        }
     }
 
     /**

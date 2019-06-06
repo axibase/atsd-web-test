@@ -23,4 +23,5 @@ public class DeleteAccountTest extends AtsdTest {
         CommonAssertions.assertPageTitleAfterLoadEquals("Users");
 
     }
+
 }

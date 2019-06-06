@@ -80,4 +80,5 @@ public class AdminBackupImportTest extends ReplacementTableImportBase {
         $(By.linkText("Backup Import")).click();
         CommonAssertions.assertPageUrlPathEquals("/admin/import-backup");
     }
+
 }

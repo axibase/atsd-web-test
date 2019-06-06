@@ -22,4 +22,5 @@ public class MetricsServiceTest extends AtsdTest {
         assertNotNull(generateAssertMessage("Can't find metric 'jvm_memory_used_percent'"), ms.getMetricByName("jvm_memory_used_percent"));
         assertNotNull(generateAssertMessage("Can't find metric metric_writes_per_second'"), ms.getMetricByName("metric_writes_per_second"));
     }
+
 }

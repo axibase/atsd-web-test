@@ -3,6 +3,7 @@ package com.axibase.webtest.cases;
 import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AtsdTest;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.Test;
 
@@ -58,12 +59,14 @@ public class CreatePortalTest extends AtsdTest {
         final WebDriver driver = getWebDriver();
         List<String> tabs = new ArrayList<>(driver.getWindowHandles());
         assertEquals(generateAssertMessage("Exactly 2 new tabs must be opened"), 3, tabs.size());
-
         for (int i = 1; i < tabs.size(); i++) {
             driver.switchTo().window(tabs.get(i));
             assertNotEquals(0, $$(By.className("widget")).size(), generateAssertMessage("No widgets for portal"));
             driver.close();
         }
         driver.switchTo().window(tabs.get(0));
+        // The size of the window changes after close -> switch
+        driver.manage().window().setSize(new Dimension(1280, 720));
     }
+
 }

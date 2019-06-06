@@ -30,7 +30,7 @@ public class AdminServiceTest extends AtsdTest {
     }
 
     private long getAtsdTime() {
-        open( "/admin/system-information");
+        open("/admin/system-information");
         CommonAssertions.assertPageTitleEquals("System Information");
         AdminService adminService = new AdminService();
         String atsdDateString = adminService.getTime();
@@ -67,4 +67,5 @@ public class AdminServiceTest extends AtsdTest {
         }
         return currentTime;
     }
+
 }

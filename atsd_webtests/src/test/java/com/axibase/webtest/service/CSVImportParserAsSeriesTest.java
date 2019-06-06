@@ -1,11 +1,10 @@
-package com.axibase.webtest.service.csv;
+package com.axibase.webtest.service;
 
 import com.axibase.webtest.CommonActions;
 import com.axibase.webtest.CommonAssertions;
-import com.axibase.webtest.service.AtsdTest;
 import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -15,6 +14,7 @@ import java.util.Optional;
 import static com.codeborne.selenide.Selenide.$;
 import static com.codeborne.selenide.Selenide.$$;
 import static org.testng.AssertJUnit.assertTrue;
+
 
 public class CSVImportParserAsSeriesTest extends AtsdTest {
     private static final String PARSER_NAME = "test-atsd-import-series-parser";
@@ -26,12 +26,6 @@ public class CSVImportParserAsSeriesTest extends AtsdTest {
         goToCSVParsersImportPage();
     }
 
-    @AfterMethod
-    public void cleanup() {
-        goToCSVParsersPage();
-        CommonActions.deleteAllRecords();
-    }
-
     @Test
     public void testImportCSVParserPage() {
         setReplaceExisting(false);
@@ -39,9 +33,8 @@ public class CSVImportParserAsSeriesTest extends AtsdTest {
 
         goToCSVParsersPage();
 
-
         final boolean isParserPresented = Optional.of($("#configurationList > tbody"))
-                .map(WebElement::getText)
+                .map(SelenideElement::getText)
                 .map(text -> text.contains(PARSER_NAME))
                 .orElse(false);
         assertTrue("Parser is not added into table", isParserPresented);
@@ -56,7 +49,13 @@ public class CSVImportParserAsSeriesTest extends AtsdTest {
 
         goToCSVParsersPage();
         assertTrue("Parser is not added into table",
-                $(By.cssSelector("#configurationList > tbody")).getText().contains(PARSER_NAME));
+                $("#configurationList > tbody").getText().contains(PARSER_NAME));
+    }
+
+    @AfterMethod
+    public void cleanup() {
+        goToCSVParsersPage();
+        CommonActions.deleteAllRecords();
     }
 
     private void sendParserIntoTableWithoutReplacement() {

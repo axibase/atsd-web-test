@@ -43,4 +43,5 @@ public class LoginServiceTest extends AtsdTest {
         assertTrue("Can't login on page", ls.loginAsAdmin());
         assertTrue("Can't logout from page", ls.logout());
     }
+
 }

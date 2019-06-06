@@ -3,9 +3,9 @@ package com.axibase.webtest.cases;
 import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AccountService;
 import com.axibase.webtest.service.AtsdTest;
+import com.codeborne.selenide.SelenideElement;
 import io.qameta.allure.Issue;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
@@ -61,14 +61,14 @@ public class CreateUserGroupTest extends AtsdTest {
         $(By.name("update")).click();
 
         // Check that configuration saved correctly
-        WebElement allEntitiesReadCheckbox = $(By.id("allEntityGroupsRead"));
+        SelenideElement allEntitiesReadCheckbox = $(By.id("allEntityGroupsRead"));
         assertTrue(generateAssertMessage("'All Entities Read' should be enabled"), allEntitiesReadCheckbox.isSelected());
 
-        WebElement allEntitiesWriteCheckbox = $(By.id("allEntityGroupsWrite"));
+        SelenideElement allEntitiesWriteCheckbox = $(By.id("allEntityGroupsWrite"));
         assertFalse(generateAssertMessage("'All Entities Write' should be disabled"), allEntitiesWriteCheckbox.isSelected());
 
         $(By.linkText("Members")).click();
-        WebElement userCheckbox = $(By.id("members0.groupMember"));
+        SelenideElement userCheckbox = $(By.id("members0.groupMember"));
         assertTrue(generateAssertMessage("Check box for user '" + TEST_USER + "' should be enabled"), userCheckbox.isSelected());
 
         // Add additional settings
@@ -87,7 +87,7 @@ public class CreateUserGroupTest extends AtsdTest {
         allEntitiesWriteCheckbox = $(By.id("allEntityGroupsWrite"));
         assertFalse(generateAssertMessage("'All Entities Write' should be disabled"), allEntitiesWriteCheckbox.isSelected());
 
-        WebElement secondEntityGroupWriteCheckbox = $(By.id("entityGroupPermissionModels1.write"));
+        SelenideElement secondEntityGroupWriteCheckbox = $(By.id("entityGroupPermissionModels1.write"));
         assertTrue(generateAssertMessage("Write checkbox for the second Entity Group should be enabled"), secondEntityGroupWriteCheckbox.isSelected());
 
         $(By.linkText("Members")).click();
@@ -95,8 +95,9 @@ public class CreateUserGroupTest extends AtsdTest {
         assertTrue(generateAssertMessage("Check box for user '" + TEST_USER + "' should be enabled"), userCheckbox.isSelected());
 
         $(By.linkText("Portal Permissions")).click();
-        WebElement firstPortalCheckbox = $(By.id("portalPermissionsModels0.accessGranted"));
+        SelenideElement firstPortalCheckbox = $(By.id("portalPermissionsModels0.accessGranted"));
         assertTrue(generateAssertMessage("Check box for first portal should be enabled"), firstPortalCheckbox.isSelected());
     }
+
 }
 

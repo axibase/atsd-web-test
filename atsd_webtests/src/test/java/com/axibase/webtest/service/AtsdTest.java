@@ -39,4 +39,5 @@ public abstract class AtsdTest {
             throw new BadLoginException("Expected login page title is '" + LoginService.TITLE + "' but actual is '" + title() + "'");
         }
     }
+
 }

@@ -25,4 +25,5 @@ public class EntitiesServiceTest extends AtsdTest {
         //Assert.assertNotNull(generateAssertMessage("Can't find 'entity-1' cell"), es.getEntityByName("entity-1"));
         assertNotNull(generateAssertMessage("Can't find " + hostname + " cell"), es.getEntityByName(hostname.toLowerCase()));
     }
+
 }

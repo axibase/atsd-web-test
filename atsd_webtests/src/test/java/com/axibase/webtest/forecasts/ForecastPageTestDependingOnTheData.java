@@ -1,14 +1,15 @@
 package com.axibase.webtest.forecasts;
 
-import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.CommonSelects;
-import com.axibase.webtest.pages.ForecastSettingsPage;
-import com.axibase.webtest.pages.ForecastViewerPage;
-import com.axibase.webtest.pages.PortalPage;
+import com.axibase.webtest.pageobjects.ForecastSettingsPage;
+import com.axibase.webtest.pageobjects.ForecastViewerPage;
+import com.axibase.webtest.pageobjects.PortalPage;
 import com.axibase.webtest.service.AtsdTest;
 import com.axibase.webtest.service.CSVDataUploaderService;
+import com.axibase.webtest.service.CSVImportParserAsSeriesTest;
 import com.axibase.webtest.service.Config;
-import com.axibase.webtest.service.csv.CSVImportParserAsSeriesTest;
+import com.codeborne.selenide.ElementsCollection;
+import com.codeborne.selenide.SelenideElement;
 import org.apache.commons.net.util.Base64;
 import org.apache.http.HttpHeaders;
 import org.apache.http.HttpResponse;
@@ -17,9 +18,8 @@ import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.client.utils.URIBuilder;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.message.BasicNameValuePair;
+import org.openqa.selenium.Dimension;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
@@ -37,6 +37,8 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static com.axibase.webtest.CommonActions.createNewURL;
+import static com.codeborne.selenide.Condition.value;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static com.codeborne.selenide.WebDriverRunner.url;
@@ -78,7 +80,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
                 .setPeriodUnit("minute")
                 .setForecastHorizonCount("1")
                 .setForecastHorizonUnit("hour")
-                .submitFormAndWait(15);
+                .submitFormAndWait();
 
         assertEquals("Should be only one silver component", 1,
                 forecastViewerPage.getCountOfPassiveComponentsInComponentContainer());
@@ -180,7 +182,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
         open(newURL);
 
         assertRegularizeOptionValues(params.get("aggregation"), params.get("interpolation"), "25",
-                "minute", "URL params test");
+                "minute");
         assertDecomposeOptionValues(params.get("componentThreshold"), params.get("componentCount"),
                 params.get("windowLength"), "URL params test");
         assertForecastOptions("AVG", "1", "minute", "URL params test");
@@ -205,12 +207,12 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
         forecastViewerPage.setGroupAuto()
                 .setGroupCount("11")
                 .setComponentCount("19")
-                .submitFormAndWait(20);
+                .submitFormAndWait();
 
-        List<WebElement> forecastSingularValues = forecastViewerPage.getSummaryContainerForecastsSingularValueLinks();
-        WebElement componentContainer = forecastViewerPage.getComponentContainer();
+        ElementsCollection forecastSingularValues = forecastViewerPage.getSummaryContainerForecastsSingularValueLinks();
+        SelenideElement componentContainer = forecastViewerPage.getComponentContainer();
 
-        for (WebElement forecastSingularValue : forecastSingularValues) {
+        for (SelenideElement forecastSingularValue : forecastSingularValues) {
             forecastSingularValue.click();
             assertNameOfForecastInComponentsWindowAndNameInSummary(forecastSingularValue, componentContainer);
             assertCountOfGreenComponents(forecastSingularValues.indexOf(forecastSingularValue));
@@ -219,9 +221,9 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
 
     @Test
     public void testActiveRegularizeOptionsCloning() {
-        forecastViewerPage.setRegularizeOptions("PERCENTILE_99", "PREVIOUS", "20", "minute")
+        forecastViewerPage.setRegularizeOptions("Percentile 99", "Previous", "20", "minute")
                 .addForecastTab();
-        assertRegularizeOptionValues("PERCENTILE_99", "PREVIOUS", "20", "minute", "cloning");
+        assertRegularizeOptionValues("PERCENTILE_99", "PREVIOUS", "20", "minute");
     }
 
     @Test
@@ -233,24 +235,24 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
 
     @Test
     public void testActiveForecastOptionsCloning() {
-        forecastViewerPage.setForecastOptions("MEDIAN", "10", "year")
+        forecastViewerPage.setForecastOptions("Median", "10", "year")
                 .addForecastTab();
         assertForecastOptions("MEDIAN", "10", "year", "cloning");
     }
 
     @Test
     public void testSwitchTabsRegularizeOptions() {
-        forecastViewerPage.setRegularizeOptions("PERCENTILE_99", "PREVIOUS", "20", "minute")
+        forecastViewerPage.setRegularizeOptions("Percentile 99", "Previous", "20", "minute")
                 .addForecastTab();
 
         String[] names = forecastViewerPage.getForecastTabNames();
-        assertNotEquals(names[0], names[1], "Forecast names in tabs are equals but they shouldn't be");
+        assertNotEquals(names[1], names[0], "Forecast names in tabs are equals but they shouldn't be");
 
-        forecastViewerPage.setRegularizeOptions("SUM", "LINEAR", "10", "hour")
+        forecastViewerPage.setRegularizeOptions("Sum", "Linear", "10", "hour")
                 .switchForecastTab("Forecast 1");
-        assertRegularizeOptionValues("PERCENTILE_99", "PREVIOUS", "20", "minute", "switching");
+        assertRegularizeOptionValues("PERCENTILE_99", "PREVIOUS", "20", "minute");
         forecastViewerPage.switchForecastTab("Forecast 2");
-        assertRegularizeOptionValues("SUM", "LINEAR", "10", "hour", "switching");
+        assertRegularizeOptionValues("SUM", "LINEAR", "10", "hour");
     }
 
     @Test
@@ -266,9 +268,9 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
 
     @Test
     public void testSwitchTabsForecastOptions() {
-        forecastViewerPage.setForecastOptions("MEDIAN", "10", "year")
+        forecastViewerPage.setForecastOptions("Median", "10", "year")
                 .addForecastTab()
-                .setForecastOptions("AVG", "11", "minute")
+                .setForecastOptions("Average", "11", "minute")
                 .switchForecastTab("Forecast 1");
         assertForecastOptions("MEDIAN", "10", "year", "switching");
         forecastViewerPage.switchForecastTab("Forecast 2");
@@ -281,7 +283,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
         forecastViewerPage.setGroupAuto()
                 .setGroupCount(countOfGroups)
                 .setComponentCount("19")
-                .submitFormAndWait(20);
+                .submitFormAndWait();
         int countInPic = forecastViewerPage.getCountOfForecastsInWidgetContainer();
         assertEquals("Wrong count of groups on the chart", countOfGroups, Integer.toString(countInPic));
     }
@@ -289,7 +291,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     @Test
     public void testPresenceOfForecastsInSummary() {
         forecastViewerPage.addForecastTab()
-                .submitFormAndWait(20);
+                .submitFormAndWait();
         int forecastCountInSummary = forecastViewerPage.getSummaryContainerForecastsSingularValueLinks().size();
         assertEquals("Wrong count of history charts in summary", 2, forecastCountInSummary);
     }
@@ -298,7 +300,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     public void testPresenceOfHistoryChartsInPicWithDifferentPeriods() {
         forecastViewerPage.addForecastTab()
                 .setPeriodCount("20")
-                .submitFormAndWait(20);
+                .submitFormAndWait();
         int forecastCountInChart = forecastViewerPage.getCountOfHistoryChartsInWidgetContainer();
         assertEquals("Wrong count of history charts in chart", 2, forecastCountInChart);
     }
@@ -306,8 +308,8 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     @Test
     public void testPresenceOfHistoryChartsInPicWithDifferentAggregation() {
         forecastViewerPage.addForecastTab()
-                .setAggregation("SUM")
-                .submitFormAndWait(20);
+                .setAggregation("Sum")
+                .submitFormAndWait();
         int forecastCountInChart = forecastViewerPage.getCountOfHistoryChartsInWidgetContainer();
         assertEquals("Wrong count of history charts in chart", 2, forecastCountInChart);
     }
@@ -315,8 +317,8 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     @Test
     public void testPresenceOfHistoryChartsInPicWithDifferentInterpolation() {
         forecastViewerPage.addForecastTab()
-                .setInterpolation("PREVIOUS")
-                .submitFormAndWait(20);
+                .setInterpolation("Previous")
+                .submitFormAndWait();
         int forecastCountInChart = forecastViewerPage.getCountOfHistoryChartsInWidgetContainer();
         assertEquals("Wrong count of history charts in chart", 2, forecastCountInChart);
     }
@@ -327,7 +329,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
                 .addForecastTab()
                 .switchForecastTab("Forecast 2")
                 .removeForecastTab()
-                .submitFormAndWait(25);
+                .submitFormAndWait();
 
         String[] names = forecastViewerPage.getForecastTabNames();
         List<String> forecastNames = forecastViewerPage.getSummaryContainerForecastNames();
@@ -343,7 +345,7 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
         assertEquals("Wrong count of green components", countOfActiveComponents, countOfGreenComponents);
     }
 
-    private void assertNameOfForecastInComponentsWindowAndNameInSummary(WebElement forecast, WebElement componentContainer) {
+    private void assertNameOfForecastInComponentsWindowAndNameInSummary(SelenideElement forecast, SelenideElement componentContainer) {
         String name = forecastViewerPage.getNameOfForecastInSummaryTable(forecast);
         assertTrue("Wrong forecast name in components window", componentContainer.getText().contains(name));
     }
@@ -353,8 +355,8 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     }
 
     private void assertEndDate(String errorMessage, String sendedDate) {
-        String newDate = forecastViewerPage.getEndDate().getAttribute("value") + "T" +
-                forecastViewerPage.getEndTime().getAttribute("value");
+        String newDate = forecastViewerPage.getEndDate().getValue() + "T" +
+                forecastViewerPage.getEndTime().getValue();
         assertEquals(errorMessage, getTranslatedDate(sendedDate).toString(), newDate);
     }
 
@@ -364,21 +366,9 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     }
 
     private void assertStartDate(String errorMessage, String sendedDate) {
-        String newDate = forecastViewerPage.getStartDate().getAttribute("value") + "T" +
-                forecastViewerPage.getStartTime().getAttribute("value");
+        String newDate = forecastViewerPage.getStartDate().getValue() + "T" +
+                forecastViewerPage.getStartTime().getValue();
         assertEquals(errorMessage, getTranslatedDate(sendedDate).toString(), newDate);
-    }
-
-    private String createNewURL(String urlPrefix, Map<String, String> params) {
-        List<NameValuePair> paramsForEncoding = new ArrayList<>();
-        for (Map.Entry<String, String> entry : params.entrySet()) {
-            paramsForEncoding.add(new BasicNameValuePair(entry.getKey(), entry.getValue()));
-        }
-        try {
-            return new URIBuilder(urlPrefix).addParameters(paramsForEncoding).build().toString();
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Wrong URI", e);
-        }
     }
 
     private String removeURLParameter(String url, String parameterName) {
@@ -399,11 +389,9 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     }
 
     private void assertRegularizeOptionValues(String aggregationType, String interpolationType,
-                                              String periodCount, String periodUnit, String testType) {
-        CommonAssertions.assertValueAttributeOfElement("Wrong aggregation after " + testType, aggregationType,
-                forecastViewerPage.getAggregation());
-        CommonAssertions.assertValueAttributeOfElement("Wrong interpolation after " + testType, interpolationType,
-                forecastViewerPage.getInterpolation());
+                                              String periodCount, String periodUnit) {
+        forecastViewerPage.getAggregation().shouldHave(value(aggregationType));
+        forecastViewerPage.getInterpolation().shouldHave(value(interpolationType));
         assertIntervalEquals("Wrong period in the regularize section",
                 periodCount + "-" + periodUnit,
                 CommonSelects.getFormattedInterval(forecastViewerPage.getPeriodCount(),
@@ -411,17 +399,13 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
     }
 
     private void assertDecomposeOptionValues(String threshold, String componentCount, String windowLen, String testType) {
-        CommonAssertions.assertValueAttributeOfElement("Wrong threshold after " + testType,
-                threshold, forecastViewerPage.getThreshold());
-        CommonAssertions.assertValueAttributeOfElement("Wrong component count after " + testType,
-                componentCount, forecastViewerPage.getComponentCount());
-        CommonAssertions.assertValueAttributeOfElement("Wrong window length after " + testType,
-                windowLen, forecastViewerPage.getWindowLength());
+        forecastViewerPage.getThreshold().shouldHave(value(threshold));
+        forecastViewerPage.getComponentCount().shouldHave(value(componentCount));
+        forecastViewerPage.getWindowLength().shouldHave(value(windowLen));
     }
 
     private void assertForecastOptions(String average, String intervalCount, String intervalUnit, String testType) {
-        CommonAssertions.assertValueAttributeOfElement("Wrong average name after " + testType,
-                average, forecastViewerPage.getAveragingFunction());
+        forecastViewerPage.getAveragingFunction().shouldHave(value(average));
         assertIntervalEquals("Wrong score interval in the Forecast section",
                 intervalCount + "-" + intervalUnit,
                 CommonSelects.getFormattedInterval(forecastViewerPage.getScoreIntervalCount(),
@@ -459,6 +443,8 @@ public class ForecastPageTestDependingOnTheData extends AtsdTest {
         List<String> tabs = new ArrayList<>(driver.getWindowHandles());
         driver.close();
         driver.switchTo().window(tabs.get(1));
+        // The size of the window changes after close -> switch
+        driver.manage().window().setSize(new Dimension(1280, 720));
     }
 
     private void loadDataAndParserByNames(String parserName, String dataName) {

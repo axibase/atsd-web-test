@@ -49,5 +49,6 @@ public abstract class ReplacementTableImportBase extends AtsdTest {
 
         final boolean value;
     }
+
 }
 

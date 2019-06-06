@@ -1,7 +1,7 @@
 package com.axibase.webtest.cases;
 
-import com.axibase.webtest.pages.DataEntryPage;
-import com.axibase.webtest.pages.MetricsForEntityPage;
+import com.axibase.webtest.pageobjects.DataEntryPage;
+import com.axibase.webtest.pageobjects.MetricsForEntityPage;
 import com.axibase.webtest.service.AtsdTest;
 import io.qameta.allure.Step;
 import lombok.RequiredArgsConstructor;

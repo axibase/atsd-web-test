@@ -1,5 +1,6 @@
 package com.axibase.webtest.service;
 
+import com.axibase.webtest.CommonActions;
 import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 
@@ -18,7 +19,7 @@ public class CSVDataUploaderService extends Service {
     public CSVDataUploaderService() {
         open(PARSERS_TABLE_PATH);
         for (SelenideElement parser : $$(By.xpath("//*/tbody/tr"))) {
-            uploadedParsers.add(parser.findElement(By.xpath("td/a")).getText());
+            uploadedParsers.add(parser.$(By.xpath("td/a")).getText());
         }
     }
 
@@ -50,7 +51,7 @@ public class CSVDataUploaderService extends Service {
     }
 
     private void uploadCSVFileByPath(String pathToCSVFile, String parserName) {
-        open( CSV_IMPORT_PATH + parserName);
+        open(CSV_IMPORT_PATH + CommonActions.urlEncode(parserName));
         $(By.id("file")).sendKeys(pathToCSVFile);
         $(By.id("upload-btn")).click();
     }

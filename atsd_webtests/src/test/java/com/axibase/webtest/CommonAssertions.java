@@ -1,11 +1,10 @@
 package com.axibase.webtest;
 
-import org.openqa.selenium.WebElement;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.time.Duration;
 
-import static com.axibase.webtest.CommonActions.executeWithElement;
 import static com.axibase.webtest.PageUtils.urlPath;
 import static com.axibase.webtest.service.AtsdTest.generateAssertMessage;
 import static com.codeborne.selenide.Selenide.Wait;
@@ -20,9 +19,9 @@ public class CommonAssertions {
      * @param errorMessage - message that will be shown if element is invalid
      * @param element      - element that will be checked
      */
-    public static void assertValid(String errorMessage, WebElement element) {
+    public static void assertValid(String errorMessage, SelenideElement element) {
         String script = "return element.checkValidity()";
-        Boolean result = executeWithElement(element, script);
+        Boolean result = CommonActions.executeWithElement(element, script);
         assertTrue(errorMessage, result);
     }
 
@@ -32,21 +31,10 @@ public class CommonAssertions {
      * @param errorMessage - message that will be shown if element is valid
      * @param element      - element that will be checked
      */
-    public static void assertInvalid(String errorMessage, WebElement element) {
+    public static void assertInvalid(String errorMessage, SelenideElement element) {
         String script = "return element.checkValidity()";
-        Boolean result = executeWithElement(element, script);
+        Boolean result = CommonActions.executeWithElement(element, script);
         assertFalse(errorMessage, result);
-    }
-
-    /**
-     * Compare element's value and expected value
-     *
-     * @param errorMessage  - message that will be shown if element is valid
-     * @param expectedValue - expected value
-     * @param element       - element that will be checked
-     */
-    public static void assertValueAttributeOfElement(String errorMessage, String expectedValue, WebElement element) {
-        assertEquals(errorMessage, expectedValue, element.getAttribute("value"));
     }
 
     /**

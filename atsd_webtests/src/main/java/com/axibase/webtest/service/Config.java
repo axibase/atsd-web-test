@@ -55,7 +55,7 @@ public class Config {
                 Configuration.screenshots = false; // create screenshots manually with proper name
                 Configuration.reportsFolder = screenshotDir;
                 Configuration.browser = System.getProperty(SELENIDE_BROWSER_PROPERTY_NAME, browserFromProperties);
-                Configuration.browserSize = "1024x768";
+                Configuration.browserSize = "1280x720";
                 Configuration.headless = Boolean.parseBoolean(properties.getProperty(SELENIDE_HEADLESS_PROPERTY_NAME, "true"));
                 if (Configuration.headless && "chrome".equals(Configuration.browser)) {
                     System.setProperty("chromeoptions.args", "--no-sandbox");
