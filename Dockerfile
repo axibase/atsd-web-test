@@ -14,7 +14,6 @@ RUN curl https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.d
   && rm ~/chrome.deb
 
 RUN git clone https://github.com/axibase/atsd-web-test /root/atsd-web-test
-COPY . /root/atsd-web-test
 
 ENTRYPOINT ["/bin/bash","/root/atsd-web-test/check_atsd.sh"]
 
