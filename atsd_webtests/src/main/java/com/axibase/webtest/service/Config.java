@@ -16,7 +16,6 @@ import java.util.Properties;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class Config {
     private static final String PROPERTY_PATH = "atsd.properties";
-    private static final String CHROME_DRIVER_PROPERTY_NAME = "webdriver.chrome.driver";
     private static final String SELENIDE_BROWSER_PROPERTY_NAME = "selenide.browser";
     private static final String SELENIDE_HEADLESS_PROPERTY_NAME = "selenide.headless";
     private final String login;
@@ -46,10 +45,6 @@ public class Config {
                     log.error("Can't read required properties");
                     System.exit(1);
                 }
-                final String chromedriverPath = properties.getProperty(CHROME_DRIVER_PROPERTY_NAME);
-                if (chromedriverPath != null) {
-                    System.setProperty(CHROME_DRIVER_PROPERTY_NAME, chromedriverPath);
-                }
                 final String browserFromProperties = properties.getProperty(SELENIDE_BROWSER_PROPERTY_NAME, "chrome");
                 Configuration.baseUrl = url;
                 Configuration.screenshots = false; // create screenshots manually with proper name
@@ -67,5 +62,7 @@ public class Config {
                 throw new IllegalStateException(e);
             }
         }
+
     }
+
 }

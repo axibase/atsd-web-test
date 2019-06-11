@@ -4,6 +4,11 @@ sudo: required
 services:
   - docker
 install:
-  - docker pull axibase/atsd_package_validation
+  - |
+    if [[ -n "$TRAVIS_PULL_REQUEST_BRANCH" ]] && [[ ! $(git diff --name-only --diff-filter=d "$(git merge-base HEAD master)" | grep -q 'Dockerfile') ]]; then
+        docker build . -t axibase/atsd_package_validation
+    else
+        docker pull axibase/atsd_package_validation
+    fi
 script:
   - docker run -e BRANCH=$TRAVIS_PULL_REQUEST_BRANCH -e ATSD_REQUIRED_REVISION=`curl -s https://axibase.com/public/atsd_deb_latest.htm | grep -oE 'atsd_([0-9]+)_amd64.deb' | head -n 1 | cut -f 2 -d _` axibase/atsd_package_validation
