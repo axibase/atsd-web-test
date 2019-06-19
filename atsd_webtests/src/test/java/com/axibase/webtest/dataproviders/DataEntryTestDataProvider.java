@@ -192,6 +192,7 @@ public class DataEntryTestDataProvider {
     public static Object[][] invalidCommandData() {
         return new Object[][]{
                 {"entity"},
+                {"message e:data-entry-commands-test_message-is-not-added"},
                 {"<#list 1..5 as i> \n" +
                         "series e:dataentrycommandstest_testinvalidcommands_entity " +
                         "m:dataentrycommandstest_testinvalidcommands_metric-${k*2}=10 \n" +
