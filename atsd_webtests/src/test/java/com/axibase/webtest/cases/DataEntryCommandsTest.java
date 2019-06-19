@@ -12,7 +12,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Parameters;
 import org.testng.annotations.Test;
 
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -154,7 +153,6 @@ public class DataEntryCommandsTest extends AtsdTest {
     private void assertPropertyKeysAndTags(Property expectedProperty) {
         PropertyPage propertiesPage = new PropertyPage(expectedProperty.getEntityName(),
                 Collections.singletonMap("type", expectedProperty.getPropType()));
-        Wait().withTimeout(Duration.ofSeconds(2)).until(condition -> propertiesPage.getTagsAndKeys().length > 0);
 
         Object[] allUnits = Stream.of(expectedProperty.getKeyNames(), expectedProperty.getKeyValues(),
                 expectedProperty.getTagNames(), expectedProperty.getTagValues())
