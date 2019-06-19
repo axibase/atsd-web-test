@@ -101,21 +101,6 @@ public class DataEntryCommandsTest extends AtsdTest {
         assertEquals(expectedEntity, createdEntity, "Wrong created entity\n");
     }
 
-    @Test
-    public void testMessageIsNotAdded() {
-        String entityName = "data-entry-commands-test_message-is-not-added";
-        String insertMessage = "message e:" + entityName;
-
-        dataEntryPage.typeCommands(insertMessage).sendCommands();
-        assertTrue(dataEntryPage.isCommandInserted());
-
-        EntitiesTablePage entitiesTablePage = new EntitiesTablePage();
-        assertFalse(entitiesTablePage.isRecordPresent(entityName), "Entity is added\n");
-
-        MessagesPage messagesPage = new MessagesPage().setEntity(entityName).search();
-        assertEquals(messagesPage.getCountOfMessages(), 0, "Message is added into table\n");
-    }
-
     @Parameters({"insertMessage", "expectedMetrics"})
     @Test(dataProvider = "validFreemarkerCommandTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testValidCommands(String insertMessage, String[] expectedMetrics) {
