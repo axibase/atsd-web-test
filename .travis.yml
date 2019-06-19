@@ -5,7 +5,7 @@ services:
   - docker
 install:
   - |
-    if [[ -n "$TRAVIS_PULL_REQUEST_BRANCH" ]] && [[ ! $(git diff --name-only --diff-filter=d "$(git merge-base HEAD master)" | grep -q 'Dockerfile') ]]; then
+    if [[ -n "$TRAVIS_PULL_REQUEST_BRANCH" ]] && git diff --name-only --diff-filter=d "$(git merge-base HEAD master)" | grep -q 'Dockerfile'; then
         docker build . -t axibase/atsd_package_validation
     else
         docker pull axibase/atsd_package_validation
