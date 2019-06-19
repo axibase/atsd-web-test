@@ -45,7 +45,7 @@ public class DataEntryCommandsTest extends AtsdTest {
     }
 
     @Parameters({"insertMessage", "expectedProperty"})
-    @Test(dataProvider = "propertyTest", dataProviderClass = DataEntryTestDataProvider.class, enabled = false)
+    @Test(dataProvider = "propertyTest", dataProviderClass = DataEntryTestDataProvider.class)
     public void testPropertyIsAdded(String insertMessage, Property expectedProperty) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
         assertTrue(dataEntryPage.isCommandInserted());
