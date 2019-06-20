@@ -32,6 +32,7 @@ public class ActionOnTestState implements ITestListener {
         if (!CreateAdminAccountTest.class.equals(result.getTestClass().getRealClass())) {
             createAdminUserIfItDoesNotExist();
         }
+        log.info("Starting test {}.{}", result.getTestClass().getRealClass().getSimpleName(), result.getMethod().getMethodName());
     }
 
     private void createAdminUserIfItDoesNotExist() {
