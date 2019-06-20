@@ -19,7 +19,6 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 import static com.axibase.webtest.CommonActions.getColumnValuesByColumnName;
-import static com.codeborne.selenide.Selenide.Wait;
 import static org.testng.AssertJUnit.*;
 
 public class DataEntryCommandsTest extends AtsdTest {
@@ -117,7 +116,7 @@ public class DataEntryCommandsTest extends AtsdTest {
     public void textExamples(int exampleIndex, String expectedCommand) {
         dataEntryPage.openHelpCommands()
                 .copyExampleByIndex(exampleIndex);
-        assertEquals(expectedCommand, dataEntryPage.getCommandsWindowText(), "Command is wrong copied\n");
+        assertEquals("Command is wrong copied\n", expectedCommand, dataEntryPage.getCommandsWindowText());
 
         dataEntryPage.validate();
         assertTrue("Command: \n" + expectedCommand + "\nis not passed validation\n", dataEntryPage.isCommandValidated());
