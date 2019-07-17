@@ -24,7 +24,11 @@ public abstract class ReplacementTableImportBase extends AtsdTest {
                 {"test-text", "TEXT", "Tony Bluejay"}};
         final ElementsCollection elements = $(By.id("overviewTable")).findAll(By.xpath("./tbody/tr")).shouldHaveSize(expectedResult.length);
         for (int i = 0; i < expectedResult.length; i++) {
-            final List<String> row = elements.get(i).findAll(By.xpath("./td")).exclude(Condition.cssClass("select-field")).texts();
+            final List<String> row = elements.get(i)
+                    .findAll(By.xpath("./td"))
+                    .exclude(Condition.cssClass("select-field"))
+                    .exclude(Condition.matchText("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}"))
+                    .texts();
             assertEquals("Mismatch on row " + (i + 1), Arrays.asList(expectedResult[i]), row);
         }
     }
