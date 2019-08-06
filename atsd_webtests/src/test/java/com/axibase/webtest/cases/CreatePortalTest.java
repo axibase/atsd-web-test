@@ -2,9 +2,13 @@ package com.axibase.webtest.cases;
 
 import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AtsdTest;
+import com.codeborne.selenide.SelenideElement;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.interactions.Action;
+import org.openqa.selenium.interactions.Actions;
 import org.testng.annotations.Test;
 
 import java.util.ArrayList;
@@ -30,27 +34,47 @@ public class CreatePortalTest extends AtsdTest {
         CommonAssertions.assertPageTitleAfterLoadEquals("New Portal");
 
         $(By.id("name")).sendKeys("Test Portal");
-        String config = "[configuration]\\n" +
-                "  height-units = 2\\n" +
-                "  width-units = 2\\n" +
-                "  time-span = 12 hour\\n" +
-                "\\n" +
-                "[group]\\n" +
-                "\\n" +
-                "  [widget]\\n" +
-                "    type = chart\\n" +
-                "    [series]\\n" +
-                "      entity = my-entity\\n" +
-                "      metric = my-metric\\n" +
-                "\\n" +
-                "  [widget]\\n" +
-                "    type = gauge\\n" +
-                "    thresholds = 0, 60, 80, 100\\n" +
-                "    [series]\\n" +
-                "      entity = my-entity\\n" +
+        String config = "[configuration]\n" +
+                "  height-units = 2\n" +
+                "  width-units = 2\n" +
+                "  time-span = 12 hour\n" +
+                "\n" +
+                "[group]\n" +
+                "\n" +
+                "  [widget]\n" +
+                "    type = chart\n" +
+                "    [series]\n" +
+                "      entity = my-entity\n" +
+                "      metric = my-metric\n" +
+                "\n" +
+                "  [widget]\n" +
+                "    type = gauge\n" +
+                "    thresholds = 0, 60, 80, 100\n" +
+                "    [series]\n" +
+                "      entity = my-entity\n" +
                 "      metric = my-metric";
 
-        executeJavaScript("document.querySelector('.CodeMirror').CodeMirror.setValue('" + config + "');");
+        // Focus code editor
+        SelenideElement codeEditor = $(By.className("monaco-editor"));
+        codeEditor.click(50, 50);
+        // Send Ctrl/Cmd + A to select and wipe all default content
+        boolean isMac = System.getProperty("os.name").toLowerCase().contains("mac");
+        Keys controlOrCommand = isMac ? Keys.COMMAND : Keys.CONTROL;
+        Actions clearConfig = actions()
+                .keyDown(controlOrCommand)
+                .sendKeys("a")
+                .keyUp(controlOrCommand)
+                .sendKeys(Keys.BACK_SPACE);
+        clearConfig.perform();
+        assertEquals("Failed to clear portal editor", $(By.id("content")).val(), "");
+        // Write down portal configuration
+        Actions writeConfig = actions();
+        for (String line: config.split("\n")) {
+            // Send config content line by line
+            // We will send Escape to close autocompletion
+            writeConfig.sendKeys(line).sendKeys(Keys.ESCAPE).sendKeys(Keys.RETURN);
+        }
+        writeConfig.perform();
         $(By.id("save-button")).shouldBe(clickable).click();
         $(By.id("save-button")).shouldHave(cssClass("btn-success"));
         CommonAssertions.assertPageTitleAfterLoadEquals("Portal Test Portal");
