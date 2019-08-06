@@ -60,11 +60,15 @@ public class CreatePortalTest extends AtsdTest {
         // Send Ctrl/Cmd + A to select and wipe all default content
         boolean isMac = System.getProperty("os.name").toLowerCase().contains("mac");
         Keys controlOrCommand = isMac ? Keys.COMMAND : Keys.CONTROL;
-        Actions writeConfig = new Actions(codeEditor.getWrappedDriver())
+        Actions clearConfig = actions()
                 .keyDown(controlOrCommand)
                 .sendKeys("a")
                 .keyUp(controlOrCommand)
                 .sendKeys(Keys.BACK_SPACE);
+        clearConfig.perform();
+        assertEquals("Failed to clear portal editor", $(By.id("content")).val(), "");
+        // Write down portal configuration
+        Actions writeConfig = actions();
         for (String line: config.split("\n")) {
             // Send config content line by line
             // We will send Escape to close autocompletion
