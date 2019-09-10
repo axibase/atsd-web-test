@@ -18,7 +18,7 @@ public class DeleteAccountTest extends AtsdTest {
         String testUser = "axiuser-" + System.currentTimeMillis();
         final AccountService accountService = new AccountService();
         assertTrue(generateAssertMessage("Can't create account"), accountService.createUser(testUser, testUser));
-        CommonAssertions.assertPageTitleAfterLoadEquals("User " + testUser);
+        CommonAssertions.assertPageTitleAfterLoadEquals("User: " + testUser);
         assertTrue(generateAssertMessage("Can't delete account '" + testUser + "'"), accountService.deleteUser(testUser));
         CommonAssertions.assertPageTitleAfterLoadEquals("Users");
 
