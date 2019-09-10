@@ -1,12 +1,12 @@
 package com.axibase.webtest.service;
 
+import com.axibase.webtest.CommonActions;
 import com.codeborne.selenide.SelenideElement;
 import org.apache.commons.lang3.StringUtils;
 import org.openqa.selenium.By;
 
 import java.util.stream.Collectors;
 
-import com.axibase.webtest.CommonActions;
 import static com.codeborne.selenide.Selenide.*;
 
 public class AccountService extends Service {
@@ -33,7 +33,7 @@ public class AccountService extends Service {
     }
 
     public boolean deleteUser(String login) {
-        if (title().equals("User " + login)) {
+        if (title().equals("User: " + login)) {
             CommonActions.deleteRecord();
             return true;
         }
