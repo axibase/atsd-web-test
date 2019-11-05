@@ -32,8 +32,8 @@ public class DataEntryPage {
         return $$(formStatuses).first().text().contains(" commands successfully processed");
     }
 
-    public boolean isCommandValidated() {
-        return $$(formStatuses).first().text().equals("All commands are valid");
+    public boolean isCommandValidated(int expectedCount) {
+        return $$(formStatuses).first().text().equals(expectedCount + " commands are valid");
     }
 
     public DataEntryPage openHelpCommands() {

@@ -180,28 +180,29 @@ public class DataEntryTestDataProvider {
         return new Object[][]{
                 {4, "<#list 1..20 as i>\n" +
                         "series s:${(nowSeconds - i * 60)?c} e:{entity} m:{metric-name}=${(60 - 2*i)?c}\n" +
-                        "</#list>"},
+                        "</#list>", 20},
                 {5, "<#assign values={\"metric-1\": 10, \"metric-2\": 100} />\n" +
                         "<#list values as metric, value>\n" +
                         "series e:{entity} m:${metric}=${value}\n" +
-                        "</#list>"}
+                        "</#list>", 2}
         };
     }
 
     @DataProvider(name = "invalidFreemarkerCommandTest")
     public static Object[][] invalidCommandData() {
         return new Object[][]{
-                {"entity"},
-                {"message e:data-entry-commands-test_message-is-not-added"},
+                {"entity", 1},
+                {"message e:data-entry-commands-test_message-is-not-added", 1},
                 {"<#list 1..5 as i> \n" +
                         "series e:dataentrycommandstest_testinvalidcommands_entity " +
                         "m:dataentrycommandstest_testinvalidcommands_metric-${k*2}=10 \n" +
-                        "</#list> "},
+                        "</#list> ", 5},
                 {"<#assign />\n" +
                         "<#list 1..5 as i>\n" +
                         "series e:dataentrycommandstest_testinvalidcommands_entity " +
                         "m:dataentrycommandstest_testinvalidcommands_metric-${i * startIndex}=5\n" +
-                        "</#list>"}};
+                        "</#list>", 5}
+        };
     }
 
 }
