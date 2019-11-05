@@ -111,23 +111,23 @@ public class DataEntryCommandsTest extends AtsdTest {
         }
     }
 
-    @Parameters({"exampleIndex", "expectedCommand"})
+    @Parameters({"exampleIndex", "expectedCommand", "expectedCount"})
     @Test(dataProvider = "exampleSyntaxTest", dataProviderClass = DataEntryTestDataProvider.class)
-    public void textExamples(int exampleIndex, String expectedCommand) {
+    public void textExamples(int exampleIndex, String expectedCommand, int expectedCount) {
         dataEntryPage.openHelpCommands()
                 .copyExampleByIndex(exampleIndex);
         assertEquals("Command is wrong copied\n", expectedCommand, dataEntryPage.getCommandsWindowText());
 
         dataEntryPage.validate();
-        assertTrue("Command: \n" + expectedCommand + "\nis not passed validation\n", dataEntryPage.isCommandValidated());
+        assertTrue("Command: \n" + expectedCommand + "\nhas not passed validation\n", dataEntryPage.isCommandValidated(expectedCount));
     }
 
-    @Parameters({"insertMessage"})
+    @Parameters({"insertMessage", "expectedCount"})
     @Test(dataProvider = "invalidFreemarkerCommandTest", dataProviderClass = DataEntryTestDataProvider.class)
-    public void testInvalidCommands(String insertMessage) {
+    public void testInvalidCommands(String insertMessage, int expectedCount) {
         dataEntryPage.typeCommands(insertMessage).validate();
 
-        assertFalse("Wrong command is accepted", dataEntryPage.isCommandValidated());
+        assertFalse("Wrong command is accepted", dataEntryPage.isCommandValidated(expectedCount));
     }
 
     @Step("Check the entity adds into entities table")
