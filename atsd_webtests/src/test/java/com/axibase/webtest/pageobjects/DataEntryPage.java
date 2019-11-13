@@ -29,11 +29,11 @@ public class DataEntryPage {
     }
 
     public boolean isCommandInserted() {
-        return $$(formStatuses).first().text().contains(" commands successfully processed");
+        return $$(formStatuses).first().text().contains("Malformed commands: 0.");
     }
 
     public boolean isCommandValidated(int expectedCount) {
-        return $$(formStatuses).first().text().equals(expectedCount + " commands are valid");
+        return $$(formStatuses).first().text().contains("Valid commands: " + expectedCount + ".");
     }
 
     public DataEntryPage openHelpCommands() {
@@ -68,7 +68,7 @@ public class DataEntryPage {
     }
 
     private boolean isCommandFailed() {
-        return !$("form[action='/metrics/entry']").text().contains("commands successfully processed");
+        return $$(".put-form.commands .alert-error").size() > 0;
     }
 
     private void typeCommands(String[] commands) {
