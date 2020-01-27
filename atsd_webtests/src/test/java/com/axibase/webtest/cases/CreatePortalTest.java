@@ -7,7 +7,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.annotations.Test;
 
@@ -30,7 +29,7 @@ public class CreatePortalTest extends AtsdTest {
         boolean panelVisible = $(By.xpath("//h4[normalize-space(text())='Portals']")).isDisplayed();
         assertTrue(generateAssertMessage("Portal panel should be visible"), panelVisible);
 
-        $(By.linkText("Create")).click();
+        $(By.linkText("Add")).click();
         CommonAssertions.assertPageTitleAfterLoadEquals("New Portal");
 
         $(By.id("name")).sendKeys("Test Portal");
