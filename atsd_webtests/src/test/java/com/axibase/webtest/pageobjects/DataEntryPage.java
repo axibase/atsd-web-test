@@ -12,7 +12,7 @@ public class DataEntryPage {
     private static final String BASE_URL = "/metrics/entry";
 
     private final By sendButton = By.cssSelector("button[value=send]");
-    private final By formStatuses = By.cssSelector("form.commands .form-status");
+    private final By responseStatuses = By.cssSelector("form.commands .response-status");
 
     public DataEntryPage() {
         open(BASE_URL);
@@ -29,11 +29,11 @@ public class DataEntryPage {
     }
 
     public boolean isCommandInserted() {
-        return $$(formStatuses).first().text().contains("Malformed commands: 0.");
+        return $$(responseStatuses).first().text().contains("Malformed commands: 0.");
     }
 
     public boolean isCommandValidated(int expectedCount) {
-        return $$(formStatuses).first().text().contains("Valid commands: " + expectedCount + ".");
+        return $$(responseStatuses).first().text().contains("Valid commands: " + expectedCount + ".");
     }
 
     public DataEntryPage openHelpCommands() {
