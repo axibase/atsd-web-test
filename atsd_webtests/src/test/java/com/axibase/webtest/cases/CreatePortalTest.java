@@ -2,11 +2,9 @@ package com.axibase.webtest.cases;
 
 import com.axibase.webtest.CommonAssertions;
 import com.axibase.webtest.service.AtsdTest;
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.SelenideElement;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Dimension;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.testng.annotations.Test;
 
@@ -18,8 +16,7 @@ import static com.codeborne.selenide.Condition.cssClass;
 import static com.codeborne.selenide.Selenide.*;
 import static com.codeborne.selenide.WebDriverRunner.getWebDriver;
 import static org.testng.Assert.assertNotEquals;
-import static org.testng.AssertJUnit.assertEquals;
-import static org.testng.AssertJUnit.assertTrue;
+import static org.testng.AssertJUnit.*;
 
 public class CreatePortalTest extends AtsdTest {
 
@@ -31,6 +28,8 @@ public class CreatePortalTest extends AtsdTest {
 
         $(By.linkText("Add")).click();
         CommonAssertions.assertPageTitleAfterLoadEquals("New Portal");
+
+        ensureNotFullScreen();
 
         $(By.id("name")).sendKeys("Test Portal");
         String config = "[configuration]\n" +
@@ -91,5 +90,27 @@ public class CreatePortalTest extends AtsdTest {
         // The size of the window changes after close -> switch
         driver.manage().window().setSize(new Dimension(1280, 720));
     }
+
+    private void ensureNotFullScreen() {
+        if (isInFullscreen()) {
+            SelenideElement toggleFullscreenButton = $("#toggle-fs-btn");
+            toggleFullscreenButton.click();
+            assertFalse("Failed to leave fullscreen", isInFullscreen());
+        }
+    }
+
+    private boolean isInFullscreen() {
+        try {
+            if ($("#toggle-fs-btn").has(Condition.cssClass("active"))) {
+                return true;
+            }
+
+            $("#name").click();
+            return false;
+        } catch (ElementClickInterceptedException e) {
+            return true; // Name input is hidden
+        }
+    }
+
 
 }
