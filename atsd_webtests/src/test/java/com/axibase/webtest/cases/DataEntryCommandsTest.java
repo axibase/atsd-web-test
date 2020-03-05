@@ -35,11 +35,8 @@ public class DataEntryCommandsTest extends AtsdTest {
     public void testMessageIsAdded(String insertMessage, Message expectedMessage) {
         dataEntryPage.typeCommands(insertMessage).sendCommands();
         assertTrue(dataEntryPage.isCommandInserted());
-
         String entityName = expectedMessage.getEntityName();
-
         assertEntityAdds(entityName);
-        assertMessageTagsAreAddedIntoIdsTable(expectedMessage);
         assertMessageAddByEntityName(entityName);
         assertMessageParameters(expectedMessage);
     }
@@ -204,14 +201,6 @@ public class DataEntryCommandsTest extends AtsdTest {
         for (String value : tags) {
             assertTrue(errorMessage + value, ArrayUtils.contains(tablesTags, value));
         }
-    }
-
-    @Step
-    private void assertMessageTagsAreAddedIntoIdsTable(Message expectedMessage) {
-        assertExpectedTagsInTable("Message tag key is not added into Message Tag Key IDs: ",
-                expectedMessage.getTagNames(), new MessageTagKeyIDsPage().getTable());
-        assertExpectedTagsInTable("Message tag value is not added into Message Tag Value IDs: ",
-                expectedMessage.getTagValues(), new MessageTagValueIDsPage().getTable());
     }
 
     @Step
