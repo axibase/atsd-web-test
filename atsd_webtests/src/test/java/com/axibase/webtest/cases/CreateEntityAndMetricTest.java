@@ -18,8 +18,8 @@ public class CreateEntityAndMetricTest extends AtsdTest {
         boolean submenuVisible = $(By.xpath("//h4[normalize-space(text())='Data']")).isDisplayed();
         assertTrue(generateAssertMessage("Submenu should be visible"), submenuVisible);
 
-        $(By.linkText("Data Entry")).click();
-        CommonAssertions.assertPageTitleAfterLoadEquals("Data Entry");
+        $(By.linkText("Command Entry")).click();
+        CommonAssertions.assertPageTitleAfterLoadEquals("Command Entry");
 
         $(By.id("seriesType")).click();
         $(By.name("entity")).sendKeys("my-entity");
