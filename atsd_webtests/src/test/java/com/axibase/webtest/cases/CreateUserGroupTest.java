@@ -39,8 +39,8 @@ public class CreateUserGroupTest extends AtsdTest {
     public void createUserGroup() {
         open("/");
 
-        $(By.linkText("Settings")).click();
-        boolean submenuVisible = $(By.xpath("//h4[normalize-space(text())='Settings']")).isDisplayed();
+        $(By.linkText("Admin")).click();
+        boolean submenuVisible = $(By.xpath("//h4[normalize-space(text())='Admin']")).isDisplayed();
         assertTrue(generateAssertMessage("Submenu should be visible"), submenuVisible);
 
         $(By.linkText("User Groups")).click();

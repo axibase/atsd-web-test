@@ -75,7 +75,7 @@ public class AdminBackupImportTest extends ReplacementTableImportBase {
     }
 
     private void goToAdminImportBackupPage() {
-        $(By.linkText("Settings")).click();
+        $(By.linkText("Admin")).click();
         $(By.linkText("Diagnostics")).hover();
         $(By.linkText("Backup Import")).click();
         CommonAssertions.assertPageUrlPathEquals("/admin/import-backup");
