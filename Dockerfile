@@ -11,7 +11,9 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com --recv-keys 26AEE425A5796
   && adduser --disabled-password --quiet --gecos "" axibase \
   && ln -s /usr/bin/chromium-browser /usr/bin/google-chrome;
 
-RUN git clone https://github.com/axibase/atsd-web-test /root/atsd-web-test
+RUN mkdir /opt/atsd
+
+RUN git clone --depth 1 https://github.com/axibase/atsd-web-test /root/atsd-web-test
 
 ENTRYPOINT ["/bin/bash","/root/atsd-web-test/check_atsd.sh"]
 
