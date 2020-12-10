@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -x
+set -x
 # exit code description:
 # 0 - test success
 # 1 - script arguments error
@@ -21,9 +21,9 @@ BRANCH=${BRANCH:-master}
 function main() {
   check_download_pages
   check_package_links
-  check_repository_atsd_revision
+  #check_repository_atsd_revision
   pull_repository
-  check_installed_atsd_revision
+  install_atsd
   run_webtests
 }
 
